@@ -122,6 +122,8 @@ cd horizon
 
 → 纯原因可分；混合原因不可靠。论文主张应是“单原因探针 + 混合压力测试 + 弃权”，而不是“分类器能分四类”。详见审计 §13。
 
+**多标签修正**：把单标签换成 3 个二分类后，mixed 从 0% 变成“任一成分命中 100%、两成分全中 50%”（n=12，bank-grouped LOO；exact-set 89%）。论文接口应写成多标签后验，而不是单原因分类。
+
 ## 6. 数据与可复现性
 
 为控制仓库体积，**只保留元数据、逐次 `record.json`、`effective_config.json`、图表和小型 `summary.json`**；策略权重 `.npz`、任务 payload（`tasks_*`）与原始大规模结果目录未纳入。它们由固定种子确定性生成，重跑同一配置即可复现。完整清单与再生成命令见 [`horizon/results/README.md`](horizon/results/README.md)。
