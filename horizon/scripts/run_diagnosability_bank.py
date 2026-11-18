@@ -53,6 +53,16 @@ def load() -> list[dict]:
             r["_source"] = d
             if r.get("decisions") and r["decisions"][0].get("profile"):
                 out.append(r)
+    # Independent profiles collected by scripts/collect_profiles.py (one per cause x bank).
+    prof_path = ROOT / "results/diagnosis_profiles_20261118/profiles.jsonl"
+    if prof_path.exists():
+        for line in prof_path.read_text(encoding="utf-8").splitlines():
+            if not line.strip():
+                continue
+            row = json.loads(line)
+            out.append({"cause": row["cause"], "_source": "profiles",
+                        "bank_index": row["bank_index"],
+                        "decisions": [{"profile": row["profile"]}]})
     return out
 
 

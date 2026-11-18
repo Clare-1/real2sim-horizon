@@ -116,6 +116,12 @@ cd horizon
 
 详细证据与自我更正见 [`重跑风险审计_2026-11-18.md`](重跑风险审计_2026-11-18.md) 第八节。
 
+### 5.4 learned diagnoser 的可信数字（Phase 1）
+
+按 bank 分组留一（同一 bank 的多个 selector 看到同一 profile，旧脚本把它们当独立样本，88.9% 被放大），并补 4 类 × 20 个独立 feedback profile 后：**176 个独立 profile / 148 组**，几何 100%、覆盖 95%、健康 92%、恢复 100%，**mixed 0%**（10 个混合样本全被判成覆盖）。
+
+→ 纯原因可分；混合原因不可靠。论文主张应是“单原因探针 + 混合压力测试 + 弃权”，而不是“分类器能分四类”。详见审计 §13。
+
 ## 6. 数据与可复现性
 
 为控制仓库体积，**只保留元数据、逐次 `record.json`、`effective_config.json`、图表和小型 `summary.json`**；策略权重 `.npz`、任务 payload（`tasks_*`）与原始大规模结果目录未纳入。它们由固定种子确定性生成，重跑同一配置即可复现。完整清单与再生成命令见 [`horizon/results/README.md`](horizon/results/README.md)。
