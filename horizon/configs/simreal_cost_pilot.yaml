@@ -1,0 +1,34 @@
+# New protocol: shared data/feedback RNGs; repair_budget is cumulative across rounds.
+# Unit costs are abstract accounting units, not measured human or robot minutes.
+name: simreal_cost_pilot
+common:
+  init_budget: 20000
+  round_budget: 10000
+  rounds: 3
+  real_episodes: 60
+  audit_frac: 0.25
+  twin_episodes: 40
+  judge_scale: 0.4
+  grounding: {confuse: {green: blue, blue: green}}
+  eval_pert: 0.1
+  paired_feedback: true
+  repair_budget: 3
+  repair_costs: {geometry: 1, verifier: 1, graph: 1, dynamics: 1}
+dist:
+  families: [pack, sort, stack]
+  H_values: [2, 4, 6]
+open_loop:
+  recovery_frac: 0.3
+  latency_choices: [0, 0, 1]
+train: {steps: 2000, hidden: 256, layers: 2, batch: 512, lr: 0.001, device: cpu}
+test: {n_per: 6, curve_n_per: 2}
+methods:
+  sim_only: {route: none}
+  random_route: {route: random}
+  routed: {route: routed}
+  gated: {route: gated}
+  cost_gated: {route: cost_gated}
+  cascade: {route: cascade}
+  cascade_no_replay: {route: cascade, cascade_replay: false}
+  repair_all: {route: all}
+  perfect: {route: perfect}

@@ -1,0 +1,14 @@
+# H5 (paper plan Sec. 2): unit task cost vs. number of previously learned task families.
+# Target family F gets b new transitions; every previously learned family contributes prior_budget
+# transitions (a mature task). One multi-task hierarchical policy per (F, prior set, b).
+name: transfer
+families: [pack, sort, stack]
+H_values: [2, 4, 6, 8, 10]
+prior_budget: 60000
+budgets: [0, 5000, 10000, 20000, 40000]
+target: 0.5  # success level that defines C_task (report)
+open_loop:
+  recovery_frac: 0.3
+  latency_choices: [0, 0, 1]
+train: {steps: 8000, hidden: 512, layers: 3, batch: 2048, lr: 0.001}
+test: {n_per: 20}

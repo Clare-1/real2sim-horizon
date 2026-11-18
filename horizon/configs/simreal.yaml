@@ -1,0 +1,29 @@
+# Sim-real proxy (v3 report Sec. 7): the robot trains only in its reconstructed simulator, where the
+# tray / cutting-board heights are reconstructed 70% too low, and is deployed with a lenient judge
+# (verifier tolerance x2.5). Each round: 60 "real" episodes, 25% human-audited, at most one repair
+# (except route "all"), DAgger in the current simulator. Matched across methods: sim training-set
+# size (80k + 3 x 40k), real episodes per round, audits per round.
+name: simreal
+common:
+  init_budget: 80000
+  round_budget: 40000
+  rounds: 3
+  real_episodes: 60
+  audit_frac: 0.25
+  twin_episodes: 40
+  judge_scale: 2.5
+  eval_pert: 0.1
+dist:
+  families: [pack, sort, stack]
+  H_values: [2, 4, 6, 8, 10]
+open_loop:
+  recovery_frac: 0.3
+  latency_choices: [0, 0, 1]
+train: {steps: 8000, hidden: 512, layers: 3, batch: 2048, lr: 0.001}
+test: {n_per: 20, curve_n_per: 8}
+methods:
+  sim_only: {route: none}         # DAgger in the reconstructed simulator only (no real feedback)
+  random_route: {route: random}   # real feedback, but the repair is picked at random (incl. decoys)
+  routed: {route: routed}         # ours: twin test + audits pick the repair
+  repair_all: {route: all}        # every repair every round (no budget on repairs)
+  perfect: {route: perfect}       # true geometry + calibrated judge from the start (upper bound)

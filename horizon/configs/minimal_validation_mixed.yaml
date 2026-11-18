@@ -1,0 +1,31 @@
+name: minimal_validation_mixed
+# Advisor §四.7: A1 fails when two causes coexist. This scenario injects BOTH a support-height
+# bias and a layout coverage deficit, so no single operation is optimal.
+#   fixed  = calibrate once then DAgger  -> fixes geometry, never fills the uncovered region
+#   rule   = must fire both branches across rounds
+#   oracle = calibrate -> targeted regeneration
+seeds: [0]
+selectors: [fixed, rule, oracle]
+families: [pack]
+H_values: [4]
+scenario_banks: 10
+init_budget: 80000
+round_budget: 40000
+rounds: 3
+feedback_episodes: 24
+curve_n_per: 20
+final_n_per: 20
+feedback_pert: 0.1
+collection_pert: 0.1
+torch_threads: 4
+deploy_budget: 100000
+label_budget: 1000000
+banks: {training: 81000000, feedback: 82000000, curve: 83000000, final: 84000000}
+world: {plate_half: 0.01, tray_height: 0.02}
+train: {steps: 8000, hidden: 512, layers: 3, batch: 2048, lr: 0.001, device: cuda}
+open_loop: {recovery_frac: 0.3, latency_choices: [0, 0, 1]}
+scenarios:
+  - name: mixed
+    cause: mixed_cause
+    conditions: {recon: {bias: {plate: 0.46, tray: 0.46}}}
+    train_randomization: {layout_prior: left_half}

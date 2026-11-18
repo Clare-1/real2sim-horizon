@@ -1,0 +1,24 @@
+name: calibrator_healthy
+# Advisor 回复学生 §四.4 第二步: after fixing the estimator, repeatedly calibrate on a *healthy*
+# twin and check whether noisy feedback drifts it anyway. No policy learning, no new labels.
+seeds: [0, 1, 2]
+families: [pack]
+H_values: [4]
+init_budget: 20000
+round_budget: 0
+rounds: 3
+feedback_episodes: 24
+curve_n_per: 20
+feedback_pert: 0.1
+collection_pert: 0.1
+torch_threads: 4
+banks: {training: 96000000, feedback: 97000000, curve: 98000000, final: 99000000}
+world: {plate_half: 0.01, tray_height: 0.02}
+train: {steps: 2000, hidden: 256, layers: 3, batch: 1024, lr: 0.001, device: cuda}
+open_loop: {recovery_frac: 0.3, latency_choices: [0, 0, 1]}
+only_causes: [healthy]
+scenarios:
+  - name: healthy
+    cause: healthy
+    conditions: {recon: {}}
+    train_randomization: {layout_prior: full}

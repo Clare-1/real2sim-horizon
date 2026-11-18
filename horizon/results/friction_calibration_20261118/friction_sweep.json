@@ -1,0 +1,32 @@
+[
+  {
+    "friction_scale": 1.0,
+    "sr_nominal": 0.75,
+    "sr_perturbed": 0.65
+  },
+  {
+    "friction_scale": 0.7,
+    "sr_nominal": 0.75,
+    "sr_perturbed": 0.7
+  },
+  {
+    "friction_scale": 0.55,
+    "sr_nominal": 0.75,
+    "sr_perturbed": 0.7
+  },
+  {
+    "friction_scale": 0.4,
+    "sr_nominal": 0.75,
+    "sr_perturbed": 0.7
+  },
+  {
+    "friction_scale": 0.3,
+    "sr_nominal": 0.75,
+    "sr_perturbed": 0.7
+  },
+  {
+    "friction_scale": 0.2,
+    "sr_nominal": 0.75,
+    "sr_perturbed": 0.7
+  }
+]

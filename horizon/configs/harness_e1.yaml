@@ -1,0 +1,23 @@
+name: harness_e1_pack_development
+seeds: [0, 1, 2]
+arms: [S00, S01, S10, S11]
+families: [pack]
+H_values: [2, 4]
+init_budget: 80000
+round_budget: 40000
+rounds: 3
+feedback_episodes: 24
+curve_n_per: 8
+final_n_per: 20
+judge_scale: 1.0
+feedback_pert: 0.1
+collection_pert: 0.1
+torch_threads: 4
+banks: {training: 54000000, feedback: 55000000, curve: 56000000, final: 57000000}
+world: {plate_half: 0.01, tray_height: 0.02}
+conditions:
+  healthy: {recon: {}}
+  height_bias: {recon: {bias: {plate: 0.3, tray: 0.3}}}
+source: {kind: procedural}
+open_loop: {recovery_frac: 0.3, latency_choices: [0, 0, 1]}
+train: {steps: 8000, hidden: 512, layers: 3, batch: 2048, lr: 0.001, device: cuda}

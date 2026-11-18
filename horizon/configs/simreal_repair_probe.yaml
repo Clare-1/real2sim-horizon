@@ -1,0 +1,25 @@
+# Diagnostic only: the same frozen policy checkpoint is shared across methods.
+name: simreal_repair_probe
+common:
+  rounds: 3
+  real_episodes: 60
+  audit_frac: 0.25
+  twin_episodes: 40
+  judge_scale: 0.4
+  grounding: {confuse: {green: blue, blue: green}}
+  eval_pert: 0.1
+  paired_feedback: true
+  repair_budget: 3
+  repair_costs: {geometry: 1, verifier: 1, graph: 1, dynamics: 1}
+dist:
+  families: [pack, sort, stack]
+  H_values: [2, 4, 6, 8, 10]
+test: {n_per: 4, curve_n_per: 1}
+methods:
+  sim_only: {route: none}
+  routed: {route: routed}
+  gated: {route: gated}
+  cost_gated: {route: cost_gated}
+  cascade: {route: cascade}
+  cascade_no_replay: {route: cascade, cascade_replay: false}
+  perfect: {route: perfect}

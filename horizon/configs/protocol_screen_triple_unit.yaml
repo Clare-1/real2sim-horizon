@@ -1,0 +1,89 @@
+{
+  "name": "protocol_screen_triple_unit",
+  "common": {
+    "rounds": 3,
+    "real_episodes": 30,
+    "audit_frac": 0.5,
+    "twin_episodes": 24,
+    "judge_scale": 0.4,
+    "grounding": {
+      "confuse": {
+        "green": "blue",
+        "blue": "green"
+      }
+    },
+    "eval_pert": 0.1,
+    "paired_feedback": true,
+    "repair_budget": 3,
+    "repair_costs": {
+      "geometry": 1,
+      "verifier": 1,
+      "graph": 1,
+      "dynamics": 1
+    },
+    "evaluation_split": "development",
+    "feedback_seed_base": 2000000,
+    "curve_seed_base": 20000000,
+    "eval_seed_base": 30000000,
+    "confirmation_seed_base": 40000000
+  },
+  "dist": {
+    "families": [
+      "pack",
+      "sort",
+      "stack"
+    ],
+    "H_values": [
+      2,
+      4,
+      6,
+      8,
+      10
+    ],
+    "seed_base": 0
+  },
+  "test": {
+    "n_per": 4,
+    "curve_n_per": 1
+  },
+  "methods": {
+    "sim_only": {
+      "route": "none"
+    },
+    "perfect": {
+      "route": "perfect"
+    },
+    "routed": {
+      "route": "routed"
+    },
+    "gated": {
+      "route": "gated"
+    },
+    "cascade": {
+      "route": "cascade"
+    },
+    "fixed_gvg": {
+      "route": "fixed",
+      "repair_order": [
+        "geometry",
+        "verifier",
+        "graph"
+      ]
+    },
+    "fixed_ggv": {
+      "route": "fixed",
+      "repair_order": [
+        "geometry",
+        "graph",
+        "verifier"
+      ]
+    },
+    "repair_all": {
+      "route": "all"
+    },
+    "random_valid": {
+      "route": "random",
+      "random_include_decoy": false
+    }
+  }
+}

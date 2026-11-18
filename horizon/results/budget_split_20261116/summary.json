@@ -1,0 +1,124 @@
+{
+  "records": [
+    {
+      "arm": "single",
+      "cause": "geometry_bias",
+      "labels_added": 12000,
+      "labels_total": 12000,
+      "scenario": "geometry",
+      "seed": 0,
+      "sr_nominal": 0.85,
+      "sr_perturbed": 0.75
+    },
+    {
+      "arm": "do_all",
+      "cause": "geometry_bias",
+      "labels_added": 12000,
+      "labels_total": 12000,
+      "scenario": "geometry",
+      "seed": 0,
+      "sr_nominal": 0.75,
+      "sr_perturbed": 0.75
+    },
+    {
+      "arm": "single",
+      "cause": "geometry_bias",
+      "labels_added": 12000,
+      "labels_total": 12000,
+      "scenario": "geometry",
+      "seed": 1,
+      "sr_nominal": 0.85,
+      "sr_perturbed": 0.8
+    },
+    {
+      "arm": "do_all",
+      "cause": "geometry_bias",
+      "labels_added": 12000,
+      "labels_total": 12000,
+      "scenario": "geometry",
+      "seed": 1,
+      "sr_nominal": 0.85,
+      "sr_perturbed": 0.75
+    },
+    {
+      "arm": "single",
+      "cause": "geometry_bias",
+      "labels_added": 12000,
+      "labels_total": 12000,
+      "scenario": "geometry",
+      "seed": 2,
+      "sr_nominal": 0.95,
+      "sr_perturbed": 0.85
+    },
+    {
+      "arm": "do_all",
+      "cause": "geometry_bias",
+      "labels_added": 12000,
+      "labels_total": 12000,
+      "scenario": "geometry",
+      "seed": 2,
+      "sr_nominal": 0.65,
+      "sr_perturbed": 0.8
+    },
+    {
+      "arm": "single",
+      "cause": "coverage_deficit",
+      "labels_added": 12000,
+      "labels_total": 12000,
+      "scenario": "coverage",
+      "seed": 0,
+      "sr_nominal": 0.0,
+      "sr_perturbed": 0.05
+    },
+    {
+      "arm": "do_all",
+      "cause": "coverage_deficit",
+      "labels_added": 12000,
+      "labels_total": 12000,
+      "scenario": "coverage",
+      "seed": 0,
+      "sr_nominal": 0.3,
+      "sr_perturbed": 0.2
+    },
+    {
+      "arm": "single",
+      "cause": "coverage_deficit",
+      "labels_added": 12000,
+      "labels_total": 12000,
+      "scenario": "coverage",
+      "seed": 1,
+      "sr_nominal": 0.0,
+      "sr_perturbed": 0.0
+    },
+    {
+      "arm": "do_all",
+      "cause": "coverage_deficit",
+      "labels_added": 12000,
+      "labels_total": 12000,
+      "scenario": "coverage",
+      "seed": 1,
+      "sr_nominal": 0.3,
+      "sr_perturbed": 0.3
+    },
+    {
+      "arm": "single",
+      "cause": "coverage_deficit",
+      "labels_added": 12000,
+      "labels_total": 12000,
+      "scenario": "coverage",
+      "seed": 2,
+      "sr_nominal": 0.0,
+      "sr_perturbed": 0.0
+    },
+    {
+      "arm": "do_all",
+      "cause": "coverage_deficit",
+      "labels_added": 12000,
+      "labels_total": 12000,
+      "scenario": "coverage",
+      "seed": 2,
+      "sr_nominal": 0.2,
+      "sr_perturbed": 0.2
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+name: harness_e0_external_fixture
+seeds: [0]
+arms: [S01]
+families: [sort]
+H_values: [2]
+init_budget: 512
+round_budget: 512
+rounds: 1
+feedback_episodes: 2
+curve_n_per: 1
+final_n_per: 2
+judge_scale: 1.0
+feedback_pert: 0.0
+collection_pert: 0.1
+torch_threads: 4
+banks: {training: 60000000, feedback: 61000000, curve: 62000000, final: 63000000}
+world: {plate_half: 0.0, tray_height: 0.0}
+conditions:
+  fixture: {recon: {}}
+source:
+  kind: mjcf_fixture
+  path: ../baselines/agentic_rsr/tests/fixtures/stage3/code_as_policy_tabletop.xml
+  instruction: 'Sort the objects into the bins matching their colours, in this order: blue_block, green_block.'
+open_loop: {recovery_frac: 0.0, latency_choices: [0]}
+train: {steps: 40, hidden: 64, layers: 2, batch: 128, lr: 0.001, device: cuda}

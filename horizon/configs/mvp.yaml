@@ -1,0 +1,41 @@
+# M1 MVP (paper Sec. 9): matched-budget comparison on the three task families.
+name: mvp
+policy: hier
+total_budget: 160000        # supervised transitions per method (matched)
+init_frac: 0.5              # closed-loop methods start from the same open-loop half
+rounds: 3
+eval_episodes: 120          # policy rollouts per RSI round (train distribution)
+eval_pert: 0.1              # perturbation suite probability during RSI rounds
+nominal_frac: 0.2
+
+dist:
+  families: [pack, sort, stack]
+  H_values: [2, 4, 6, 8, 10]
+
+open_loop:                  # ARSTAG recipe
+  recovery_frac: 0.3
+  latency_choices: [0, 0, 1]
+
+train:
+  steps: 8000
+  hidden: 512
+  layers: 3
+  batch: 2048
+  lr: 0.001
+
+test:
+  families: [pack, sort, stack]
+  H_values: [2, 4, 6, 8, 10]
+  n_per: 30
+  pert: [0.0, 0.15]
+
+methods:
+  open_loop: {strategy: open_loop}            # ARSTAG open-loop, same budget
+  ours: {strategy: ours}                       # subgoal-attributed RSI
+  oracle: {strategy: oracle}                   # ground-truth attribution (upper bound)
+  uniform: {strategy: uniform}                 # closed loop, no attribution
+  dagger: {strategy: dagger}                   # relabel visited states
+  embodirsi: {strategy: embodirsi}             # CEC + ADC re-implementation
+  flat_open_loop: {strategy: open_loop, policy: flat}   # no task graph
+  flat_ours: {strategy: ours, policy: flat}
+  ours_no_recovery: {strategy: ours, ops: [regen]}      # ablation: no recovery/boundary operators

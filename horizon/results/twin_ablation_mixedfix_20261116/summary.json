@@ -1,0 +1,28 @@
+{
+  "records": [
+    {
+      "arm": "mixed",
+      "bias": 0.46,
+      "new_labels": 36000,
+      "seed": 0,
+      "sr_nominal": 0.3,
+      "sr_perturbed": 0.25
+    },
+    {
+      "arm": "mixed",
+      "bias": 0.46,
+      "new_labels": 36000,
+      "seed": 1,
+      "sr_nominal": 0.35,
+      "sr_perturbed": 0.35
+    },
+    {
+      "arm": "mixed",
+      "bias": 0.46,
+      "new_labels": 36000,
+      "seed": 2,
+      "sr_nominal": 0.2,
+      "sr_perturbed": 0.25
+    }
+  ]
+}

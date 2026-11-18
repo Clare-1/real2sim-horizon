@@ -1,0 +1,16 @@
+# Integration test for budget curves (not a result).
+name: smoke_v3
+policy: hier
+total_budget: 30000
+init_frac: 0.34
+rounds: 2
+eval_episodes: 16
+eval_pert: 0.1
+nominal_frac: 0.25
+dist: {families: [pack, sort, stack], H_values: [2, 4]}
+open_loop: {recovery_frac: 0.3, latency_choices: [0, 0, 1]}
+train: {steps: 300, hidden: 128, layers: 2, batch: 512, lr: 0.001}
+test: {families: [pack, sort], H_values: [2, 4], n_per: 2, pert: [0.0, 0.15]}
+methods:
+  dagger_attr: {strategy: dagger_attr}
+  open_loop_norec: {strategy: open_loop, curve: [10000, 30000], open_loop: {recovery_frac: 0.0}}

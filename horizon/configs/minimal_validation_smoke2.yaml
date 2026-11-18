@@ -1,0 +1,31 @@
+﻿name: minimal_validation_smoke2
+# Pipeline check for the protocol-shaped structure: scenario banks + sequence oracle.
+seeds: [0]
+selectors: [fixed, rule, oracle]
+families: [pack]
+H_values: [4]
+scenario_banks: 2
+init_budget: 600
+round_budget: 400
+rounds: 2
+feedback_episodes: 6
+curve_n_per: 3
+final_n_per: 3
+feedback_pert: 0.1
+collection_pert: 0.1
+torch_threads: 4
+deploy_budget: 100000
+label_budget: 1000000
+banks: {training: 95000000, feedback: 96000000, curve: 97000000, final: 98000000}
+world: {plate_half: 0.01, tray_height: 0.02}
+train: {steps: 40, hidden: 64, layers: 2, batch: 128, lr: 0.001, device: cuda}
+open_loop: {recovery_frac: 0.3, latency_choices: [0, 0, 1]}
+scenarios:
+  - name: geometry
+    cause: geometry_bias
+    conditions: {recon: {bias: {plate: 0.46, tray: 0.46}}}
+    train_randomization: {layout_prior: full}
+  - name: coverage
+    cause: coverage_deficit
+    conditions: {recon: {}}
+    train_randomization: {layout_prior: left_half}

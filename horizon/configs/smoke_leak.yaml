@@ -1,0 +1,36 @@
+name: smoke_leak
+seeds: [0]
+selectors: [fixed, oracle]
+families: [pack]
+H_values: [4]
+scenario_banks: 1
+init_budget: 256
+round_budget: 256
+rounds: 1
+feedback_episodes: 4
+curve_n_per: 2
+final_n_per: 2
+feedback_pert: 0.1
+collection_pert: 0.1
+torch_threads: 4
+banks: {training: 81000000, feedback: 82000000, curve: 83000000, final: 84000000}
+world: {plate_half: 0.01, tray_height: 0.02}
+train: {steps: 20, hidden: 32, layers: 2, batch: 64, lr: 0.001, device: cuda}
+open_loop: {recovery_frac: 0.3, latency_choices: [0, 0, 1]}
+scenarios:
+  - name: coverage
+    cause: coverage_deficit
+    conditions: {recon: {}}
+    train_randomization: {layout_prior: left_half}
+  - name: recovery
+    cause: recovery_deficit
+    conditions: {recon: {}}
+    train_randomization: {layout_prior: full}
+    open_loop: {recovery_frac: 0.0}
+    feedback_pert: 0.5
+    eval_mode: perturbed
+    eval_pert: 0.7
+  - name: healthy
+    cause: healthy
+    conditions: {recon: {}}
+    train_randomization: {layout_prior: full}

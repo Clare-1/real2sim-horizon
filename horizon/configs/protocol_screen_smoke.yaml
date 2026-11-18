@@ -1,0 +1,53 @@
+{
+  "name": "protocol_screen_smoke",
+  "common": {
+    "rounds": 1,
+    "real_episodes": 6,
+    "audit_frac": 0.5,
+    "twin_episodes": 3,
+    "judge_scale": 0.4,
+    "grounding": {
+      "confuse": {
+        "green": "blue",
+        "blue": "green"
+      }
+    },
+    "eval_pert": 0.1,
+    "paired_feedback": true,
+    "repair_budget": 3,
+    "repair_costs": {
+      "geometry": 1,
+      "verifier": 1,
+      "graph": 1,
+      "dynamics": 1
+    },
+    "evaluation_split": "development",
+    "feedback_seed_base": 2000000,
+    "curve_seed_base": 20000000,
+    "eval_seed_base": 30000000,
+    "confirmation_seed_base": 40000000
+  },
+  "dist": {
+    "families": [
+      "pack"
+    ],
+    "H_values": [
+      2
+    ],
+    "seed_base": 0
+  },
+  "test": {
+    "n_per": 1,
+    "curve_n_per": 1
+  },
+  "methods": {
+    "fixed_ggv": {
+      "route": "fixed",
+      "repair_order": [
+        "geometry",
+        "graph",
+        "verifier"
+      ]
+    }
+  }
+}

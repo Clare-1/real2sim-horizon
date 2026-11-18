@@ -1,0 +1,45 @@
+# Main matched-budget comparison (paper Fig. 3 / Fig. 9): every closed-loop method spends the
+# same 160k supervised transitions as the open-loop baseline; open-loop is also run at 80k
+# and 320k to read off data efficiency.
+name: main
+policy: hier
+total_budget: 160000
+init_frac: 0.5
+rounds: 3
+eval_episodes: 120
+eval_pert: 0.1
+nominal_frac: 0.2
+
+dist:
+  families: [pack, sort, stack]
+  H_values: [2, 4, 6, 8, 10]
+
+open_loop:
+  recovery_frac: 0.3
+  latency_choices: [0, 0, 1]
+
+train:
+  steps: 8000
+  hidden: 512
+  layers: 3
+  batch: 2048
+  lr: 0.001
+
+test:
+  families: [pack, sort, stack]
+  H_values: [2, 4, 6, 8, 10]
+  n_per: 30
+  pert: [0.0, 0.15]
+
+methods:
+  open_loop: {strategy: open_loop}
+  open_loop_80k: {strategy: open_loop, total_budget: 80000}
+  open_loop_320k: {strategy: open_loop, total_budget: 320000}
+  ours: {strategy: ours}
+  oracle: {strategy: oracle}
+  uniform: {strategy: uniform}
+  dagger: {strategy: dagger}
+  embodirsi: {strategy: embodirsi}
+  ours_no_recovery: {strategy: ours, ops: [regen]}
+  flat_open_loop: {strategy: open_loop, policy: flat_set}   # ablation: no task graph (order-aware attention policy)
+  flat_ours: {strategy: ours, policy: flat_set}

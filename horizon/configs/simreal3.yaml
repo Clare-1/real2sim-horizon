@@ -1,0 +1,35 @@
+# Sim-real proxy with three error sources (v3 report Sec. 7). The robot trains only in its own
+# simulator and is deployed on the "real" scene, where:
+#   * scene: the tray / cutting-board heights are reconstructed 70% too low;
+#   * judge: its success detector is too strict (tolerance x0.4): it rejects correct placements
+#     (a lenient judge is harmless in this testbed: scripts/diag/judge_scale.py);
+#   * plan: its instruction compiler swaps the green and blue bins.
+# Each round: 60 real episodes, 25% human-audited, at most one repair (except route "all"), DAgger in
+# the robot's current simulator. Matched across methods: training-set size (80k + 3 x 40k), real
+# episodes per round, audits per round.
+name: simreal3
+common:
+  init_budget: 80000
+  round_budget: 40000
+  rounds: 3
+  real_episodes: 60
+  audit_frac: 0.25
+  twin_episodes: 40
+  judge_scale: 0.4
+  grounding: {confuse: {green: blue, blue: green}}
+  eval_pert: 0.1
+dist:
+  families: [pack, sort, stack]
+  H_values: [2, 4, 6, 8, 10]
+open_loop:
+  recovery_frac: 0.3
+  latency_choices: [0, 0, 1]
+train: {steps: 8000, hidden: 512, layers: 3, batch: 2048, lr: 0.001}
+test: {n_per: 20, curve_n_per: 8}
+methods:
+  sim_only: {route: none}         # DAgger in the robot's simulator only (no real feedback)
+  random_route: {route: random}   # real feedback, but the repair is picked at random (incl. a decoy)
+  routed: {route: routed}         # ours: twin test + audits pick the repair (one per round)
+  gated: {route: gated}           # ours without the repair budget: every repair with evidence
+  repair_all: {route: all}        # every repair every round (no budget on repairs)
+  perfect: {route: perfect}       # correct scene, calibrated judge, correct plan from the start (upper bound)

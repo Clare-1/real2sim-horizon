@@ -1,0 +1,60 @@
+{
+  "name": "memory_training_smoke",
+  "common": {
+    "rounds": 2,
+    "real_episodes": 3,
+    "audit_frac": 1,
+    "twin_episodes": 3,
+    "judge_scale": 0.4,
+    "grounding": {
+      "confuse": {
+        "green": "blue",
+        "blue": "green"
+      }
+    },
+    "eval_pert": 0.1,
+    "paired_feedback": true,
+    "repair_budget": 3,
+    "repair_costs": {
+      "geometry": 1,
+      "verifier": 1,
+      "graph": 1,
+      "dynamics": 1
+    },
+    "evaluation_split": "development",
+    "feedback_seed_base": 2000000,
+    "curve_seed_base": 20000000,
+    "eval_seed_base": 30000000,
+    "confirmation_seed_base": 40000000,
+    "init_budget": 128,
+    "round_budget": 64
+  },
+  "dist": {
+    "families": [
+      "pack"
+    ],
+    "H_values": [
+      2
+    ]
+  },
+  "open_loop": {
+    "recovery_frac": 0
+  },
+  "train": {
+    "steps": 2,
+    "hidden": 16,
+    "layers": 1,
+    "batch": 16,
+    "lr": 0.001
+  },
+  "test": {
+    "n_per": 1,
+    "curve_n_per": 1
+  },
+  "methods": {
+    "memory_accum": {
+      "route": "memory",
+      "audit_memory": true
+    }
+  }
+}

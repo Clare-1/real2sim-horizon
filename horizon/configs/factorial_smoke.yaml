@@ -1,0 +1,63 @@
+{
+  "name": "factorial_smoke",
+  "common": {
+    "rounds": 3,
+    "real_episodes": 12,
+    "audit_frac": 0.5,
+    "twin_episodes": 12,
+    "judge_scale": 0.4,
+    "grounding": {
+      "confuse": {
+        "green": "blue",
+        "blue": "green"
+      }
+    },
+    "eval_pert": 0.1,
+    "paired_feedback": true,
+    "repair_budget": 3,
+    "repair_costs": {
+      "geometry": 1,
+      "verifier": 1,
+      "graph": 1,
+      "dynamics": 1
+    },
+    "evaluation_split": "development",
+    "feedback_seed_base": 3000000,
+    "curve_seed_base": 21000000,
+    "eval_seed_base": 31000000,
+    "confirmation_seed_base": 40000000
+  },
+  "dist": {
+    "families": [
+      "pack",
+      "sort",
+      "stack"
+    ],
+    "H_values": [
+      2
+    ],
+    "seed_base": 0
+  },
+  "test": {
+    "n_per": 1,
+    "curve_n_per": 1
+  },
+  "methods": {
+    "memory_accum": {
+      "route": "memory",
+      "audit_memory": true
+    },
+    "greedy_ratio": {
+      "route": "greedy_ratio"
+    },
+    "fixed_grouped": {
+      "route": "fixed",
+      "repair_order": [
+        "geometry",
+        "graph",
+        "verifier"
+      ],
+      "fixed_repairs_per_round": 2
+    }
+  }
+}

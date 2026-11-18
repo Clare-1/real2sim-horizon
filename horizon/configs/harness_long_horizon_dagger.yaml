@@ -1,0 +1,24 @@
+name: long_horizon_full_coverage_dagger_development
+seeds: [0]
+arms: [S01]
+families: [pack, sort, stack]
+H_values: [2, 4, 6, 8, 10]
+init_budget: 80000
+round_budget: 40000
+rounds: 3
+feedback_episodes: 30
+curve_n_per: 1
+final_n_per: 10
+calibration_schedule: first_round
+learning_collection: dagger
+judge_scale: 1.0
+feedback_pert: 0.1
+collection_pert: 0.1
+torch_threads: 4
+banks: {training: 74000000, feedback: 75000000, curve: 76000000, final: 77000000}
+world: {plate_half: 0.01, tray_height: 0.02}
+conditions:
+  healthy: {recon: {}}
+source: {kind: procedural}
+open_loop: {recovery_frac: 0.3, latency_choices: [0, 0, 1]}
+train: {steps: 8000, hidden: 512, layers: 3, batch: 2048, lr: 0.001, device: cuda, normalization: constant_safe}

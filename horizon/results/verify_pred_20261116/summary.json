@@ -1,0 +1,235 @@
+{
+  "records": [
+    {
+      "arm": "no_verify",
+      "cause": "geometry_bias",
+      "checks": [],
+      "rejected": 0,
+      "scenario": "geometry",
+      "seed": 0,
+      "sr_nominal": 0.8,
+      "sr_perturbed": 0.7
+    },
+    {
+      "arm": "verify_pred",
+      "cause": "geometry_bias",
+      "checks": [
+        {
+          "believed_mm": 9.2,
+          "cand_mm": 20.25,
+          "err_after_mm": 1.33,
+          "err_before_mm": 11.75,
+          "fixture": "tray"
+        },
+        {
+          "believed_mm": 18.4,
+          "cand_mm": 18.51,
+          "err_after_mm": 0.62,
+          "err_before_mm": 0.62,
+          "fixture": "tray"
+        },
+        {
+          "believed_mm": 18.4,
+          "cand_mm": 18.69,
+          "err_after_mm": 1.66,
+          "err_before_mm": 1.8,
+          "fixture": "tray"
+        }
+      ],
+      "rejected": 0,
+      "scenario": "geometry",
+      "seed": 0,
+      "sr_nominal": 0.8,
+      "sr_perturbed": 0.7
+    },
+    {
+      "arm": "no_verify",
+      "cause": "geometry_bias",
+      "checks": [],
+      "rejected": 0,
+      "scenario": "geometry",
+      "seed": 1,
+      "sr_nominal": 0.7,
+      "sr_perturbed": 0.55
+    },
+    {
+      "arm": "verify_pred",
+      "cause": "geometry_bias",
+      "checks": [
+        {
+          "believed_mm": 9.2,
+          "cand_mm": 20.33,
+          "err_after_mm": 0.98,
+          "err_before_mm": 10.69,
+          "fixture": "tray"
+        },
+        {
+          "believed_mm": 18.4,
+          "cand_mm": 18.79,
+          "err_after_mm": 0.89,
+          "err_before_mm": 0.74,
+          "fixture": "tray"
+        },
+        {
+          "believed_mm": 18.4,
+          "cand_mm": 18.5,
+          "err_after_mm": 12.29,
+          "err_before_mm": 12.31,
+          "fixture": "tray"
+        }
+      ],
+      "rejected": 0,
+      "scenario": "geometry",
+      "seed": 1,
+      "sr_nominal": 0.7,
+      "sr_perturbed": 0.55
+    },
+    {
+      "arm": "no_verify",
+      "cause": "geometry_bias",
+      "checks": [],
+      "rejected": 0,
+      "scenario": "geometry",
+      "seed": 2,
+      "sr_nominal": 0.65,
+      "sr_perturbed": 0.7
+    },
+    {
+      "arm": "verify_pred",
+      "cause": "geometry_bias",
+      "checks": [
+        {
+          "believed_mm": 9.2,
+          "cand_mm": 19.12,
+          "err_after_mm": 1.15,
+          "err_before_mm": 10.9,
+          "fixture": "tray"
+        },
+        {
+          "believed_mm": 18.4,
+          "cand_mm": 18.76,
+          "err_after_mm": 1.58,
+          "err_before_mm": 1.66,
+          "fixture": "tray"
+        },
+        {
+          "believed_mm": 18.4,
+          "cand_mm": 19.1,
+          "err_after_mm": 0.9,
+          "err_before_mm": 0.91,
+          "fixture": "tray"
+        }
+      ],
+      "rejected": 0,
+      "scenario": "geometry",
+      "seed": 2,
+      "sr_nominal": 0.65,
+      "sr_perturbed": 0.7
+    },
+    {
+      "arm": "no_verify",
+      "cause": "coverage_deficit",
+      "checks": [],
+      "rejected": 0,
+      "scenario": "coverage",
+      "seed": 0,
+      "sr_nominal": 0.0,
+      "sr_perturbed": 0.0
+    },
+    {
+      "arm": "verify_pred",
+      "cause": "coverage_deficit",
+      "checks": [
+        {
+          "believed_mm": 20.0,
+          "cand_mm": 26.31,
+          "err_after_mm": 6.46,
+          "err_before_mm": 2.08,
+          "fixture": "tray"
+        }
+      ],
+      "rejected": 1,
+      "scenario": "coverage",
+      "seed": 0,
+      "sr_nominal": 0.0,
+      "sr_perturbed": 0.0
+    },
+    {
+      "arm": "no_verify",
+      "cause": "coverage_deficit",
+      "checks": [],
+      "rejected": 0,
+      "scenario": "coverage",
+      "seed": 1,
+      "sr_nominal": 0.0,
+      "sr_perturbed": 0.0
+    },
+    {
+      "arm": "verify_pred",
+      "cause": "coverage_deficit",
+      "checks": [
+        {
+          "believed_mm": 20.0,
+          "cand_mm": 21.99,
+          "err_after_mm": 2.81,
+          "err_before_mm": 1.2,
+          "fixture": "tray"
+        },
+        {
+          "believed_mm": 20.0,
+          "cand_mm": 19.46,
+          "err_after_mm": 1.86,
+          "err_before_mm": 1.72,
+          "fixture": "tray"
+        }
+      ],
+      "rejected": 0,
+      "scenario": "coverage",
+      "seed": 1,
+      "sr_nominal": 0.0,
+      "sr_perturbed": 0.0
+    },
+    {
+      "arm": "no_verify",
+      "cause": "coverage_deficit",
+      "checks": [],
+      "rejected": 0,
+      "scenario": "coverage",
+      "seed": 2,
+      "sr_nominal": 0.0,
+      "sr_perturbed": 0.0
+    },
+    {
+      "arm": "verify_pred",
+      "cause": "coverage_deficit",
+      "checks": [
+        {
+          "believed_mm": 20.0,
+          "cand_mm": 19.62,
+          "err_after_mm": 1.44,
+          "err_before_mm": 1.44,
+          "fixture": "tray"
+        },
+        {
+          "believed_mm": 20.0,
+          "cand_mm": 20.18,
+          "err_after_mm": 1.15,
+          "err_before_mm": 0.97,
+          "fixture": "tray"
+        },
+        {
+          "believed_mm": 20.0,
+          "cand_mm": 18.96,
+          "err_after_mm": 0.35,
+          "err_before_mm": 1.11,
+          "fixture": "tray"
+        }
+      ],
+      "rejected": 0,
+      "scenario": "coverage",
+      "seed": 2,
+      "sr_nominal": 0.0,
+      "sr_perturbed": 0.0
+    }
+  ]
+}

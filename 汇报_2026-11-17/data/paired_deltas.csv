@@ -1,0 +1,11 @@
+source,cause,selector,n_pairs,delta_pp,ci_lo_pp,ci_hi_pp
+3seeds,coverage_deficit,oracle,30,37.83,33.67,42.17
+3seeds,coverage_deficit,rule,30,31.33,27.17,35.67
+3seeds,geometry_bias,oracle,30,14.33,10.67,17.67
+3seeds,geometry_bias,rule,30,7.0,3.17,11.17
+n50,coverage_deficit,oracle,5,29.6,24.0,35.6
+n50,coverage_deficit,rule,5,25.6,17.6,31.2
+n50,geometry_bias,oracle,5,17.2,14.4,20.0
+n50,geometry_bias,rule,5,4.0,0.0,8.8
+mixed,mixed_cause,oracle,10,27.0,19.0,35.5
+mixed,mixed_cause,rule,10,24.0,10.0,41.0

@@ -1,0 +1,52 @@
+# Main comparison, v1: success-vs-budget curves (paper Fig. 4) with matched, paired budgets.
+# Every closed-loop method starts from the same 80k open-loop transitions (identical to the first
+# 80k of the open-loop pool) and adds 40k per round; open loop is evaluated on nested prefixes of
+# one 320k pool. Each budget level is therefore a paired comparison: +nominal vs +targeted data.
+name: main_v1
+policy: hier
+total_budget: 200000
+init_frac: 0.4
+rounds: 3
+eval_episodes: 120
+eval_pert: 0.1
+nominal_frac: 0.25
+
+dist:
+  families: [pack, sort, stack]
+  H_values: [2, 4, 6, 8, 10]
+
+open_loop:
+  recovery_frac: 0.3
+  latency_choices: [0, 0, 1]
+
+train:
+  steps: 8000
+  hidden: 512
+  layers: 3
+  batch: 2048
+  lr: 0.001
+
+test:
+  families: [pack, sort, stack]
+  H_values: [2, 4, 6, 8, 10]
+  n_per: 20
+  pert: [0.0, 0.15]
+
+methods:
+  open_loop: {strategy: open_loop, total_budget: 320000, curve: [80000, 120000, 160000, 200000, 320000]}
+  ours: {strategy: ours}
+  uniform: {strategy: uniform}
+  oracle: {strategy: oracle}
+  dagger: {strategy: dagger}
+  embodirsi: {strategy: embodirsi}
+  # ablations (run after the main comparison)
+  ours_no_recovery: {strategy: ours, ops: [regen]}
+  flat_open_loop: {strategy: open_loop, policy: flat_set, total_budget: 200000, curve: [80000, 120000, 160000, 200000]}
+  flat_ours: {strategy: ours, policy: flat_set}
+  # validation of the flat-policy finding and the standard DAgger baseline
+  dagger_beta: {strategy: dagger_beta}            # Ross et al. 2011: beta-mixed collection, beta = 0.5^round
+  flat_uniform: {strategy: uniform, policy: flat_set}
+  # follow-ups from the v3 report
+  dagger_attr: {strategy: dagger_attr}            # attribution-guided DAgger (60% of episodes start at blamed subgoals)
+  open_loop_norec: {strategy: open_loop, total_budget: 200000, curve: [80000, 120000, 160000, 200000], open_loop: {recovery_frac: 0.0}}  # H3
+  hybrid: {strategy: hybrid}                      # half attributed, half uniform (v3 report Sec. 7, item 3)

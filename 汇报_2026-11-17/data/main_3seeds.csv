@@ -1,0 +1,7 @@
+selector,cause,n_runs,mean_sr,ci_lo,ci_hi,first_step_correct,mean_new_labels
+fixed,coverage_deficit,30,0.6083,0.565,0.6483,0/30,80000
+fixed,geometry_bias,30,0.8217,0.7883,0.8533,30/30,80000
+oracle,coverage_deficit,30,0.9867,0.975,0.9967,30/30,114667
+oracle,geometry_bias,30,0.965,0.95,0.98,30/30,74667
+rule,coverage_deficit,30,0.9217,0.8983,0.9433,28/30,116000
+rule,geometry_bias,30,0.8917,0.8633,0.9183,30/30,76000

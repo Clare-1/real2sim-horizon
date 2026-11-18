@@ -1,0 +1,4245 @@
+{
+  "fingerprint": "4558038bfdb726664a4ed132840b56cd77187368af4e417c711464482bd39031",
+  "records": [
+    {
+      "bank_index": 0,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.5416666666666666,
+            "per_subgoal": {
+              "subgoal0": 13,
+              "subgoal1": 4,
+              "subgoal2": 6,
+              "subgoal3": 1
+            },
+            "residual": 0.011229331600885087,
+            "sr": 0.0
+          },
+          "reason": "fixed recipe: calibrate first round",
+          "round": 1,
+          "sr_after": 0.7,
+          "sr_before": 0.15,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5555555555555556,
+            "per_subgoal": {
+              "subgoal0": 5,
+              "subgoal1": 3,
+              "subgoal2": 1
+            },
+            "residual": 0.00013040548526262186,
+            "sr": 0.625
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 2,
+          "sr_after": 0.9,
+          "sr_before": 0.7,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.3333333333333333,
+            "per_subgoal": {
+              "subgoal0": 1,
+              "subgoal2": 1,
+              "subgoal3": 1
+            },
+            "residual": 0.00044661972159647234,
+            "sr": 0.875
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 3,
+          "sr_after": 0.8,
+          "sr_before": 0.9,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.8,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "fixed"
+    },
+    {
+      "bank_index": 0,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.5416666666666666,
+            "per_subgoal": {
+              "subgoal0": 13,
+              "subgoal1": 4,
+              "subgoal2": 6,
+              "subgoal3": 1
+            },
+            "residual": 0.011229331600885087,
+            "sr": 0.0
+          },
+          "reason": "residual 11.2mm > 4mm",
+          "round": 1,
+          "sr_after": 0.7,
+          "sr_before": 0.15,
+          "target": null
+        },
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5555555555555556,
+            "per_subgoal": {
+              "subgoal0": 5,
+              "subgoal1": 3,
+              "subgoal2": 1
+            },
+            "residual": 0.00013040548526262186,
+            "sr": 0.625
+          },
+          "reason": "56% of failures in subgoal0",
+          "round": 2,
+          "sr_after": 0.95,
+          "sr_before": 0.7,
+          "target": "subgoal0"
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5,
+            "per_subgoal": {
+              "subgoal0": 1,
+              "subgoal1": 1
+            },
+            "residual": 0.0003425600274225074,
+            "sr": 0.9166666666666666
+          },
+          "reason": "default: one DAgger round",
+          "round": 3,
+          "sr_after": 0.9,
+          "sr_before": 0.95,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.9,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "rule"
+    },
+    {
+      "bank_index": 0,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.5416666666666666,
+            "per_subgoal": {
+              "subgoal0": 13,
+              "subgoal1": 4,
+              "subgoal2": 6,
+              "subgoal3": 1
+            },
+            "residual": 0.011229331600885087,
+            "sr": 0.0
+          },
+          "reason": "oracle: geometry_bias step 1",
+          "round": 1,
+          "sr_after": 0.7,
+          "sr_before": 0.15,
+          "target": null
+        },
+        {
+          "action": "regenerate_uniform",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.5555555555555556,
+            "per_subgoal": {
+              "subgoal0": 5,
+              "subgoal1": 3,
+              "subgoal2": 1
+            },
+            "residual": 0.00013040548526262186,
+            "sr": 0.625
+          },
+          "reason": "oracle: geometry_bias step 2",
+          "round": 2,
+          "sr_after": 0.95,
+          "sr_before": 0.7,
+          "target": null
+        },
+        {
+          "action": "regenerate_uniform",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5,
+            "per_subgoal": {
+              "subgoal0": 1,
+              "subgoal1": 1
+            },
+            "residual": 0.0003425600274225074,
+            "sr": 0.9166666666666666
+          },
+          "reason": "oracle: repeat the cause's best operation",
+          "round": 3,
+          "sr_after": 0.95,
+          "sr_before": 0.95,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.95,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "oracle"
+    },
+    {
+      "bank_index": 1,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.4444444444444444,
+            "per_subgoal": {
+              "subgoal0": 4,
+              "subgoal1": 8,
+              "subgoal2": 4,
+              "subgoal3": 2
+            },
+            "residual": 0.010775307531402198,
+            "sr": 0.25
+          },
+          "reason": "fixed recipe: calibrate first round",
+          "round": 1,
+          "sr_after": 0.8,
+          "sr_before": 0.15,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.6153846153846154,
+            "per_subgoal": {
+              "subgoal0": 8,
+              "subgoal1": 3,
+              "subgoal2": 1,
+              "subgoal3": 1
+            },
+            "residual": 0.001189629062252076,
+            "sr": 0.45833333333333337
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 2,
+          "sr_after": 0.7,
+          "sr_before": 0.8,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 1.0,
+            "per_subgoal": {
+              "subgoal0": 7
+            },
+            "residual": 0.0006240523615534156,
+            "sr": 0.7083333333333333
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 3,
+          "sr_after": 0.75,
+          "sr_before": 0.7,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.75,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "fixed"
+    },
+    {
+      "bank_index": 1,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.4444444444444444,
+            "per_subgoal": {
+              "subgoal0": 4,
+              "subgoal1": 8,
+              "subgoal2": 4,
+              "subgoal3": 2
+            },
+            "residual": 0.010775307531402198,
+            "sr": 0.25
+          },
+          "reason": "residual 10.8mm > 4mm",
+          "round": 1,
+          "sr_after": 0.8,
+          "sr_before": 0.15,
+          "target": null
+        },
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.6153846153846154,
+            "per_subgoal": {
+              "subgoal0": 8,
+              "subgoal1": 3,
+              "subgoal2": 1,
+              "subgoal3": 1
+            },
+            "residual": 0.001189629062252076,
+            "sr": 0.45833333333333337
+          },
+          "reason": "62% of failures in subgoal0",
+          "round": 2,
+          "sr_after": 0.9,
+          "sr_before": 0.8,
+          "target": "subgoal0"
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.75,
+            "per_subgoal": {
+              "subgoal1": 3,
+              "subgoal2": 1
+            },
+            "residual": 1.2202831585948759e-05,
+            "sr": 0.8333333333333334
+          },
+          "reason": "default: one DAgger round",
+          "round": 3,
+          "sr_after": 0.85,
+          "sr_before": 0.9,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.85,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "rule"
+    },
+    {
+      "bank_index": 1,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.4444444444444444,
+            "per_subgoal": {
+              "subgoal0": 4,
+              "subgoal1": 8,
+              "subgoal2": 4,
+              "subgoal3": 2
+            },
+            "residual": 0.010775307531402198,
+            "sr": 0.25
+          },
+          "reason": "oracle: geometry_bias step 1",
+          "round": 1,
+          "sr_after": 0.8,
+          "sr_before": 0.15,
+          "target": null
+        },
+        {
+          "action": "regenerate_uniform",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.6153846153846154,
+            "per_subgoal": {
+              "subgoal0": 8,
+              "subgoal1": 3,
+              "subgoal2": 1,
+              "subgoal3": 1
+            },
+            "residual": 0.001189629062252076,
+            "sr": 0.45833333333333337
+          },
+          "reason": "oracle: geometry_bias step 2",
+          "round": 2,
+          "sr_after": 0.9,
+          "sr_before": 0.8,
+          "target": null
+        },
+        {
+          "action": "regenerate_uniform",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.75,
+            "per_subgoal": {
+              "subgoal1": 3,
+              "subgoal2": 1
+            },
+            "residual": 1.2202831585948759e-05,
+            "sr": 0.8333333333333334
+          },
+          "reason": "oracle: repeat the cause's best operation",
+          "round": 3,
+          "sr_after": 0.9,
+          "sr_before": 0.9,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.9,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "oracle"
+    },
+    {
+      "bank_index": 2,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.47058823529411764,
+            "per_subgoal": {
+              "subgoal0": 8,
+              "subgoal1": 2,
+              "subgoal2": 6,
+              "subgoal3": 1
+            },
+            "residual": 0.010773676506511985,
+            "sr": 0.29166666666666663
+          },
+          "reason": "fixed recipe: calibrate first round",
+          "round": 1,
+          "sr_after": 0.6,
+          "sr_before": 0.2,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5,
+            "per_subgoal": {
+              "subgoal0": 5,
+              "subgoal1": 2,
+              "subgoal2": 2,
+              "subgoal3": 1
+            },
+            "residual": 0.000646389002156942,
+            "sr": 0.5833333333333333
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 2,
+          "sr_after": 0.9,
+          "sr_before": 0.6,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5,
+            "per_subgoal": {
+              "subgoal0": 1,
+              "subgoal1": 2,
+              "subgoal2": 1
+            },
+            "residual": 5.7764584732309526e-05,
+            "sr": 0.8333333333333334
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 3,
+          "sr_after": 0.7,
+          "sr_before": 0.9,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.7,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "fixed"
+    },
+    {
+      "bank_index": 2,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.47058823529411764,
+            "per_subgoal": {
+              "subgoal0": 8,
+              "subgoal1": 2,
+              "subgoal2": 6,
+              "subgoal3": 1
+            },
+            "residual": 0.010773676506511985,
+            "sr": 0.29166666666666663
+          },
+          "reason": "residual 10.8mm > 4mm",
+          "round": 1,
+          "sr_after": 0.6,
+          "sr_before": 0.2,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5,
+            "per_subgoal": {
+              "subgoal0": 5,
+              "subgoal1": 2,
+              "subgoal2": 2,
+              "subgoal3": 1
+            },
+            "residual": 0.000646389002156942,
+            "sr": 0.5833333333333333
+          },
+          "reason": "default: one DAgger round",
+          "round": 2,
+          "sr_after": 0.9,
+          "sr_before": 0.6,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5,
+            "per_subgoal": {
+              "subgoal0": 1,
+              "subgoal1": 2,
+              "subgoal2": 1
+            },
+            "residual": 5.7764584732309526e-05,
+            "sr": 0.8333333333333334
+          },
+          "reason": "default: one DAgger round",
+          "round": 3,
+          "sr_after": 0.7,
+          "sr_before": 0.9,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.7,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "rule"
+    },
+    {
+      "bank_index": 2,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.47058823529411764,
+            "per_subgoal": {
+              "subgoal0": 8,
+              "subgoal1": 2,
+              "subgoal2": 6,
+              "subgoal3": 1
+            },
+            "residual": 0.010773676506511985,
+            "sr": 0.29166666666666663
+          },
+          "reason": "oracle: geometry_bias step 1",
+          "round": 1,
+          "sr_after": 0.6,
+          "sr_before": 0.2,
+          "target": null
+        },
+        {
+          "action": "regenerate_uniform",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.5,
+            "per_subgoal": {
+              "subgoal0": 5,
+              "subgoal1": 2,
+              "subgoal2": 2,
+              "subgoal3": 1
+            },
+            "residual": 0.000646389002156942,
+            "sr": 0.5833333333333333
+          },
+          "reason": "oracle: geometry_bias step 2",
+          "round": 2,
+          "sr_after": 0.9,
+          "sr_before": 0.6,
+          "target": null
+        },
+        {
+          "action": "stop",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.0,
+            "per_subgoal": {},
+            "residual": 0.00024045808733422214,
+            "sr": 1.0
+          },
+          "reason": "already solved",
+          "round": 3,
+          "sr_after": 0.9,
+          "sr_before": 0.9,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.9,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 40000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "oracle"
+    },
+    {
+      "bank_index": 3,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.3333333333333333,
+            "per_subgoal": {
+              "subgoal0": 6,
+              "subgoal1": 7,
+              "subgoal2": 5,
+              "subgoal3": 3
+            },
+            "residual": 0.011419978172350558,
+            "sr": 0.125
+          },
+          "reason": "fixed recipe: calibrate first round",
+          "round": 1,
+          "sr_after": 0.75,
+          "sr_before": 0.15,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.4444444444444444,
+            "per_subgoal": {
+              "subgoal0": 3,
+              "subgoal1": 4,
+              "subgoal2": 1,
+              "subgoal3": 1
+            },
+            "residual": 0.0005674738428905479,
+            "sr": 0.625
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 2,
+          "sr_after": 0.85,
+          "sr_before": 0.75,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.75,
+            "per_subgoal": {
+              "subgoal0": 3,
+              "subgoal1": 1
+            },
+            "residual": 0.00025190860097361323,
+            "sr": 0.8333333333333334
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 3,
+          "sr_after": 0.85,
+          "sr_before": 0.85,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.85,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "fixed"
+    },
+    {
+      "bank_index": 3,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.3333333333333333,
+            "per_subgoal": {
+              "subgoal0": 6,
+              "subgoal1": 7,
+              "subgoal2": 5,
+              "subgoal3": 3
+            },
+            "residual": 0.011419978172350558,
+            "sr": 0.125
+          },
+          "reason": "residual 11.4mm > 4mm",
+          "round": 1,
+          "sr_after": 0.75,
+          "sr_before": 0.15,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.4444444444444444,
+            "per_subgoal": {
+              "subgoal0": 3,
+              "subgoal1": 4,
+              "subgoal2": 1,
+              "subgoal3": 1
+            },
+            "residual": 0.0005674738428905479,
+            "sr": 0.625
+          },
+          "reason": "default: one DAgger round",
+          "round": 2,
+          "sr_after": 0.85,
+          "sr_before": 0.75,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.75,
+            "per_subgoal": {
+              "subgoal0": 3,
+              "subgoal1": 1
+            },
+            "residual": 0.00025190860097361323,
+            "sr": 0.8333333333333334
+          },
+          "reason": "default: one DAgger round",
+          "round": 3,
+          "sr_after": 0.85,
+          "sr_before": 0.85,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.85,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "rule"
+    },
+    {
+      "bank_index": 3,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.3333333333333333,
+            "per_subgoal": {
+              "subgoal0": 6,
+              "subgoal1": 7,
+              "subgoal2": 5,
+              "subgoal3": 3
+            },
+            "residual": 0.011419978172350558,
+            "sr": 0.125
+          },
+          "reason": "oracle: geometry_bias step 1",
+          "round": 1,
+          "sr_after": 0.75,
+          "sr_before": 0.15,
+          "target": null
+        },
+        {
+          "action": "regenerate_uniform",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.4444444444444444,
+            "per_subgoal": {
+              "subgoal0": 3,
+              "subgoal1": 4,
+              "subgoal2": 1,
+              "subgoal3": 1
+            },
+            "residual": 0.0005674738428905479,
+            "sr": 0.625
+          },
+          "reason": "oracle: geometry_bias step 2",
+          "round": 2,
+          "sr_after": 1.0,
+          "sr_before": 0.75,
+          "target": null
+        },
+        {
+          "action": "regenerate_uniform",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.6,
+            "per_subgoal": {
+              "subgoal0": 1,
+              "subgoal1": 1,
+              "subgoal2": 3
+            },
+            "residual": 0.0003136249974939123,
+            "sr": 0.7916666666666666
+          },
+          "reason": "oracle: repeat the cause's best operation",
+          "round": 3,
+          "sr_after": 0.95,
+          "sr_before": 1.0,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.95,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "oracle"
+    },
+    {
+      "bank_index": 4,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.42105263157894735,
+            "per_subgoal": {
+              "subgoal0": 4,
+              "subgoal1": 8,
+              "subgoal2": 6,
+              "subgoal3": 1
+            },
+            "residual": 0.010795528612167773,
+            "sr": 0.20833333333333337
+          },
+          "reason": "fixed recipe: calibrate first round",
+          "round": 1,
+          "sr_after": 0.7,
+          "sr_before": 0.2,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.7,
+            "per_subgoal": {
+              "subgoal0": 7,
+              "subgoal1": 2,
+              "subgoal3": 1
+            },
+            "residual": 0.00055056613837072,
+            "sr": 0.5833333333333333
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 2,
+          "sr_after": 0.9,
+          "sr_before": 0.7,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.42857142857142855,
+            "per_subgoal": {
+              "subgoal0": 4,
+              "subgoal1": 6,
+              "subgoal2": 2,
+              "subgoal3": 2
+            },
+            "residual": 0.00022079308243784512,
+            "sr": 0.41666666666666663
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 3,
+          "sr_after": 0.8,
+          "sr_before": 0.9,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.8,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "fixed"
+    },
+    {
+      "bank_index": 4,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.42105263157894735,
+            "per_subgoal": {
+              "subgoal0": 4,
+              "subgoal1": 8,
+              "subgoal2": 6,
+              "subgoal3": 1
+            },
+            "residual": 0.010795528612167773,
+            "sr": 0.20833333333333337
+          },
+          "reason": "residual 10.8mm > 4mm",
+          "round": 1,
+          "sr_after": 0.7,
+          "sr_before": 0.2,
+          "target": null
+        },
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.7,
+            "per_subgoal": {
+              "subgoal0": 7,
+              "subgoal1": 2,
+              "subgoal3": 1
+            },
+            "residual": 0.00055056613837072,
+            "sr": 0.5833333333333333
+          },
+          "reason": "70% of failures in subgoal0",
+          "round": 2,
+          "sr_after": 1.0,
+          "sr_before": 0.7,
+          "target": "subgoal0"
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.6,
+            "per_subgoal": {
+              "subgoal0": 1,
+              "subgoal1": 3,
+              "subgoal3": 1
+            },
+            "residual": 0.00013806444904629692,
+            "sr": 0.7916666666666666
+          },
+          "reason": "default: one DAgger round",
+          "round": 3,
+          "sr_after": 0.95,
+          "sr_before": 1.0,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.95,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "rule"
+    },
+    {
+      "bank_index": 4,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.42105263157894735,
+            "per_subgoal": {
+              "subgoal0": 4,
+              "subgoal1": 8,
+              "subgoal2": 6,
+              "subgoal3": 1
+            },
+            "residual": 0.010795528612167773,
+            "sr": 0.20833333333333337
+          },
+          "reason": "oracle: geometry_bias step 1",
+          "round": 1,
+          "sr_after": 0.7,
+          "sr_before": 0.2,
+          "target": null
+        },
+        {
+          "action": "regenerate_uniform",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.7,
+            "per_subgoal": {
+              "subgoal0": 7,
+              "subgoal1": 2,
+              "subgoal3": 1
+            },
+            "residual": 0.00055056613837072,
+            "sr": 0.5833333333333333
+          },
+          "reason": "oracle: geometry_bias step 2",
+          "round": 2,
+          "sr_after": 1.0,
+          "sr_before": 0.7,
+          "target": null
+        },
+        {
+          "action": "regenerate_uniform",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.6,
+            "per_subgoal": {
+              "subgoal0": 1,
+              "subgoal1": 3,
+              "subgoal3": 1
+            },
+            "residual": 0.00013806444904629692,
+            "sr": 0.7916666666666666
+          },
+          "reason": "oracle: repeat the cause's best operation",
+          "round": 3,
+          "sr_after": 0.95,
+          "sr_before": 1.0,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.95,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "oracle"
+    },
+    {
+      "bank_index": 5,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.6,
+            "per_subgoal": {
+              "subgoal0": 12,
+              "subgoal1": 4,
+              "subgoal2": 3,
+              "subgoal3": 1
+            },
+            "residual": 0.011608884803226922,
+            "sr": 0.16666666666666663
+          },
+          "reason": "fixed recipe: calibrate first round",
+          "round": 1,
+          "sr_after": 0.7,
+          "sr_before": 0.15,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.8181818181818182,
+            "per_subgoal": {
+              "subgoal0": 9,
+              "subgoal1": 2
+            },
+            "residual": 0.0006572075738585093,
+            "sr": 0.5416666666666667
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 2,
+          "sr_after": 0.7,
+          "sr_before": 0.7,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 1.0,
+            "per_subgoal": {
+              "subgoal1": 1
+            },
+            "residual": 0.0005623600259763613,
+            "sr": 0.9583333333333334
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 3,
+          "sr_after": 0.8,
+          "sr_before": 0.7,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.8,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "fixed"
+    },
+    {
+      "bank_index": 5,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.6,
+            "per_subgoal": {
+              "subgoal0": 12,
+              "subgoal1": 4,
+              "subgoal2": 3,
+              "subgoal3": 1
+            },
+            "residual": 0.011608884803226922,
+            "sr": 0.16666666666666663
+          },
+          "reason": "residual 11.6mm > 4mm",
+          "round": 1,
+          "sr_after": 0.7,
+          "sr_before": 0.15,
+          "target": null
+        },
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.8181818181818182,
+            "per_subgoal": {
+              "subgoal0": 9,
+              "subgoal1": 2
+            },
+            "residual": 0.0006572075738585093,
+            "sr": 0.5416666666666667
+          },
+          "reason": "82% of failures in subgoal0",
+          "round": 2,
+          "sr_after": 1.0,
+          "sr_before": 0.7,
+          "target": "subgoal0"
+        },
+        {
+          "action": "stop",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.0,
+            "per_subgoal": {},
+            "residual": 0.0006990015816673509,
+            "sr": 1.0
+          },
+          "reason": "already solved",
+          "round": 3,
+          "sr_after": 1.0,
+          "sr_before": 1.0,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 1.0,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 40000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "rule"
+    },
+    {
+      "bank_index": 5,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.6,
+            "per_subgoal": {
+              "subgoal0": 12,
+              "subgoal1": 4,
+              "subgoal2": 3,
+              "subgoal3": 1
+            },
+            "residual": 0.011608884803226922,
+            "sr": 0.16666666666666663
+          },
+          "reason": "oracle: geometry_bias step 1",
+          "round": 1,
+          "sr_after": 0.7,
+          "sr_before": 0.15,
+          "target": null
+        },
+        {
+          "action": "regenerate_uniform",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.8181818181818182,
+            "per_subgoal": {
+              "subgoal0": 9,
+              "subgoal1": 2
+            },
+            "residual": 0.0006572075738585093,
+            "sr": 0.5416666666666667
+          },
+          "reason": "oracle: geometry_bias step 2",
+          "round": 2,
+          "sr_after": 1.0,
+          "sr_before": 0.7,
+          "target": null
+        },
+        {
+          "action": "stop",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.0,
+            "per_subgoal": {},
+            "residual": 0.0006990015816673509,
+            "sr": 1.0
+          },
+          "reason": "already solved",
+          "round": 3,
+          "sr_after": 1.0,
+          "sr_before": 1.0,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 1.0,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 40000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "oracle"
+    },
+    {
+      "bank_index": 6,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.3333333333333333,
+            "per_subgoal": {
+              "subgoal0": 7,
+              "subgoal1": 7,
+              "subgoal2": 5,
+              "subgoal3": 2
+            },
+            "residual": 0.01136042702835328,
+            "sr": 0.125
+          },
+          "reason": "fixed recipe: calibrate first round",
+          "round": 1,
+          "sr_after": 0.45,
+          "sr_before": 0.35,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.75,
+            "per_subgoal": {
+              "subgoal0": 3,
+              "subgoal1": 1
+            },
+            "residual": 0.000604579950696401,
+            "sr": 0.8333333333333334
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 2,
+          "sr_after": 0.7,
+          "sr_before": 0.45,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5,
+            "per_subgoal": {
+              "subgoal0": 1,
+              "subgoal2": 1
+            },
+            "residual": 0.00019906440333971806,
+            "sr": 0.9166666666666666
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 3,
+          "sr_after": 0.95,
+          "sr_before": 0.7,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.95,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "fixed"
+    },
+    {
+      "bank_index": 6,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.3333333333333333,
+            "per_subgoal": {
+              "subgoal0": 7,
+              "subgoal1": 7,
+              "subgoal2": 5,
+              "subgoal3": 2
+            },
+            "residual": 0.01136042702835328,
+            "sr": 0.125
+          },
+          "reason": "residual 11.4mm > 4mm",
+          "round": 1,
+          "sr_after": 0.45,
+          "sr_before": 0.35,
+          "target": null
+        },
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.75,
+            "per_subgoal": {
+              "subgoal0": 3,
+              "subgoal1": 1
+            },
+            "residual": 0.000604579950696401,
+            "sr": 0.8333333333333334
+          },
+          "reason": "75% of failures in subgoal0",
+          "round": 2,
+          "sr_after": 0.9,
+          "sr_before": 0.45,
+          "target": "subgoal0"
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 1.0,
+            "per_subgoal": {
+              "subgoal1": 1
+            },
+            "residual": 0.00027369039501693934,
+            "sr": 0.9583333333333334
+          },
+          "reason": "default: one DAgger round",
+          "round": 3,
+          "sr_after": 0.75,
+          "sr_before": 0.9,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.75,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "rule"
+    },
+    {
+      "bank_index": 6,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.3333333333333333,
+            "per_subgoal": {
+              "subgoal0": 7,
+              "subgoal1": 7,
+              "subgoal2": 5,
+              "subgoal3": 2
+            },
+            "residual": 0.01136042702835328,
+            "sr": 0.125
+          },
+          "reason": "oracle: geometry_bias step 1",
+          "round": 1,
+          "sr_after": 0.45,
+          "sr_before": 0.35,
+          "target": null
+        },
+        {
+          "action": "regenerate_uniform",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.75,
+            "per_subgoal": {
+              "subgoal0": 3,
+              "subgoal1": 1
+            },
+            "residual": 0.000604579950696401,
+            "sr": 0.8333333333333334
+          },
+          "reason": "oracle: geometry_bias step 2",
+          "round": 2,
+          "sr_after": 0.9,
+          "sr_before": 0.45,
+          "target": null
+        },
+        {
+          "action": "regenerate_uniform",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 1.0,
+            "per_subgoal": {
+              "subgoal1": 1
+            },
+            "residual": 0.00027369039501693934,
+            "sr": 0.9583333333333334
+          },
+          "reason": "oracle: repeat the cause's best operation",
+          "round": 3,
+          "sr_after": 1.0,
+          "sr_before": 0.9,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 1.0,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "oracle"
+    },
+    {
+      "bank_index": 7,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.42857142857142855,
+            "per_subgoal": {
+              "subgoal0": 6,
+              "subgoal1": 5,
+              "subgoal2": 9,
+              "subgoal3": 1
+            },
+            "residual": 0.011421616441874755,
+            "sr": 0.125
+          },
+          "reason": "fixed recipe: calibrate first round",
+          "round": 1,
+          "sr_after": 0.55,
+          "sr_before": 0.05,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 1.0,
+            "per_subgoal": {
+              "subgoal0": 11
+            },
+            "residual": 0.000727679863472417,
+            "sr": 0.5416666666666667
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 2,
+          "sr_after": 0.8,
+          "sr_before": 0.55,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.6666666666666666,
+            "per_subgoal": {
+              "subgoal0": 2,
+              "subgoal1": 1
+            },
+            "residual": 0.00038637578586252566,
+            "sr": 0.875
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 3,
+          "sr_after": 0.9,
+          "sr_before": 0.8,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.9,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "fixed"
+    },
+    {
+      "bank_index": 7,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.42857142857142855,
+            "per_subgoal": {
+              "subgoal0": 6,
+              "subgoal1": 5,
+              "subgoal2": 9,
+              "subgoal3": 1
+            },
+            "residual": 0.011421616441874755,
+            "sr": 0.125
+          },
+          "reason": "residual 11.4mm > 4mm",
+          "round": 1,
+          "sr_after": 0.55,
+          "sr_before": 0.05,
+          "target": null
+        },
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 1.0,
+            "per_subgoal": {
+              "subgoal0": 11
+            },
+            "residual": 0.000727679863472417,
+            "sr": 0.5416666666666667
+          },
+          "reason": "100% of failures in subgoal0",
+          "round": 2,
+          "sr_after": 0.95,
+          "sr_before": 0.55,
+          "target": "subgoal0"
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5,
+            "per_subgoal": {
+              "subgoal0": 1,
+              "subgoal1": 1
+            },
+            "residual": 0.0001466715169912182,
+            "sr": 0.9166666666666666
+          },
+          "reason": "default: one DAgger round",
+          "round": 3,
+          "sr_after": 0.85,
+          "sr_before": 0.95,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.85,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "rule"
+    },
+    {
+      "bank_index": 7,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.42857142857142855,
+            "per_subgoal": {
+              "subgoal0": 6,
+              "subgoal1": 5,
+              "subgoal2": 9,
+              "subgoal3": 1
+            },
+            "residual": 0.011421616441874755,
+            "sr": 0.125
+          },
+          "reason": "oracle: geometry_bias step 1",
+          "round": 1,
+          "sr_after": 0.55,
+          "sr_before": 0.05,
+          "target": null
+        },
+        {
+          "action": "regenerate_uniform",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 1.0,
+            "per_subgoal": {
+              "subgoal0": 11
+            },
+            "residual": 0.000727679863472417,
+            "sr": 0.5416666666666667
+          },
+          "reason": "oracle: geometry_bias step 2",
+          "round": 2,
+          "sr_after": 0.95,
+          "sr_before": 0.55,
+          "target": null
+        },
+        {
+          "action": "regenerate_uniform",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5,
+            "per_subgoal": {
+              "subgoal0": 1,
+              "subgoal1": 1
+            },
+            "residual": 0.0001466715169912182,
+            "sr": 0.9166666666666666
+          },
+          "reason": "oracle: repeat the cause's best operation",
+          "round": 3,
+          "sr_after": 1.0,
+          "sr_before": 0.95,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 1.0,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "oracle"
+    },
+    {
+      "bank_index": 8,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.4090909090909091,
+            "per_subgoal": {
+              "subgoal0": 6,
+              "subgoal1": 5,
+              "subgoal2": 9,
+              "subgoal3": 2
+            },
+            "residual": 0.01038070503714689,
+            "sr": 0.08333333333333337
+          },
+          "reason": "fixed recipe: calibrate first round",
+          "round": 1,
+          "sr_after": 0.65,
+          "sr_before": 0.15,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.6666666666666666,
+            "per_subgoal": {
+              "subgoal0": 4,
+              "subgoal1": 1,
+              "subgoal2": 1
+            },
+            "residual": 0.0006208563412439666,
+            "sr": 0.75
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 2,
+          "sr_after": 0.85,
+          "sr_before": 0.65,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5,
+            "per_subgoal": {
+              "subgoal0": 2,
+              "subgoal1": 3,
+              "subgoal3": 1
+            },
+            "residual": 0.00040587183401835647,
+            "sr": 0.75
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 3,
+          "sr_after": 0.9,
+          "sr_before": 0.85,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.9,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "fixed"
+    },
+    {
+      "bank_index": 8,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.4090909090909091,
+            "per_subgoal": {
+              "subgoal0": 6,
+              "subgoal1": 5,
+              "subgoal2": 9,
+              "subgoal3": 2
+            },
+            "residual": 0.01038070503714689,
+            "sr": 0.08333333333333337
+          },
+          "reason": "residual 10.4mm > 4mm",
+          "round": 1,
+          "sr_after": 0.65,
+          "sr_before": 0.15,
+          "target": null
+        },
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.6666666666666666,
+            "per_subgoal": {
+              "subgoal0": 4,
+              "subgoal1": 1,
+              "subgoal2": 1
+            },
+            "residual": 0.0006208563412439666,
+            "sr": 0.75
+          },
+          "reason": "67% of failures in subgoal0",
+          "round": 2,
+          "sr_after": 1.0,
+          "sr_before": 0.65,
+          "target": "subgoal0"
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.6666666666666666,
+            "per_subgoal": {
+              "subgoal0": 2,
+              "subgoal3": 1
+            },
+            "residual": 0.0005990797832481076,
+            "sr": 0.875
+          },
+          "reason": "default: one DAgger round",
+          "round": 3,
+          "sr_after": 0.9,
+          "sr_before": 1.0,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.9,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "rule"
+    },
+    {
+      "bank_index": 8,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.4090909090909091,
+            "per_subgoal": {
+              "subgoal0": 6,
+              "subgoal1": 5,
+              "subgoal2": 9,
+              "subgoal3": 2
+            },
+            "residual": 0.01038070503714689,
+            "sr": 0.08333333333333337
+          },
+          "reason": "oracle: geometry_bias step 1",
+          "round": 1,
+          "sr_after": 0.65,
+          "sr_before": 0.15,
+          "target": null
+        },
+        {
+          "action": "regenerate_uniform",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.6666666666666666,
+            "per_subgoal": {
+              "subgoal0": 4,
+              "subgoal1": 1,
+              "subgoal2": 1
+            },
+            "residual": 0.0006208563412439666,
+            "sr": 0.75
+          },
+          "reason": "oracle: geometry_bias step 2",
+          "round": 2,
+          "sr_after": 1.0,
+          "sr_before": 0.65,
+          "target": null
+        },
+        {
+          "action": "regenerate_uniform",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.6666666666666666,
+            "per_subgoal": {
+              "subgoal0": 2,
+              "subgoal3": 1
+            },
+            "residual": 0.0005990797832481076,
+            "sr": 0.875
+          },
+          "reason": "oracle: repeat the cause's best operation",
+          "round": 3,
+          "sr_after": 1.0,
+          "sr_before": 1.0,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 1.0,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "oracle"
+    },
+    {
+      "bank_index": 9,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.5454545454545454,
+            "per_subgoal": {
+              "subgoal0": 5,
+              "subgoal1": 5,
+              "subgoal2": 12
+            },
+            "residual": 0.010886539167467176,
+            "sr": 0.08333333333333337
+          },
+          "reason": "fixed recipe: calibrate first round",
+          "round": 1,
+          "sr_after": 0.75,
+          "sr_before": 0.25,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5714285714285714,
+            "per_subgoal": {
+              "subgoal0": 4,
+              "subgoal1": 3
+            },
+            "residual": 0.0003417437694177017,
+            "sr": 0.7083333333333333
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 2,
+          "sr_after": 0.85,
+          "sr_before": 0.75,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5,
+            "per_subgoal": {
+              "subgoal0": 2,
+              "subgoal1": 2
+            },
+            "residual": 0.0003868442239624362,
+            "sr": 0.8333333333333334
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 3,
+          "sr_after": 0.9,
+          "sr_before": 0.85,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.9,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "fixed"
+    },
+    {
+      "bank_index": 9,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.5454545454545454,
+            "per_subgoal": {
+              "subgoal0": 5,
+              "subgoal1": 5,
+              "subgoal2": 12
+            },
+            "residual": 0.010886539167467176,
+            "sr": 0.08333333333333337
+          },
+          "reason": "residual 10.9mm > 4mm",
+          "round": 1,
+          "sr_after": 0.75,
+          "sr_before": 0.25,
+          "target": null
+        },
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5714285714285714,
+            "per_subgoal": {
+              "subgoal0": 4,
+              "subgoal1": 3
+            },
+            "residual": 0.0003417437694177017,
+            "sr": 0.7083333333333333
+          },
+          "reason": "57% of failures in subgoal0",
+          "round": 2,
+          "sr_after": 1.0,
+          "sr_before": 0.75,
+          "target": "subgoal0"
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 1.0,
+            "per_subgoal": {
+              "subgoal2": 1
+            },
+            "residual": 0.0002313266772797154,
+            "sr": 0.9583333333333334
+          },
+          "reason": "default: one DAgger round",
+          "round": 3,
+          "sr_after": 0.95,
+          "sr_before": 1.0,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.95,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "rule"
+    },
+    {
+      "bank_index": 9,
+      "calibrations": 1,
+      "cause": "geometry_bias",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.5454545454545454,
+            "per_subgoal": {
+              "subgoal0": 5,
+              "subgoal1": 5,
+              "subgoal2": 12
+            },
+            "residual": 0.010886539167467176,
+            "sr": 0.08333333333333337
+          },
+          "reason": "oracle: geometry_bias step 1",
+          "round": 1,
+          "sr_after": 0.75,
+          "sr_before": 0.25,
+          "target": null
+        },
+        {
+          "action": "regenerate_uniform",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.5714285714285714,
+            "per_subgoal": {
+              "subgoal0": 4,
+              "subgoal1": 3
+            },
+            "residual": 0.0003417437694177017,
+            "sr": 0.7083333333333333
+          },
+          "reason": "oracle: geometry_bias step 2",
+          "round": 2,
+          "sr_after": 1.0,
+          "sr_before": 0.75,
+          "target": null
+        },
+        {
+          "action": "regenerate_uniform",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 1.0,
+            "per_subgoal": {
+              "subgoal2": 1
+            },
+            "residual": 0.0002313266772797154,
+            "sr": 0.9583333333333334
+          },
+          "reason": "oracle: repeat the cause's best operation",
+          "round": 3,
+          "sr_after": 1.0,
+          "sr_before": 1.0,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 1.0,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "geometry",
+      "seed": 0,
+      "selector": "oracle"
+    },
+    {
+      "bank_index": 0,
+      "calibrations": 1,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.9565217391304348,
+            "per_subgoal": {
+              "subgoal0": 22,
+              "subgoal3": 1
+            },
+            "residual": null,
+            "sr": 0.04166666666666663
+          },
+          "reason": "fixed recipe: calibrate first round",
+          "round": 1,
+          "sr_after": 0.1,
+          "sr_before": 0.1,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.782608695652174,
+            "per_subgoal": {
+              "subgoal0": 18,
+              "subgoal1": 5
+            },
+            "residual": 0.0014892402567777165,
+            "sr": 0.04166666666666663
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 2,
+          "sr_after": 0.25,
+          "sr_before": 0.1,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.375,
+            "per_subgoal": {
+              "subgoal0": 2,
+              "subgoal1": 2,
+              "subgoal2": 1,
+              "subgoal3": 3
+            },
+            "residual": 0.0010695282737135034,
+            "sr": 0.6666666666666667
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 3,
+          "sr_after": 0.7,
+          "sr_before": 0.25,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.7,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": false,
+      "new_labels": 80000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "fixed"
+    },
+    {
+      "bank_index": 0,
+      "calibrations": 0,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.9565217391304348,
+            "per_subgoal": {
+              "subgoal0": 22,
+              "subgoal3": 1
+            },
+            "residual": null,
+            "sr": 0.04166666666666663
+          },
+          "reason": "96% of failures in subgoal0",
+          "round": 1,
+          "sr_after": 0.85,
+          "sr_before": 0.1,
+          "target": "subgoal0"
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5,
+            "per_subgoal": {
+              "subgoal0": 1,
+              "subgoal3": 1
+            },
+            "residual": 0.0016879644573378136,
+            "sr": 0.9166666666666666
+          },
+          "reason": "default: one DAgger round",
+          "round": 2,
+          "sr_after": 1.0,
+          "sr_before": 0.85,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5,
+            "per_subgoal": {
+              "subgoal0": 2,
+              "subgoal1": 1,
+              "subgoal3": 1
+            },
+            "residual": 0.00171540964727036,
+            "sr": 0.8333333333333334
+          },
+          "reason": "default: one DAgger round",
+          "round": 3,
+          "sr_after": 0.9,
+          "sr_before": 1.0,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.9,
+      "first_action": "regenerate_targeted",
+      "first_step_correct": true,
+      "new_labels": 120000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "rule"
+    },
+    {
+      "bank_index": 0,
+      "calibrations": 0,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.9565217391304348,
+            "per_subgoal": {
+              "subgoal0": 22,
+              "subgoal3": 1
+            },
+            "residual": null,
+            "sr": 0.04166666666666663
+          },
+          "reason": "oracle: coverage_deficit step 1",
+          "round": 1,
+          "sr_after": 0.85,
+          "sr_before": 0.1,
+          "target": null
+        },
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5,
+            "per_subgoal": {
+              "subgoal0": 1,
+              "subgoal3": 1
+            },
+            "residual": 0.0016879644573378136,
+            "sr": 0.9166666666666666
+          },
+          "reason": "oracle: repeat the cause's best operation",
+          "round": 2,
+          "sr_after": 1.0,
+          "sr_before": 0.85,
+          "target": null
+        },
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 1.0,
+            "per_subgoal": {
+              "subgoal2": 1
+            },
+            "residual": 0.001765703133273483,
+            "sr": 0.9583333333333334
+          },
+          "reason": "oracle: repeat the cause's best operation",
+          "round": 3,
+          "sr_after": 1.0,
+          "sr_before": 1.0,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 1.0,
+      "first_action": "regenerate_targeted",
+      "first_step_correct": true,
+      "new_labels": 120000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "oracle"
+    },
+    {
+      "bank_index": 1,
+      "calibrations": 1,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.9166666666666666,
+            "per_subgoal": {
+              "subgoal0": 22,
+              "subgoal1": 2
+            },
+            "residual": null,
+            "sr": 0.0
+          },
+          "reason": "fixed recipe: calibrate first round",
+          "round": 1,
+          "sr_after": 0.05,
+          "sr_before": 0.05,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.8260869565217391,
+            "per_subgoal": {
+              "subgoal0": 19,
+              "subgoal1": 2,
+              "subgoal2": 2
+            },
+            "residual": 0.0002755379293587802,
+            "sr": 0.04166666666666663
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 2,
+          "sr_after": 0.2,
+          "sr_before": 0.05,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.75,
+            "per_subgoal": {
+              "subgoal0": 12,
+              "subgoal1": 2,
+              "subgoal3": 2
+            },
+            "residual": 0.0018983173946791297,
+            "sr": 0.33333333333333337
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 3,
+          "sr_after": 0.65,
+          "sr_before": 0.2,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.65,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": false,
+      "new_labels": 80000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "fixed"
+    },
+    {
+      "bank_index": 1,
+      "calibrations": 0,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.9166666666666666,
+            "per_subgoal": {
+              "subgoal0": 22,
+              "subgoal1": 2
+            },
+            "residual": null,
+            "sr": 0.0
+          },
+          "reason": "92% of failures in subgoal0",
+          "round": 1,
+          "sr_after": 0.9,
+          "sr_before": 0.05,
+          "target": "subgoal0"
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5,
+            "per_subgoal": {
+              "subgoal0": 1,
+              "subgoal1": 1
+            },
+            "residual": 0.0014347279955538549,
+            "sr": 0.9166666666666666
+          },
+          "reason": "default: one DAgger round",
+          "round": 2,
+          "sr_after": 0.9,
+          "sr_before": 0.9,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5,
+            "per_subgoal": {
+              "subgoal0": 1,
+              "subgoal1": 1
+            },
+            "residual": 0.0009680464273329921,
+            "sr": 0.9166666666666666
+          },
+          "reason": "default: one DAgger round",
+          "round": 3,
+          "sr_after": 0.9,
+          "sr_before": 0.9,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.9,
+      "first_action": "regenerate_targeted",
+      "first_step_correct": true,
+      "new_labels": 120000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "rule"
+    },
+    {
+      "bank_index": 1,
+      "calibrations": 0,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.9166666666666666,
+            "per_subgoal": {
+              "subgoal0": 22,
+              "subgoal1": 2
+            },
+            "residual": null,
+            "sr": 0.0
+          },
+          "reason": "oracle: coverage_deficit step 1",
+          "round": 1,
+          "sr_after": 0.9,
+          "sr_before": 0.05,
+          "target": null
+        },
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5,
+            "per_subgoal": {
+              "subgoal0": 1,
+              "subgoal1": 1
+            },
+            "residual": 0.0014347279955538549,
+            "sr": 0.9166666666666666
+          },
+          "reason": "oracle: repeat the cause's best operation",
+          "round": 2,
+          "sr_after": 0.9,
+          "sr_before": 0.9,
+          "target": null
+        },
+        {
+          "action": "stop",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.0,
+            "per_subgoal": {},
+            "residual": 0.0011830466833306595,
+            "sr": 1.0
+          },
+          "reason": "already solved",
+          "round": 3,
+          "sr_after": 0.9,
+          "sr_before": 0.9,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.9,
+      "first_action": "regenerate_targeted",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "oracle"
+    },
+    {
+      "bank_index": 2,
+      "calibrations": 1,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 1.0,
+            "per_subgoal": {
+              "subgoal0": 21
+            },
+            "residual": 0.0025470192094112325,
+            "sr": 0.125
+          },
+          "reason": "fixed recipe: calibrate first round",
+          "round": 1,
+          "sr_after": 0.1,
+          "sr_before": 0.1,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.782608695652174,
+            "per_subgoal": {
+              "subgoal0": 18,
+              "subgoal1": 3,
+              "subgoal2": 2
+            },
+            "residual": 0.0016421880020306458,
+            "sr": 0.04166666666666663
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 2,
+          "sr_after": 0.45,
+          "sr_before": 0.1,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.375,
+            "per_subgoal": {
+              "subgoal0": 6,
+              "subgoal1": 3,
+              "subgoal2": 5,
+              "subgoal3": 2
+            },
+            "residual": 0.001921616870592488,
+            "sr": 0.33333333333333337
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 3,
+          "sr_after": 0.8,
+          "sr_before": 0.45,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.8,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": false,
+      "new_labels": 80000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "fixed"
+    },
+    {
+      "bank_index": 2,
+      "calibrations": 0,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 1.0,
+            "per_subgoal": {
+              "subgoal0": 21
+            },
+            "residual": 0.0025470192094112325,
+            "sr": 0.125
+          },
+          "reason": "100% of failures in subgoal0",
+          "round": 1,
+          "sr_after": 1.0,
+          "sr_before": 0.1,
+          "target": "subgoal0"
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 1.0,
+            "per_subgoal": {
+              "subgoal0": 2
+            },
+            "residual": 0.0014091131606983227,
+            "sr": 0.9166666666666666
+          },
+          "reason": "default: one DAgger round",
+          "round": 2,
+          "sr_after": 1.0,
+          "sr_before": 1.0,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 1.0,
+            "per_subgoal": {
+              "subgoal1": 1
+            },
+            "residual": 0.00182572333954625,
+            "sr": 0.9583333333333334
+          },
+          "reason": "default: one DAgger round",
+          "round": 3,
+          "sr_after": 1.0,
+          "sr_before": 1.0,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 1.0,
+      "first_action": "regenerate_targeted",
+      "first_step_correct": true,
+      "new_labels": 120000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "rule"
+    },
+    {
+      "bank_index": 2,
+      "calibrations": 0,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 1.0,
+            "per_subgoal": {
+              "subgoal0": 21
+            },
+            "residual": 0.0025470192094112325,
+            "sr": 0.125
+          },
+          "reason": "oracle: coverage_deficit step 1",
+          "round": 1,
+          "sr_after": 1.0,
+          "sr_before": 0.1,
+          "target": null
+        },
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 1.0,
+            "per_subgoal": {
+              "subgoal0": 2
+            },
+            "residual": 0.0014091131606983227,
+            "sr": 0.9166666666666666
+          },
+          "reason": "oracle: repeat the cause's best operation",
+          "round": 2,
+          "sr_after": 1.0,
+          "sr_before": 1.0,
+          "target": null
+        },
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 1.0,
+            "per_subgoal": {
+              "subgoal1": 1
+            },
+            "residual": 0.0017786776280190354,
+            "sr": 0.9583333333333334
+          },
+          "reason": "oracle: repeat the cause's best operation",
+          "round": 3,
+          "sr_after": 1.0,
+          "sr_before": 1.0,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 1.0,
+      "first_action": "regenerate_targeted",
+      "first_step_correct": true,
+      "new_labels": 120000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "oracle"
+    },
+    {
+      "bank_index": 3,
+      "calibrations": 1,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.8260869565217391,
+            "per_subgoal": {
+              "subgoal0": 19,
+              "subgoal1": 4
+            },
+            "residual": 0.0010171710077461343,
+            "sr": 0.04166666666666663
+          },
+          "reason": "fixed recipe: calibrate first round",
+          "round": 1,
+          "sr_after": 0.05,
+          "sr_before": 0.05,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.782608695652174,
+            "per_subgoal": {
+              "subgoal0": 18,
+              "subgoal1": 5
+            },
+            "residual": 0.0015023865717843678,
+            "sr": 0.04166666666666663
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 2,
+          "sr_after": 0.6,
+          "sr_before": 0.05,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.4166666666666667,
+            "per_subgoal": {
+              "subgoal0": 5,
+              "subgoal1": 3,
+              "subgoal2": 2,
+              "subgoal3": 2
+            },
+            "residual": 0.0019700726108774803,
+            "sr": 0.5
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 3,
+          "sr_after": 0.65,
+          "sr_before": 0.6,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.65,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": false,
+      "new_labels": 80000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "fixed"
+    },
+    {
+      "bank_index": 3,
+      "calibrations": 0,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.8260869565217391,
+            "per_subgoal": {
+              "subgoal0": 19,
+              "subgoal1": 4
+            },
+            "residual": 0.0010171710077461343,
+            "sr": 0.04166666666666663
+          },
+          "reason": "83% of failures in subgoal0",
+          "round": 1,
+          "sr_after": 0.9,
+          "sr_before": 0.05,
+          "target": "subgoal0"
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5,
+            "per_subgoal": {
+              "subgoal0": 2,
+              "subgoal2": 2
+            },
+            "residual": 0.0015320116926867099,
+            "sr": 0.8333333333333334
+          },
+          "reason": "default: one DAgger round",
+          "round": 2,
+          "sr_after": 0.95,
+          "sr_before": 0.9,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 1.0,
+            "per_subgoal": {
+              "subgoal0": 1
+            },
+            "residual": 0.0013186659852591175,
+            "sr": 0.9583333333333334
+          },
+          "reason": "default: one DAgger round",
+          "round": 3,
+          "sr_after": 0.95,
+          "sr_before": 0.95,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.95,
+      "first_action": "regenerate_targeted",
+      "first_step_correct": true,
+      "new_labels": 120000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "rule"
+    },
+    {
+      "bank_index": 3,
+      "calibrations": 0,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.8260869565217391,
+            "per_subgoal": {
+              "subgoal0": 19,
+              "subgoal1": 4
+            },
+            "residual": 0.0010171710077461343,
+            "sr": 0.04166666666666663
+          },
+          "reason": "oracle: coverage_deficit step 1",
+          "round": 1,
+          "sr_after": 0.9,
+          "sr_before": 0.05,
+          "target": null
+        },
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5,
+            "per_subgoal": {
+              "subgoal0": 2,
+              "subgoal2": 2
+            },
+            "residual": 0.0015320116926867099,
+            "sr": 0.8333333333333334
+          },
+          "reason": "oracle: repeat the cause's best operation",
+          "round": 2,
+          "sr_after": 0.95,
+          "sr_before": 0.9,
+          "target": null
+        },
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.6666666666666666,
+            "per_subgoal": {
+              "subgoal1": 1,
+              "subgoal2": 2
+            },
+            "residual": 0.0012134690063645565,
+            "sr": 0.875
+          },
+          "reason": "oracle: repeat the cause's best operation",
+          "round": 3,
+          "sr_after": 1.0,
+          "sr_before": 0.95,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 1.0,
+      "first_action": "regenerate_targeted",
+      "first_step_correct": true,
+      "new_labels": 120000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "oracle"
+    },
+    {
+      "bank_index": 4,
+      "calibrations": 1,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.9130434782608695,
+            "per_subgoal": {
+              "subgoal0": 21,
+              "subgoal1": 2
+            },
+            "residual": 0.0010185483213424641,
+            "sr": 0.04166666666666663
+          },
+          "reason": "fixed recipe: calibrate first round",
+          "round": 1,
+          "sr_after": 0.1,
+          "sr_before": 0.1,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.8695652173913043,
+            "per_subgoal": {
+              "subgoal0": 20,
+              "subgoal1": 2,
+              "subgoal2": 1
+            },
+            "residual": 0.0004666410019109439,
+            "sr": 0.04166666666666663
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 2,
+          "sr_after": 0.45,
+          "sr_before": 0.1,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.55,
+            "per_subgoal": {
+              "subgoal0": 11,
+              "subgoal1": 3,
+              "subgoal2": 1,
+              "subgoal3": 5
+            },
+            "residual": 0.0025880096694737564,
+            "sr": 0.16666666666666663
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 3,
+          "sr_after": 0.8,
+          "sr_before": 0.45,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.8,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": false,
+      "new_labels": 80000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "fixed"
+    },
+    {
+      "bank_index": 4,
+      "calibrations": 0,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.9130434782608695,
+            "per_subgoal": {
+              "subgoal0": 21,
+              "subgoal1": 2
+            },
+            "residual": 0.0010185483213424641,
+            "sr": 0.04166666666666663
+          },
+          "reason": "91% of failures in subgoal0",
+          "round": 1,
+          "sr_after": 0.75,
+          "sr_before": 0.1,
+          "target": "subgoal0"
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.8,
+            "per_subgoal": {
+              "subgoal0": 4,
+              "subgoal3": 1
+            },
+            "residual": 0.0014955537205485273,
+            "sr": 0.7916666666666666
+          },
+          "reason": "default: one DAgger round",
+          "round": 2,
+          "sr_after": 1.0,
+          "sr_before": 0.75,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.6,
+            "per_subgoal": {
+              "subgoal0": 3,
+              "subgoal1": 1,
+              "subgoal2": 1
+            },
+            "residual": 0.0019461936315935124,
+            "sr": 0.7916666666666666
+          },
+          "reason": "default: one DAgger round",
+          "round": 3,
+          "sr_after": 0.95,
+          "sr_before": 1.0,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.95,
+      "first_action": "regenerate_targeted",
+      "first_step_correct": true,
+      "new_labels": 120000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "rule"
+    },
+    {
+      "bank_index": 4,
+      "calibrations": 0,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.9130434782608695,
+            "per_subgoal": {
+              "subgoal0": 21,
+              "subgoal1": 2
+            },
+            "residual": 0.0010185483213424641,
+            "sr": 0.04166666666666663
+          },
+          "reason": "oracle: coverage_deficit step 1",
+          "round": 1,
+          "sr_after": 0.75,
+          "sr_before": 0.1,
+          "target": null
+        },
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.8,
+            "per_subgoal": {
+              "subgoal0": 4,
+              "subgoal3": 1
+            },
+            "residual": 0.0014955537205485273,
+            "sr": 0.7916666666666666
+          },
+          "reason": "oracle: repeat the cause's best operation",
+          "round": 2,
+          "sr_after": 1.0,
+          "sr_before": 0.75,
+          "target": null
+        },
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5,
+            "per_subgoal": {
+              "subgoal1": 1,
+              "subgoal3": 1
+            },
+            "residual": 0.001479993420871708,
+            "sr": 0.9166666666666666
+          },
+          "reason": "oracle: repeat the cause's best operation",
+          "round": 3,
+          "sr_after": 1.0,
+          "sr_before": 1.0,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 1.0,
+      "first_action": "regenerate_targeted",
+      "first_step_correct": true,
+      "new_labels": 120000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "oracle"
+    },
+    {
+      "bank_index": 5,
+      "calibrations": 1,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.6956521739130435,
+            "per_subgoal": {
+              "subgoal0": 16,
+              "subgoal1": 4,
+              "subgoal2": 1,
+              "subgoal3": 2
+            },
+            "residual": 0.0009151990398076071,
+            "sr": 0.04166666666666663
+          },
+          "reason": "fixed recipe: calibrate first round",
+          "round": 1,
+          "sr_after": 0.0,
+          "sr_before": 0.0,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.75,
+            "per_subgoal": {
+              "subgoal0": 18,
+              "subgoal1": 4,
+              "subgoal3": 2
+            },
+            "residual": 0.009181664533192392,
+            "sr": 0.0
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 2,
+          "sr_after": 0.4,
+          "sr_before": 0.0,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5,
+            "per_subgoal": {
+              "subgoal0": 9,
+              "subgoal1": 6,
+              "subgoal2": 2,
+              "subgoal3": 1
+            },
+            "residual": 0.001686269910718085,
+            "sr": 0.25
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 3,
+          "sr_after": 0.65,
+          "sr_before": 0.4,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.65,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": false,
+      "new_labels": 80000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "fixed"
+    },
+    {
+      "bank_index": 5,
+      "calibrations": 0,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.6956521739130435,
+            "per_subgoal": {
+              "subgoal0": 16,
+              "subgoal1": 4,
+              "subgoal2": 1,
+              "subgoal3": 2
+            },
+            "residual": 0.0009151990398076071,
+            "sr": 0.04166666666666663
+          },
+          "reason": "70% of failures in subgoal0",
+          "round": 1,
+          "sr_after": 0.85,
+          "sr_before": 0.0,
+          "target": "subgoal0"
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.8,
+            "per_subgoal": {
+              "subgoal0": 4,
+              "subgoal1": 1
+            },
+            "residual": 0.0013126596109149097,
+            "sr": 0.7916666666666666
+          },
+          "reason": "default: one DAgger round",
+          "round": 2,
+          "sr_after": 1.0,
+          "sr_before": 0.85,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 1.0,
+            "per_subgoal": {
+              "subgoal1": 2
+            },
+            "residual": 0.001602824275866492,
+            "sr": 0.9166666666666666
+          },
+          "reason": "default: one DAgger round",
+          "round": 3,
+          "sr_after": 1.0,
+          "sr_before": 1.0,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 1.0,
+      "first_action": "regenerate_targeted",
+      "first_step_correct": true,
+      "new_labels": 120000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "rule"
+    },
+    {
+      "bank_index": 5,
+      "calibrations": 0,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.6956521739130435,
+            "per_subgoal": {
+              "subgoal0": 16,
+              "subgoal1": 4,
+              "subgoal2": 1,
+              "subgoal3": 2
+            },
+            "residual": 0.0009151990398076071,
+            "sr": 0.04166666666666663
+          },
+          "reason": "oracle: coverage_deficit step 1",
+          "round": 1,
+          "sr_after": 0.85,
+          "sr_before": 0.0,
+          "target": null
+        },
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.8,
+            "per_subgoal": {
+              "subgoal0": 4,
+              "subgoal1": 1
+            },
+            "residual": 0.0013126596109149097,
+            "sr": 0.7916666666666666
+          },
+          "reason": "oracle: repeat the cause's best operation",
+          "round": 2,
+          "sr_after": 0.95,
+          "sr_before": 0.85,
+          "target": null
+        },
+        {
+          "action": "stop",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.0,
+            "per_subgoal": {},
+            "residual": 0.0011252609394139038,
+            "sr": 1.0
+          },
+          "reason": "already solved",
+          "round": 3,
+          "sr_after": 0.95,
+          "sr_before": 0.95,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.95,
+      "first_action": "regenerate_targeted",
+      "first_step_correct": true,
+      "new_labels": 80000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "oracle"
+    },
+    {
+      "bank_index": 6,
+      "calibrations": 1,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.8260869565217391,
+            "per_subgoal": {
+              "subgoal0": 19,
+              "subgoal1": 2,
+              "subgoal2": 2
+            },
+            "residual": 0.0023466863329876034,
+            "sr": 0.04166666666666663
+          },
+          "reason": "fixed recipe: calibrate first round",
+          "round": 1,
+          "sr_after": 0.15,
+          "sr_before": 0.15,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.7272727272727273,
+            "per_subgoal": {
+              "subgoal0": 16,
+              "subgoal1": 3,
+              "subgoal2": 2,
+              "subgoal3": 1
+            },
+            "residual": 5.052800284000014e-05,
+            "sr": 0.08333333333333337
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 2,
+          "sr_after": 0.65,
+          "sr_before": 0.15,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.6,
+            "per_subgoal": {
+              "subgoal0": 9,
+              "subgoal1": 4,
+              "subgoal2": 2
+            },
+            "residual": 0.0014563095858452606,
+            "sr": 0.375
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 3,
+          "sr_after": 0.8,
+          "sr_before": 0.65,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.8,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": false,
+      "new_labels": 80000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "fixed"
+    },
+    {
+      "bank_index": 6,
+      "calibrations": 0,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.8260869565217391,
+            "per_subgoal": {
+              "subgoal0": 19,
+              "subgoal1": 2,
+              "subgoal2": 2
+            },
+            "residual": 0.0023466863329876034,
+            "sr": 0.04166666666666663
+          },
+          "reason": "83% of failures in subgoal0",
+          "round": 1,
+          "sr_after": 0.9,
+          "sr_before": 0.15,
+          "target": "subgoal0"
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5,
+            "per_subgoal": {
+              "subgoal1": 1,
+              "subgoal2": 1
+            },
+            "residual": 0.0016683195036703569,
+            "sr": 0.9166666666666666
+          },
+          "reason": "default: one DAgger round",
+          "round": 2,
+          "sr_after": 0.9,
+          "sr_before": 0.9,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 1.0,
+            "per_subgoal": {
+              "subgoal0": 1
+            },
+            "residual": 0.0013868067027982857,
+            "sr": 0.9583333333333334
+          },
+          "reason": "default: one DAgger round",
+          "round": 3,
+          "sr_after": 1.0,
+          "sr_before": 0.9,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 1.0,
+      "first_action": "regenerate_targeted",
+      "first_step_correct": true,
+      "new_labels": 120000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "rule"
+    },
+    {
+      "bank_index": 6,
+      "calibrations": 0,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.8260869565217391,
+            "per_subgoal": {
+              "subgoal0": 19,
+              "subgoal1": 2,
+              "subgoal2": 2
+            },
+            "residual": 0.0023466863329876034,
+            "sr": 0.04166666666666663
+          },
+          "reason": "oracle: coverage_deficit step 1",
+          "round": 1,
+          "sr_after": 0.9,
+          "sr_before": 0.15,
+          "target": null
+        },
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5,
+            "per_subgoal": {
+              "subgoal1": 1,
+              "subgoal2": 1
+            },
+            "residual": 0.0016683195036703569,
+            "sr": 0.9166666666666666
+          },
+          "reason": "oracle: repeat the cause's best operation",
+          "round": 2,
+          "sr_after": 1.0,
+          "sr_before": 0.9,
+          "target": null
+        },
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 1.0,
+            "per_subgoal": {
+              "subgoal1": 2
+            },
+            "residual": 0.0013572900405243726,
+            "sr": 0.9166666666666666
+          },
+          "reason": "oracle: repeat the cause's best operation",
+          "round": 3,
+          "sr_after": 1.0,
+          "sr_before": 1.0,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 1.0,
+      "first_action": "regenerate_targeted",
+      "first_step_correct": true,
+      "new_labels": 120000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "oracle"
+    },
+    {
+      "bank_index": 7,
+      "calibrations": 1,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.7391304347826086,
+            "per_subgoal": {
+              "subgoal0": 17,
+              "subgoal1": 2,
+              "subgoal2": 4
+            },
+            "residual": 0.0018899404762007105,
+            "sr": 0.04166666666666663
+          },
+          "reason": "fixed recipe: calibrate first round",
+          "round": 1,
+          "sr_after": 0.2,
+          "sr_before": 0.2,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.9583333333333334,
+            "per_subgoal": {
+              "subgoal0": 23,
+              "subgoal2": 1
+            },
+            "residual": 0.03360567021193374,
+            "sr": 0.0
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 2,
+          "sr_after": 0.3,
+          "sr_before": 0.2,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.46153846153846156,
+            "per_subgoal": {
+              "subgoal0": 6,
+              "subgoal1": 3,
+              "subgoal2": 2,
+              "subgoal3": 2
+            },
+            "residual": 0.001798844967777699,
+            "sr": 0.45833333333333337
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 3,
+          "sr_after": 0.65,
+          "sr_before": 0.3,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.65,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": false,
+      "new_labels": 80000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "fixed"
+    },
+    {
+      "bank_index": 7,
+      "calibrations": 0,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.7391304347826086,
+            "per_subgoal": {
+              "subgoal0": 17,
+              "subgoal1": 2,
+              "subgoal2": 4
+            },
+            "residual": 0.0018899404762007105,
+            "sr": 0.04166666666666663
+          },
+          "reason": "74% of failures in subgoal0",
+          "round": 1,
+          "sr_after": 0.75,
+          "sr_before": 0.2,
+          "target": "subgoal0"
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 1.0,
+            "per_subgoal": {
+              "subgoal0": 2
+            },
+            "residual": 0.0011485183100322198,
+            "sr": 0.9166666666666666
+          },
+          "reason": "default: one DAgger round",
+          "round": 2,
+          "sr_after": 1.0,
+          "sr_before": 0.75,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.75,
+            "per_subgoal": {
+              "subgoal0": 1,
+              "subgoal1": 3
+            },
+            "residual": 0.0015788267060691877,
+            "sr": 0.8333333333333334
+          },
+          "reason": "default: one DAgger round",
+          "round": 3,
+          "sr_after": 0.9,
+          "sr_before": 1.0,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.9,
+      "first_action": "regenerate_targeted",
+      "first_step_correct": true,
+      "new_labels": 120000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "rule"
+    },
+    {
+      "bank_index": 7,
+      "calibrations": 0,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.7391304347826086,
+            "per_subgoal": {
+              "subgoal0": 17,
+              "subgoal1": 2,
+              "subgoal2": 4
+            },
+            "residual": 0.0018899404762007105,
+            "sr": 0.04166666666666663
+          },
+          "reason": "oracle: coverage_deficit step 1",
+          "round": 1,
+          "sr_after": 0.75,
+          "sr_before": 0.2,
+          "target": null
+        },
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 1.0,
+            "per_subgoal": {
+              "subgoal0": 2
+            },
+            "residual": 0.0011485183100322198,
+            "sr": 0.9166666666666666
+          },
+          "reason": "oracle: repeat the cause's best operation",
+          "round": 2,
+          "sr_after": 0.95,
+          "sr_before": 0.75,
+          "target": null
+        },
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.3333333333333333,
+            "per_subgoal": {
+              "subgoal0": 1,
+              "subgoal2": 1,
+              "subgoal3": 1
+            },
+            "residual": 0.0015243817818051224,
+            "sr": 0.875
+          },
+          "reason": "oracle: repeat the cause's best operation",
+          "round": 3,
+          "sr_after": 1.0,
+          "sr_before": 0.95,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 1.0,
+      "first_action": "regenerate_targeted",
+      "first_step_correct": true,
+      "new_labels": 120000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "oracle"
+    },
+    {
+      "bank_index": 8,
+      "calibrations": 1,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.8695652173913043,
+            "per_subgoal": {
+              "subgoal0": 20,
+              "subgoal1": 2,
+              "subgoal2": 1
+            },
+            "residual": 0.03134849890241291,
+            "sr": 0.04166666666666663
+          },
+          "reason": "fixed recipe: calibrate first round",
+          "round": 1,
+          "sr_after": 0.15,
+          "sr_before": 0.15,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.9090909090909091,
+            "per_subgoal": {
+              "subgoal0": 20,
+              "subgoal1": 2
+            },
+            "residual": 0.0012706538569087732,
+            "sr": 0.08333333333333337
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 2,
+          "sr_after": 0.4,
+          "sr_before": 0.15,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5833333333333334,
+            "per_subgoal": {
+              "subgoal0": 7,
+              "subgoal1": 2,
+              "subgoal3": 3
+            },
+            "residual": 0.0013066667106865354,
+            "sr": 0.5
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 3,
+          "sr_after": 0.7,
+          "sr_before": 0.4,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.7,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": false,
+      "new_labels": 80000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "fixed"
+    },
+    {
+      "bank_index": 8,
+      "calibrations": 1,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.8695652173913043,
+            "per_subgoal": {
+              "subgoal0": 20,
+              "subgoal1": 2,
+              "subgoal2": 1
+            },
+            "residual": 0.03134849890241291,
+            "sr": 0.04166666666666663
+          },
+          "reason": "residual 31.3mm > 4mm",
+          "round": 1,
+          "sr_after": 0.15,
+          "sr_before": 0.15,
+          "target": null
+        },
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.9090909090909091,
+            "per_subgoal": {
+              "subgoal0": 20,
+              "subgoal1": 2
+            },
+            "residual": 0.0012706538569087732,
+            "sr": 0.08333333333333337
+          },
+          "reason": "91% of failures in subgoal0",
+          "round": 2,
+          "sr_after": 0.8,
+          "sr_before": 0.15,
+          "target": "subgoal0"
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.75,
+            "per_subgoal": {
+              "subgoal0": 1,
+              "subgoal2": 3
+            },
+            "residual": 0.0020487269521248484,
+            "sr": 0.8333333333333334
+          },
+          "reason": "default: one DAgger round",
+          "round": 3,
+          "sr_after": 0.8,
+          "sr_before": 0.8,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.8,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": false,
+      "new_labels": 80000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "rule"
+    },
+    {
+      "bank_index": 8,
+      "calibrations": 0,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.8695652173913043,
+            "per_subgoal": {
+              "subgoal0": 20,
+              "subgoal1": 2,
+              "subgoal2": 1
+            },
+            "residual": 0.03134849890241291,
+            "sr": 0.04166666666666663
+          },
+          "reason": "oracle: coverage_deficit step 1",
+          "round": 1,
+          "sr_after": 0.8,
+          "sr_before": 0.15,
+          "target": null
+        },
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.6666666666666666,
+            "per_subgoal": {
+              "subgoal0": 4,
+              "subgoal1": 1,
+              "subgoal2": 1
+            },
+            "residual": 0.0011126274797476216,
+            "sr": 0.75
+          },
+          "reason": "oracle: repeat the cause's best operation",
+          "round": 2,
+          "sr_after": 0.95,
+          "sr_before": 0.8,
+          "target": null
+        },
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5,
+            "per_subgoal": {
+              "subgoal0": 1,
+              "subgoal2": 1
+            },
+            "residual": 0.0022713857494424707,
+            "sr": 0.9166666666666666
+          },
+          "reason": "oracle: repeat the cause's best operation",
+          "round": 3,
+          "sr_after": 1.0,
+          "sr_before": 0.95,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 1.0,
+      "first_action": "regenerate_targeted",
+      "first_step_correct": true,
+      "new_labels": 120000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "oracle"
+    },
+    {
+      "bank_index": 9,
+      "calibrations": 1,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "calibrate_geometry",
+          "est_cost": 1,
+          "profile": {
+            "concentration": 0.8181818181818182,
+            "per_subgoal": {
+              "subgoal0": 18,
+              "subgoal1": 3,
+              "subgoal2": 1
+            },
+            "residual": 0.0006801301737317002,
+            "sr": 0.08333333333333337
+          },
+          "reason": "fixed recipe: calibrate first round",
+          "round": 1,
+          "sr_after": 0.1,
+          "sr_before": 0.1,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.625,
+            "per_subgoal": {
+              "subgoal0": 15,
+              "subgoal1": 5,
+              "subgoal2": 3,
+              "subgoal3": 1
+            },
+            "residual": 0.0023801499028327164,
+            "sr": 0.0
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 2,
+          "sr_after": 0.45,
+          "sr_before": 0.1,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.6923076923076923,
+            "per_subgoal": {
+              "subgoal0": 9,
+              "subgoal1": 2,
+              "subgoal2": 1,
+              "subgoal3": 1
+            },
+            "residual": 0.0011623255425930318,
+            "sr": 0.45833333333333337
+          },
+          "reason": "fixed recipe: always DAgger",
+          "round": 3,
+          "sr_after": 0.8,
+          "sr_before": 0.45,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 0.8,
+      "first_action": "calibrate_geometry",
+      "first_step_correct": false,
+      "new_labels": 80000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "fixed"
+    },
+    {
+      "bank_index": 9,
+      "calibrations": 0,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.8181818181818182,
+            "per_subgoal": {
+              "subgoal0": 18,
+              "subgoal1": 3,
+              "subgoal2": 1
+            },
+            "residual": 0.0006801301737317002,
+            "sr": 0.08333333333333337
+          },
+          "reason": "82% of failures in subgoal0",
+          "round": 1,
+          "sr_after": 1.0,
+          "sr_before": 0.1,
+          "target": "subgoal0"
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5,
+            "per_subgoal": {
+              "subgoal0": 1,
+              "subgoal1": 1
+            },
+            "residual": 0.0016991095843178691,
+            "sr": 0.9166666666666666
+          },
+          "reason": "default: one DAgger round",
+          "round": 2,
+          "sr_after": 0.95,
+          "sr_before": 1.0,
+          "target": null
+        },
+        {
+          "action": "dagger_round",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 1.0,
+            "per_subgoal": {
+              "subgoal1": 1
+            },
+            "residual": 0.0015119232391905095,
+            "sr": 0.9583333333333334
+          },
+          "reason": "default: one DAgger round",
+          "round": 3,
+          "sr_after": 1.0,
+          "sr_before": 0.95,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 1.0,
+      "first_action": "regenerate_targeted",
+      "first_step_correct": true,
+      "new_labels": 120000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "rule"
+    },
+    {
+      "bank_index": 9,
+      "calibrations": 0,
+      "cause": "coverage_deficit",
+      "decisions": [
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 0,
+          "profile": {
+            "concentration": 0.8181818181818182,
+            "per_subgoal": {
+              "subgoal0": 18,
+              "subgoal1": 3,
+              "subgoal2": 1
+            },
+            "residual": 0.0006801301737317002,
+            "sr": 0.08333333333333337
+          },
+          "reason": "oracle: coverage_deficit step 1",
+          "round": 1,
+          "sr_after": 1.0,
+          "sr_before": 0.1,
+          "target": null
+        },
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 0.5,
+            "per_subgoal": {
+              "subgoal0": 1,
+              "subgoal1": 1
+            },
+            "residual": 0.0016991095843178691,
+            "sr": 0.9166666666666666
+          },
+          "reason": "oracle: repeat the cause's best operation",
+          "round": 2,
+          "sr_after": 1.0,
+          "sr_before": 1.0,
+          "target": null
+        },
+        {
+          "action": "regenerate_targeted",
+          "est_cost": 4,
+          "profile": {
+            "concentration": 1.0,
+            "per_subgoal": {
+              "subgoal1": 1
+            },
+            "residual": 0.0013193330283826805,
+            "sr": 0.9583333333333334
+          },
+          "reason": "oracle: repeat the cause's best operation",
+          "round": 3,
+          "sr_after": 1.0,
+          "sr_before": 1.0,
+          "target": null
+        }
+      ],
+      "deploy_episodes": 72,
+      "final_sr": 1.0,
+      "first_action": "regenerate_targeted",
+      "first_step_correct": true,
+      "new_labels": 120000,
+      "scenario": "coverage",
+      "seed": 0,
+      "selector": "oracle"
+    }
+  ]
+}

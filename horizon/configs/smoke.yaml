@@ -1,0 +1,20 @@
+# Tiny end-to-end run of every strategy (integration test, not a result).
+name: smoke
+policy: hier
+total_budget: 40000
+init_frac: 0.5
+rounds: 1
+eval_episodes: 24
+eval_pert: 0.1
+nominal_frac: 0.2
+dist: {families: [pack, sort, stack], H_values: [2, 4]}
+open_loop: {recovery_frac: 0.3, latency_choices: [0, 0, 1]}
+train: {steps: 300, hidden: 128, layers: 2, batch: 512, lr: 0.001}
+test: {families: [pack, sort, stack], H_values: [2, 4], n_per: 2, pert: [0.0]}
+methods:
+  open_loop: {strategy: open_loop}
+  ours: {strategy: ours}
+  oracle: {strategy: oracle}
+  uniform: {strategy: uniform}
+  dagger: {strategy: dagger}
+  embodirsi: {strategy: embodirsi}

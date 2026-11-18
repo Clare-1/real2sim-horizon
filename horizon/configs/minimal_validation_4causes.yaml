@@ -1,0 +1,45 @@
+name: minimal_validation_4causes
+# Four gradable causes. Dynamics is NOT included: friction (0.2-1.0x) and mass (1-8x) do not move
+# SR at all on this platform, and control latency is binary (<=1 no effect, >=2 total collapse).
+# Evidence: results/friction_calibration_20261118, /tmp/mass3.txt, /tmp/lat.txt.
+seeds: [0]
+selectors: [fixed, rule, random, round_robin, bandit, oracle]
+families: [pack]
+H_values: [4]
+scenario_banks: 2
+init_budget: 80000
+round_budget: 40000
+rounds: 3
+feedback_episodes: 24
+curve_n_per: 20
+final_n_per: 20
+feedback_pert: 0.1
+collection_pert: 0.1
+torch_threads: 4
+deploy_budget: 100000
+label_budget: 1000000
+banks: {training: 81000000, feedback: 82000000, curve: 83000000, final: 84000000}
+world: {plate_half: 0.01, tray_height: 0.02}
+train: {steps: 8000, hidden: 512, layers: 3, batch: 2048, lr: 0.001, device: cuda}
+open_loop: {recovery_frac: 0.3, latency_choices: [0, 0, 1]}
+scenarios:
+  - name: geometry
+    cause: geometry_bias
+    conditions: {recon: {bias: {plate: 0.46, tray: 0.46}}}
+    train_randomization: {layout_prior: full}
+  - name: coverage
+    cause: coverage_deficit
+    conditions: {recon: {}}
+    train_randomization: {layout_prior: left_half}
+  - name: recovery
+    cause: recovery_deficit
+    conditions: {recon: {}}
+    train_randomization: {layout_prior: full}
+    open_loop: {recovery_frac: 0.0}
+    feedback_pert: 0.5
+    eval_mode: perturbed
+    eval_pert: 0.7
+  - name: healthy
+    cause: healthy
+    conditions: {recon: {}}
+    train_randomization: {layout_prior: full}
