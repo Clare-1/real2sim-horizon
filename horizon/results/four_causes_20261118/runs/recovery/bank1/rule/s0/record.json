@@ -4,15 +4,15 @@
   "cause": "recovery_deficit",
   "cost": {
     "accepted_labels": 120000,
-    "available_labels": 134074,
-    "episodes": 432,
+    "available_labels": 129357,
+    "episodes": 504,
     "eval_episodes": 120,
-    "sim_steps": 4602575,
-    "worker_seconds": 498.74876975570805
+    "sim_steps": 4911175,
+    "worker_seconds": 683.1987483869307
   },
   "decisions": [
     {
-      "action": "randomize_physics",
+      "action": "dagger_round",
       "est_cost": 4,
       "profile": {
         "concentration": 0.35714285714285715,
@@ -28,78 +28,82 @@
           "subgoal2": 5,
           "subgoal3": 2
         },
+        "perturbation_events": 72,
+        "perturbation_failure_rate": 0.5833333333333334,
         "perturbed_failure_rate": 0.0,
         "recovery_triggers": 0,
         "residual": 0.0008296594814624705,
         "sr": 0.41666666666666663
       },
-      "reason": "slip/drop failures dominate",
+      "reason": "default: one DAgger round",
       "round": 1,
-      "sr_after": 0.25,
+      "sr_after": 0.7,
       "sr_before": 0.2,
       "target": null
     },
     {
-      "action": "randomize_physics",
+      "action": "dagger_round",
       "est_cost": 4,
       "profile": {
-        "concentration": 0.2857142857142857,
+        "concentration": 0.42857142857142855,
         "failure_types": {
-          "drop": 3,
-          "grasp": 6,
-          "placement": 2,
+          "drop": 1,
+          "grasp": 3,
+          "placement": 1,
           "transition": 1,
-          "verifier": 2
+          "verifier": 1
         },
         "per_subgoal": {
-          "subgoal0": 4,
-          "subgoal1": 4,
+          "subgoal0": 1,
+          "subgoal1": 2,
           "subgoal2": 3,
-          "subgoal3": 3
+          "subgoal3": 1
         },
+        "perturbation_events": 86,
+        "perturbation_failure_rate": 0.2916666666666667,
         "perturbed_failure_rate": 0.0,
         "recovery_triggers": 0,
-        "residual": 0.001290447866128537,
-        "sr": 0.41666666666666663
+        "residual": 0.0013033832803462514,
+        "sr": 0.7083333333333333
       },
-      "reason": "slip/drop failures dominate",
+      "reason": "default: one DAgger round",
       "round": 2,
-      "sr_after": 0.35,
-      "sr_before": 0.25,
+      "sr_after": 0.9,
+      "sr_before": 0.7,
       "target": null
     },
     {
-      "action": "randomize_physics",
+      "action": "dagger_round",
       "est_cost": 4,
       "profile": {
-        "concentration": 0.375,
+        "concentration": 0.6666666666666666,
         "failure_types": {
-          "drop": 2,
-          "grasp": 7,
-          "placement": 4,
-          "transition": 3
+          "drop": 1,
+          "grasp": 2,
+          "placement": 3
         },
         "per_subgoal": {
-          "subgoal0": 6,
-          "subgoal1": 4,
-          "subgoal2": 4,
-          "subgoal3": 2
+          "subgoal0": 4,
+          "subgoal1": 1,
+          "subgoal2": 1
         },
+        "perturbation_events": 77,
+        "perturbation_failure_rate": 0.25,
         "perturbed_failure_rate": 0.0,
         "recovery_triggers": 0,
-        "residual": 0.001842956842869923,
-        "sr": 0.33333333333333337
+        "residual": 0.0013202305714541084,
+        "sr": 0.75
       },
-      "reason": "slip/drop failures dominate",
+      "reason": "default: one DAgger round",
       "round": 3,
-      "sr_after": 0.1,
-      "sr_before": 0.35,
+      "sr_after": 1.0,
+      "sr_before": 0.9,
       "target": null
     }
   ],
   "deploy_episodes": 72,
-  "final_sr": 0.1,
-  "first_action": "randomize_physics",
+  "final_sr": 1.0,
+  "first_action": "dagger_round",
   "first_step_correct": false,
   "new_labels": 120000,
   "scenario": "recovery",

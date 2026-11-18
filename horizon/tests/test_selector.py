@@ -5,7 +5,9 @@ import pytest
 
 from horizon.rsi.selector import (
     ACTIONS, CAUSE_ACTION, Budget, Decision, FailureProfile, FixedRecipeSelector, HistoryEntry,
-    Observation, OracleSelector, RulePlannerSelector, first_step_correct,
+    LearnedValueSelector, LinUCBSelector, Observation, OracleSelector, RulePlannerSelector,
+    first_step_correct,
+    profile_vector,
 )
 
 
@@ -113,6 +115,26 @@ def test_oracle_follows_a_sequence_not_a_single_action():
     assert healthy.decide(obs(sr=0.3)).action == "stop"
 
 
+def test_rule_stops_only_when_the_twin_is_healthy():
+    """Healthy (SR 0.92, concentration exactly 0.50) must stop; a low-SR recovery twin must not.
+
+    Evidence from the 2026-11-18 batch: healthy sits at concentration 0.50 / SR 0.92, while the
+    recovery twin sits at 0.36 / SR 0.42. The old strict `< 0.5` test missed healthy and the old
+    stop branch gave up on recovery at SR 0.42, losing 0.75 SR.
+    """
+    rule = RulePlannerSelector()
+    healthy = FailureProfile(n_episodes=24, per_subgoal_failure={"slot0": 3, "slot1": 3},
+                             calibration_residual=0.0015, sr=0.92)
+    assert rule.decide(Observation(healthy, Budget(deploy_total=72))).action == "stop"
+    recovery = FailureProfile(n_episodes=24,
+                              per_subgoal_failure={"slot0": 6, "slot1": 5, "slot2": 5, "slot3": 1},
+                              calibration_residual=0.0008, sr=0.42)
+    assert rule.decide(Observation(recovery, Budget(deploy_total=72))).action == "dagger_round"
+    geometry = FailureProfile(n_episodes=24, per_subgoal_failure={"slot0": 8, "slot1": 2},
+                              calibration_residual=0.0112, sr=0.0)
+    assert rule.decide(Observation(geometry, Budget(deploy_total=72))).action == "calibrate_geometry"
+
+
 def test_v2_reads_perturbation_pressure_from_the_log_not_from_unset_metadata():
     """The legacy signal is dead: log.meta["perturbed"] is never written and no "recover" event
     is ever emitted. v2 must therefore use the measured failure rate under perturbations."""
@@ -130,13 +152,54 @@ def test_v2_does_not_trigger_recovery_when_perturbations_are_survived():
     v2 = RulePlannerSelector(recovery_signal="v2")
     prof = FailureProfile(n_episodes=24, per_subgoal_failure={"slot0": 3, "slot1": 3, "slot2": 3},
                           perturbation_events=11, perturbation_failure_rate=0.18,
-                          sr=0.8, calibration_residual=0.0005)
+                          sr=0.9, calibration_residual=0.0005)
     assert v2.decide(Observation(prof, Budget(deploy_total=72))).action == "stop"
     # and a profile with no perturbations at all cannot claim a recovery gap
     quiet = FailureProfile(n_episodes=24, per_subgoal_failure={"slot0": 3, "slot1": 3},
                            perturbation_events=0, perturbation_failure_rate=0.0, sr=0.8,
                            calibration_residual=0.0005)
     assert v2.decide(Observation(quiet, Budget(deploy_total=72))).action != "add_recovery_data"
+
+
+def test_mixed_causes_have_explicit_sequences():
+    """A mixture needs the union of its components, not one arbitrary label."""
+    assert CAUSE_ACTION["mixed_gc"] == "calibrate_geometry"
+    assert CAUSE_ACTION["mixed_gr"] == "calibrate_geometry"
+    assert CAUSE_ACTION["mixed_cr"] == "regenerate_targeted"
+    assert CAUSE_ACTION["mixed_gcr"] == "calibrate_geometry"
+    cr = OracleSelector(true_cause="mixed_cr")
+    assert cr.decide(obs(sr=0.3)).action == "regenerate_targeted"
+    gr = OracleSelector(true_cause="mixed_gr")
+    assert gr.decide(obs(sr=0.3)).action == "calibrate_geometry"
+
+
+def test_linucb_learns_which_operation_pays():
+    """Reward an arm once; with no exploration it becomes the chosen arm, and history is not
+    double-counted on repeated decisions."""
+    sel = LinUCBSelector(alpha=0.0)
+    prof = FailureProfile(n_episodes=24, per_subgoal_failure={"slot0": 4, "slot1": 2}, sr=0.2,
+                          calibration_residual=0.0005)
+    h = HistoryEntry("calibrate_geometry", 0.2, 0.9, context=profile_vector(prof))
+    o = Observation(prof, Budget(deploy_total=72), (h,))
+    assert sel.decide(o).action == "calibrate_geometry"
+    assert sel.seen == 1
+    assert sel.decide(o).action == "calibrate_geometry"
+    assert sel.seen == 1, "the same history entry must not be applied twice"
+
+
+def test_learned_value_selector_picks_the_highest_predicted_arm(tmp_path):
+    import json
+
+    n = len(profile_vector(FailureProfile()))          # profile features
+    actions = ("calibrate_geometry", "regenerate_uniform", "regenerate_targeted",
+               "add_recovery_data", "dagger_round")
+    n_feat = n + len(actions) + 1                       # profile + one-hot + cost
+    w = [0.0] * n + [1.0, 0.0, 0.0, 0.0, 0.0] + [0.0] + [0.0]  # + bias
+    model = {"actions": list(actions), "mu": [0.0] * n_feat, "sd": [1.0] * n_feat, "w": w}
+    path = tmp_path / "value_model.json"
+    path.write_text(json.dumps(model), encoding="utf-8")
+    sel = LearnedValueSelector(model_path=str(path))
+    assert sel.decide(obs(sr=0.4)).action == "calibrate_geometry"
 
 
 def test_every_action_is_reachable_and_valid():

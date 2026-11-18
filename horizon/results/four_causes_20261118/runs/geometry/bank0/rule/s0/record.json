@@ -3,12 +3,12 @@
   "calibrations": 1,
   "cause": "geometry_bias",
   "cost": {
-    "accepted_labels": 80000,
-    "available_labels": 86163,
-    "episodes": 336,
+    "accepted_labels": 40000,
+    "available_labels": 43071,
+    "episodes": 192,
     "eval_episodes": 120,
-    "sim_steps": 3591825,
-    "worker_seconds": 455.5507839007769
+    "sim_steps": 2235675,
+    "worker_seconds": 266.72189202182926
   },
   "decisions": [
     {
@@ -28,6 +28,8 @@
           "subgoal2": 6,
           "subgoal3": 1
         },
+        "perturbation_events": 10,
+        "perturbation_failure_rate": 1.0,
         "perturbed_failure_rate": 0.0,
         "recovery_triggers": 0,
         "residual": 0.011229331600885087,
@@ -55,6 +57,8 @@
           "subgoal1": 3,
           "subgoal2": 1
         },
+        "perturbation_events": 19,
+        "perturbation_failure_rate": 0.2,
         "perturbed_failure_rate": 0.0,
         "recovery_triggers": 0,
         "residual": 0.00013040548526262186,
@@ -67,8 +71,8 @@
       "target": "subgoal0"
     },
     {
-      "action": "dagger_round",
-      "est_cost": 4,
+      "action": "stop",
+      "est_cost": 0,
       "profile": {
         "concentration": 0.5,
         "failure_types": {
@@ -79,23 +83,25 @@
           "subgoal0": 1,
           "subgoal1": 1
         },
+        "perturbation_events": 16,
+        "perturbation_failure_rate": 0.0,
         "perturbed_failure_rate": 0.0,
         "recovery_triggers": 0,
         "residual": 0.0003425600274225074,
         "sr": 0.9166666666666666
       },
-      "reason": "default: one DAgger round",
+      "reason": "nothing localised and SR 0.92 >= 0.85",
       "round": 3,
-      "sr_after": 0.9,
+      "sr_after": 0.95,
       "sr_before": 0.95,
       "target": null
     }
   ],
   "deploy_episodes": 72,
-  "final_sr": 0.9,
+  "final_sr": 0.95,
   "first_action": "calibrate_geometry",
   "first_step_correct": true,
-  "new_labels": 80000,
+  "new_labels": 40000,
   "scenario": "geometry",
   "seed": 0,
   "selector": "rule"

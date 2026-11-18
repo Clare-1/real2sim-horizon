@@ -93,6 +93,7 @@ def main() -> int:
     ap.add_argument("--workers", type=int, default=6)
     ap.add_argument("--episodes", type=int, default=24)
     ap.add_argument("--project-root", default=".")
+    ap.add_argument("--tag", default="", help="suffix for the output files, e.g. _pert07")
     args = ap.parse_args()
 
     base = yaml.safe_load((ROOT / args.config).read_text(encoding="utf-8"))
@@ -153,9 +154,9 @@ def main() -> int:
     for r in rows:
         lines.append(f"- {r['scenario']}: {r['failure_types']}")
     text = "\n".join(lines)
-    dest = results_dir / "probe_recovery_signal.md"
+    dest = results_dir / f"probe_recovery_signal{args.tag}.md"
     dest.write_text(text + "\n", encoding="utf-8")
-    (results_dir / "probe_recovery_signal.json").write_text(
+    (results_dir / f"probe_recovery_signal{args.tag}.json").write_text(
         json.dumps(rows, ensure_ascii=False, indent=2), encoding="utf-8")
     print("\n" + text)
     print(f"\n[written] {dest}")

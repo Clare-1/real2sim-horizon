@@ -1,0 +1,78 @@
+[
+  {
+    "episodes": 24,
+    "sr": 0.16666666666666663,
+    "armed_episodes": 24,
+    "armed_rate": 1.0,
+    "perturbation_events": 10,
+    "perturbed_failure_rate": 0.8333333333333334,
+    "perturbed_given_failure": 1.0,
+    "legacy_perturbed_failure_rate": 0.0,
+    "legacy_recovery_triggers": 0,
+    "failure_types": {
+      "placement": 9,
+      "stall": 8,
+      "transition": 2,
+      "grasp": 1
+    },
+    "scenario": "geometry",
+    "cause": "geometry_bias",
+    "policy": "results/four_causes_20261118/runs/geometry/bank0/fixed/s0/policy_3.npz"
+  },
+  {
+    "episodes": 24,
+    "sr": 0.5416666666666667,
+    "armed_episodes": 24,
+    "armed_rate": 1.0,
+    "perturbation_events": 14,
+    "perturbed_failure_rate": 0.4583333333333333,
+    "perturbed_given_failure": 1.0,
+    "legacy_perturbed_failure_rate": 0.0,
+    "legacy_recovery_triggers": 0,
+    "failure_types": {
+      "placement": 3,
+      "transition": 6,
+      "grasp": 2
+    },
+    "scenario": "coverage",
+    "cause": "coverage_deficit",
+    "policy": "results/four_causes_20261118/runs/coverage/bank0/fixed/s0/policy_3.npz"
+  },
+  {
+    "episodes": 24,
+    "sr": 0.7083333333333333,
+    "armed_episodes": 24,
+    "armed_rate": 1.0,
+    "perturbation_events": 104,
+    "perturbed_failure_rate": 0.2916666666666667,
+    "perturbed_given_failure": 1.0,
+    "legacy_perturbed_failure_rate": 0.0,
+    "legacy_recovery_triggers": 0,
+    "failure_types": {
+      "placement": 3,
+      "transition": 3,
+      "grasp": 1
+    },
+    "scenario": "recovery",
+    "cause": "recovery_deficit",
+    "policy": "results/four_causes_20261118/runs/recovery/bank0/fixed/s0/policy_3.npz"
+  },
+  {
+    "episodes": 24,
+    "sr": 0.875,
+    "armed_episodes": 24,
+    "armed_rate": 1.0,
+    "perturbation_events": 18,
+    "perturbed_failure_rate": 0.125,
+    "perturbed_given_failure": 1.0,
+    "legacy_perturbed_failure_rate": 0.0,
+    "legacy_recovery_triggers": 0,
+    "failure_types": {
+      "transition": 2,
+      "placement": 1
+    },
+    "scenario": "healthy",
+    "cause": "healthy",
+    "policy": "results/four_causes_20261118/runs/healthy/bank0/fixed/s0/policy_3.npz"
+  }
+]

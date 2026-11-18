@@ -1,0 +1,92 @@
+{
+  "bank_index": 0,
+  "calibrations": 1,
+  "cause": "healthy",
+  "cost": {
+    "accepted_labels": 80000,
+    "available_labels": 85909,
+    "episodes": 312,
+    "eval_episodes": 120,
+    "sim_steps": 3249600,
+    "worker_seconds": 372.0840845836792
+  },
+  "decisions": [
+    {
+      "action": "calibrate_geometry",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "placement": 1,
+          "verifier": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 1,
+          "subgoal3": 1
+        },
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0015249082722125322,
+        "sr": 0.9166666666666666
+      },
+      "reason": "ucb: untried arm",
+      "round": 1,
+      "sr_after": 0.85,
+      "sr_before": 0.85,
+      "target": null
+    },
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 1.0,
+        "failure_types": {
+          "grasp": 2
+        },
+        "per_subgoal": {
+          "subgoal2": 2
+        },
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.001423054016015838,
+        "sr": 0.9166666666666666
+      },
+      "reason": "ucb: untried arm",
+      "round": 2,
+      "sr_after": 0.95,
+      "sr_before": 0.85,
+      "target": null
+    },
+    {
+      "action": "add_recovery_data",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 1.0,
+        "failure_types": {
+          "stall": 1,
+          "transition": 1
+        },
+        "per_subgoal": {
+          "subgoal2": 2
+        },
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0010485895768980562,
+        "sr": 0.9166666666666666
+      },
+      "reason": "ucb: untried arm",
+      "round": 3,
+      "sr_after": 1.0,
+      "sr_before": 0.95,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 1.0,
+  "first_action": "calibrate_geometry",
+  "first_step_correct": false,
+  "new_labels": 80000,
+  "scenario": "healthy",
+  "seed": 0,
+  "selector": "bandit"
+}

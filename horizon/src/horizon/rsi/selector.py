@@ -10,6 +10,7 @@ them, so a fixture that tries to leak fails loudly instead of silently passing a
 """
 from __future__ import annotations
 
+import numpy as np
 from dataclasses import dataclass, field
 from typing import Protocol
 
@@ -37,6 +38,15 @@ ORACLE_SEQUENCE: dict[str, tuple[str, ...]] = {
     # A1 fails here on purpose: two causes coexist, so no single operation is optimal and the
     # advisor's suggestion is to treat the mixture as its own class with a two-step sequence.
     "mixed_cause": ("calibrate_geometry", "regenerate_targeted"),
+    # Mixture grid (2026-11-18): the union of the component operations, ordered so the twin is
+    # fixed before data are collected. Used by configs/minimal_validation_mixed_grid.yaml.
+    "mixed_gc": ("calibrate_geometry", "regenerate_targeted"),
+    "mixed_gr": ("calibrate_geometry", "add_recovery_data"),
+    "mixed_cr": ("regenerate_targeted", "add_recovery_data"),
+    "mixed_gcr": ("calibrate_geometry", "regenerate_targeted", "add_recovery_data"),
+    # Naturalistic deployment distribution: no discrete cause, so there is no "correct" first
+    # operation. The oracle abstains; the other selectors are scored on SR gain, not first-step.
+    "natural": (),
     # NOTE: no "dynamics_bias" entry. Friction (1.0->0.01), finger friction (1.5->0.1) and mass
     # (1x->8x) do not change SR on this platform and latency is binary, so there is no gradable
     # dynamics cause to label as correct. Evidence: 重跑风险审计_2026-11-18.md section 8.
@@ -76,6 +86,24 @@ class FailureProfile:
         return max(self.per_subgoal_failure.values()) / total if total else 0.0
 
 
+_FAILURE_TYPES = ("grasp", "drop", "placement", "regression", "wrong_object",
+                  "transition", "stall", "verifier")
+
+
+def profile_vector(p: FailureProfile) -> tuple[float, ...]:
+    """Fixed-length context for learned selectors; ends with a bias term.
+
+    Only observable fields enter: calibration residual, concentration, SR, perturbation rate,
+    subgoal counts and failure-type shares. The injected cause never enters.
+    """
+    per = p.per_subgoal_failure or {}
+    ft = p.failure_types or {}
+    total = sum(ft.values()) or 1
+    return ((1000.0 * (p.calibration_residual or 0.0), p.concentration, p.sr,
+             p.perturbed_failure_rate, float(len(per)), float(sum(per.values())))
+            + tuple(ft.get(t, 0) / total for t in _FAILURE_TYPES) + (1.0,))
+
+
 @dataclass(frozen=True)
 class Budget:
     deploy_spent: int = 0
@@ -98,6 +126,9 @@ class HistoryEntry:
     sr_after: float
     target: str | None = None
     cost: int = 0
+    # Observable context at decision time, recorded by the runner so a learned selector can
+    # attribute the reward to the context it actually saw (no injected cause enters).
+    context: tuple = ()
 
 
 @dataclass(frozen=True)
@@ -173,6 +204,10 @@ class RulePlannerSelector:
     # "v1" keeps the legacy (dead) signal used by the 2026-11-18 screening batch.
     # "v2" uses the measured perturbation pressure; enable only after the probe shows separation.
     recovery_signal: str = "v1"
+    # Stop only when the twin already looks healthy. Without this floor the rule stopped on a
+    # recovery twin at SR 0.42 (concentration 0.36) and lost 0.75 SR; healthy sits at 0.92 with
+    # concentration exactly 0.50, so the concentration test must include the boundary.
+    healthy_sr: float = 0.85
 
     def decide(self, obs: Observation) -> Decision:
         stop = _guard(obs)
@@ -198,9 +233,13 @@ class RulePlannerSelector:
         #   and mass (1x->8x) do not change SR on this platform, and latency is binary, so there is
         #   no gradable dynamics cause to detect. Keeping the branch only produced misfires on
         #   diffuse failures; see 重跑风险审计_2026-11-18.md section 8.
-        # 4 nothing localised: no geometry disagreement, diffuse failures, no perturbation pressure
-        if (residual is None or residual <= self.tau_geo) and p.concentration < self.tau_concentration                 and pressure < self.tau_perturbed:
-            return Decision("stop", None, "no localised cause detected", 0)
+        # 4 nothing localised and already healthy: no update can buy anything
+        if ((residual is None or residual <= self.tau_geo)
+                and p.concentration <= self.tau_concentration
+                and pressure < self.tau_perturbed
+                and p.sr >= self.healthy_sr):
+            return Decision("stop", None,
+                            f"nothing localised and SR {p.sr:.2f} >= {self.healthy_sr:.2f}", 0)
         # 5 coverage: failures concentrated on one subgoal while its labels are thin
         if p.concentration > self.tau_concentration and b.labels_spent < self.tau_labels_low:
             worst = max(p.per_subgoal_failure, key=p.per_subgoal_failure.get)
@@ -310,69 +349,88 @@ class UCBBanditSelector:
                 best, best_val = a, val
         return Decision(best, None, f"ucb value {best_val:.3f}", 4)
 
+
 @dataclass
-class RandomSelector:
-    """Uniformly random admissible operation. The "did you just pick a soft baseline" control."""
+class LinUCBSelector:
+    """Contextual bandit over operations; context = the observable failure profile.
 
-    name: str = "random"
-    seed: int = 0
+    This is the learned selector baseline: it needs no extra simulator calls, only the rounds it
+    already runs. Rewards are the SR changes the runner records together with the context that was
+    visible when the action was taken, so the update is not confounded by later profiles.
+    """
 
-    POOL = ("calibrate_geometry", "regenerate_uniform", "regenerate_targeted",
-            "add_recovery_data", "dagger_round")
+    name: str = "linucb"
+    alpha: float = 0.5
+    arms: tuple = ("calibrate_geometry", "regenerate_uniform", "regenerate_targeted",
+                   "add_recovery_data", "dagger_round")
+    A: dict = field(default_factory=dict)
+    b: dict = field(default_factory=dict)
+    seen: int = 0
+
+    def _sync(self, obs: Observation) -> None:
+        """Apply every history entry not seen before, with its own recorded context."""
+        for h in obs.history[self.seen:]:
+            if not h.context:
+                continue
+            x = np.asarray(h.context, dtype=float)
+            A = self.A.get(h.action, np.eye(x.size))
+            b = self.b.get(h.action, np.zeros(x.size))
+            self.A[h.action] = A + np.outer(x, x)
+            self.b[h.action] = b + (h.sr_after - h.sr_before) * x
+        self.seen = len(obs.history)
 
     def decide(self, obs: Observation) -> Decision:
         stop = _guard(obs)
         if stop:
             return stop
-        import numpy as np
-        rng = np.random.default_rng(np.random.SeedSequence([self.seed, len(obs.history)]))
-        action = self.POOL[int(rng.integers(len(self.POOL)))]
-        return Decision(action, None, "random draw", 4)
-
-
-@dataclass
-class RoundRobinSelector:
-    """Cycles through the operations in a fixed order; a strong "no feedback" control."""
-
-    name: str = "round_robin"
-    order: tuple = ("calibrate_geometry", "regenerate_targeted", "dagger_round")
-
-    def decide(self, obs: Observation) -> Decision:
-        stop = _guard(obs)
-        if stop:
-            return stop
-        k = len(obs.history) % len(self.order)
-        return Decision(self.order[k], None, f"round-robin step {k}", 4)
-
-
-@dataclass
-class UCBBanditSelector:
-    """UCB1 over operations; reward is the SR change each operation produced."""
-
-    name: str = "bandit"
-    c: float = 1.0
-    arms: tuple = ("calibrate_geometry", "regenerate_targeted", "add_recovery_data",
-                   "dagger_round")
-
-    def decide(self, obs: Observation) -> Decision:
-        stop = _guard(obs)
-        if stop:
-            return stop
-        import math
-        counts: dict = {}
-        reward: dict = {}
-        for h in obs.history:
-            counts[h.action] = counts.get(h.action, 0) + 1
-            reward[h.action] = reward.get(h.action, 0.0) + (h.sr_after - h.sr_before)
-        for a in self.arms:  # try every arm once
-            if counts.get(a, 0) == 0:
-                return Decision(a, None, "ucb: untried arm", 4)
-        n = sum(counts.values())
-        best, best_val = self.arms[0], -1e9
+        self._sync(obs)
+        x = np.asarray(profile_vector(obs.profile), dtype=float)
+        best, best_val = self.arms[0], -1e18
         for a in self.arms:
-            mean = reward[a] / counts[a]
-            val = mean + self.c * math.sqrt(2.0 * math.log(max(n, 1)) / counts[a])
+            A = self.A.get(a, np.eye(x.size))
+            b = self.b.get(a, np.zeros(x.size))
+            theta = np.linalg.solve(A, b)
+            bonus = self.alpha * float(np.sqrt(max(x @ np.linalg.solve(A, x), 0.0)))
+            val = float(theta @ x) + bonus
             if val > best_val:
                 best, best_val = a, val
-        return Decision(best, None, f"ucb value {best_val:.3f}", 4)
+        return Decision(best, None, f"linucb value {best_val:.3f}", 4)
 
+
+@dataclass
+class LearnedValueSelector:
+    """Learned operation-value selector: argmax predicted ΔSR from the observable profile.
+
+    The model is trained offline on counterfactual sweeps (scripts/train_value_model.py) and loaded
+    from ``cfg['value_model']``. It never reads the injected cause.
+    """
+
+    name: str = "learned_value"
+    model_path: str = ""
+    actions: tuple = ("calibrate_geometry", "regenerate_uniform", "regenerate_targeted",
+                      "add_recovery_data", "dagger_round")
+    model: dict = field(default_factory=dict)
+
+    def __post_init__(self):
+        if self.model_path:
+            import json
+            from pathlib import Path
+            self.model = json.loads(Path(self.model_path).read_text(encoding="utf-8"))
+
+    def decide(self, obs: Observation) -> Decision:
+        stop = _guard(obs)
+        if stop:
+            return stop
+        if not self.model:
+            raise RuntimeError("learned_value selector needs cfg['value_model']")
+        base = list(profile_vector(obs.profile))
+        mu = np.asarray(self.model["mu"], float)
+        sd = np.asarray(self.model["sd"], float)
+        w = np.asarray(self.model["w"], float)
+        best, best_val = self.actions[0], -1e18
+        for a in self.actions:
+            z = np.asarray(base + [1.0 if a == b else 0.0 for b in self.actions] + [0.0], float)
+            val = float(np.append((z - mu) / sd, 1.0) @ w)
+            if val > best_val:
+                best, best_val = a, val
+        return Decision(best, None, f"learned value {best_val:+.3f}", 4)

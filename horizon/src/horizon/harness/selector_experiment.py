@@ -25,7 +25,8 @@ from ..monitor.verifier import VerifierConfig
 from ..policy.dataset import Dataset
 from ..real2sim.recon_error import ReconModel
 from ..rsi.selector import (CAUSE_ACTION, Budget, FailureProfile, FixedRecipeSelector, HistoryEntry,
-                            Observation, OracleSelector, RulePlannerSelector)
+                            LearnedValueSelector, Observation, OracleSelector, RulePlannerSelector,
+                            profile_vector)
 from ..rsi.simreal import geometry_repair
 from ..tasks.families import RandomizationConfig
 from .artifacts import canonical_hash, load_blocks, save_blocks, save_policy, write_json
@@ -34,7 +35,8 @@ from .experiment import (TaskStore, check_results, collect_recorded, dagger_fact
                          rollout_cost, train_version)
 
 SELECTORS = {"fixed": FixedRecipeSelector, "rule": RulePlannerSelector}
-WIRED = {"random": "RandomSelector", "round_robin": "RoundRobinSelector", "bandit": "UCBBanditSelector"}
+WIRED = {"random": "RandomSelector", "round_robin": "RoundRobinSelector",
+         "bandit": "UCBBanditSelector", "linucb": "LinUCBSelector"}
 
 
 def make_selector(name: str, cause: str, cfg: dict | None = None):
@@ -46,6 +48,8 @@ def make_selector(name: str, cause: str, cfg: dict | None = None):
     if name in WIRED:
         from ..rsi import selector as _sel
         return getattr(_sel, WIRED[name])()
+    if name == "learned_value":
+        return LearnedValueSelector(model_path=(cfg or {}).get("value_model", ""))
     if name == "rule":
         return RulePlannerSelector(recovery_signal=(cfg or {}).get("recovery_signal", "v1"))
     return SELECTORS[name]()
@@ -357,7 +361,8 @@ def _run_one(out, cfg, name, cause, seed, sel_name, store_train, store_deploy, r
             params, _, _ = train_version(list(data.blocks), cfg, seed, d / f"policy_{round_id}.npz")
         ev2, _ = evaluate(params, cfg, store_deploy, recon, curve_bank, cfg["curve_n_per"], workers)
         sr_now = ev2[cfg.get("eval_mode", "nominal")]["overall"]
-        history.append(HistoryEntry(dec.action, sr_before, sr_now, dec.target, dec.est_cost))
+        history.append(HistoryEntry(dec.action, sr_before, sr_now, dec.target, dec.est_cost,
+                                    context=profile_vector(prof)))
         decisions.append({**dec.__dict__, "round": round_id, "sr_before": sr_before, "sr_after": sr_now,
                           "profile": _prof_dict(prof)})
         print(f"  {name}/{sel_name}/s{seed} r{round_id}: {dec.action} "
