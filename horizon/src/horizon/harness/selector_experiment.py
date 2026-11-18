@@ -25,7 +25,8 @@ from ..monitor.verifier import VerifierConfig
 from ..policy.dataset import Dataset
 from ..real2sim.recon_error import ReconModel
 from ..rsi.selector import (CAUSE_ACTION, Budget, FailureProfile, FixedRecipeSelector, HistoryEntry,
-                            LearnedValueSelector, Observation, OracleSelector, RulePlannerSelector,
+                            LearnedValueSelector, MultiLabelSelector, Observation, OracleSelector,
+                            RulePlannerSelector,
                             profile_vector)
 from ..rsi.simreal import geometry_repair
 from ..tasks.families import RandomizationConfig
@@ -48,6 +49,8 @@ def make_selector(name: str, cause: str, cfg: dict | None = None):
     if name in WIRED:
         from ..rsi import selector as _sel
         return getattr(_sel, WIRED[name])()
+    if name == "multilabel":
+        return MultiLabelSelector(model_path=(cfg or {}).get("multilabel_model", ""))
     if name == "learned_value":
         return LearnedValueSelector(model_path=(cfg or {}).get("value_model", ""))
     if name == "rule":

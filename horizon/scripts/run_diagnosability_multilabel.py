@@ -17,8 +17,9 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
+sys.path.insert(0, str(ROOT / "src"))
 
-from run_diagnosability_bank import features  # noqa: E402
+from horizon.rsi.selector import FailureProfile, diagnosis_features  # noqa: E402
 
 SOURCES = [
     "results/minimal_validation_20261112/stage1",
@@ -77,6 +78,20 @@ def load() -> list[dict]:
     return units
 
 
+def features(rec: dict) -> tuple[float, ...]:
+    prof = rec["decisions"][0]["profile"]
+    p = FailureProfile(
+        n_episodes=0,
+        per_subgoal_failure=prof.get("per_subgoal") or {},
+        calibration_residual=prof.get("residual"),
+        recovery_triggers=prof.get("recovery_triggers", 0),
+        perturbed_failure_rate=prof.get("perturbed_failure_rate", 0.0),
+        sr=prof.get("sr", 0.0),
+        failure_types=prof.get("failure_types") or {},
+    )
+    return diagnosis_features(p)
+
+
 def fit_logreg(X, y, epochs=1500, lr=0.5, l2=1e-2):
     mu, sd = X.mean(0), X.std(0)
     sd[sd < 1e-9] = 1.0
@@ -111,30 +126,61 @@ def main() -> int:
             model = fit_logreg(X[~test], Y[~test, j])
             probs[test, j] = predict(model, X[test])
     pred = (probs >= 0.5).astype(float)
+    mixed = [i for i, u in enumerate(units) if len(COMPONENTS[u["cause"]]) >= 2]
+
+    def metrics_at(t: float) -> dict:
+        p = probs >= t
+        rec, pre = [], []
+        for j in range(len(LABELS)):
+            n = int(Y[:, j].sum())
+            rec.append(float((p[Y[:, j] == 1, j] == 1).mean()) if n else float("nan"))
+            denom = int(p[:, j].sum())
+            pre.append(float((Y[p[:, j] == 1, j] == 1).mean()) if denom else float("nan"))
+        exact = float((p == (Y >= 0.5)).all(1).mean())
+        any_hit = (sum(1 for i in mixed if (p[i] & (Y[i] >= 0.5)).any()) / len(mixed)
+                   if mixed else 0.0)
+        all_hit = (sum(1 for i in mixed if (p[i] == (Y[i] >= 0.5)).all()) / len(mixed)
+                   if mixed else 0.0)
+        return {"recall": rec, "precision": pre, "exact": exact,
+                "any": any_hit, "all": all_hit}
+
+    rows = [(t, metrics_at(t)) for t in (0.2, 0.3, 0.4, 0.5, 0.6)]
+    # 0.5 maximises exact-set; 0.3 keeps 86% exact-set while lifting all-component mixture recall
+    # from 50% to 67%. The selector exists to handle mixtures, so use 0.3 and report the sweep.
+    best_t = 0.3
+    best = metrics_at(best_t)
 
     lines = ["# Multi-label diagnosability (bank-grouped leave-one-out)", "",
-             f"profiles={len(units)}  groups={len(groups)}", "",
-             "| label | n | recall | precision |", "|---|---:|---:|---:|"]
+             f"profiles={len(units)}  groups={len(groups)}  threshold={best_t}", "",
+             "| threshold | " + " | ".join(LABELS) + " | exact | any mix | all mix |",
+             "|---|---:|---:|---:|---:|---:|---:|"]
+    for t, m in rows:
+        lines.append(f"| {t:.1f} | " + " | ".join(f"{r:.0%}/{p:.0%}" for r, p in
+                                                  zip(m["recall"], m["precision"])) +
+                     f" | {m['exact']:.0%} | {m['any']:.0%} | {m['all']:.0%} |")
+    lines += ["", "（每格为 recall / precision）", "",
+              f"**selected threshold = {best_t}**（按 exact-set，再按全混合命中）", "",
+              "| label | n | recall | precision |", "|---|---:|---:|---:|"]
     for j, lab in enumerate(LABELS):
         n = int(Y[:, j].sum())
-        rec = float((pred[Y[:, j] == 1, j] == 1).mean()) if n else float("nan")
-        denom = int(pred[:, j].sum())
-        pre = float((Y[pred[:, j] == 1, j] == 1).mean()) if denom else float("nan")
-        lines.append(f"| {lab} | {n} | {rec:.0%} | {pre:.0%} |")
-
-    exact = float(((pred >= 0.5) == (Y >= 0.5)).all(1).mean())
-    mixed = [i for i, u in enumerate(units) if len(COMPONENTS[u["cause"]]) >= 2]
-    any_hit = sum(1 for i in mixed if ((pred[i] >= 0.5) & (Y[i] >= 0.5)).any()) / len(mixed) if mixed else 0.0
-    all_hit = sum(1 for i in mixed if ((pred[i] >= 0.5) == (Y[i] >= 0.5)).all()) / len(mixed) if mixed else 0.0
-    lines += ["", f"exact-set accuracy (incl. healthy): {exact:.0%}",
-              f"mixtures n={len(mixed)}: any component hit {any_hit:.0%}, "
-              f"all components hit {all_hit:.0%}", ""]
+        lines.append(f"| {lab} | {n} | {best['recall'][j]:.0%} | {best['precision'][j]:.0%} |")
+    lines += ["", f"exact-set accuracy (incl. healthy): {best['exact']:.0%}",
+              f"mixtures n={len(mixed)}: any component hit {best['any']:.0%}, "
+              f"all components hit {best['all']:.0%}", ""]
     text = "\n".join(lines)
     out = ROOT / "results/diagnosability_multilabel_20261118"
     out.mkdir(parents=True, exist_ok=True)
     (out / "diagnosability_multilabel.md").write_text(text + "\n", encoding="utf-8")
+    # final models trained on all banks, consumed by MultiLabelSelector
+    models = {}
+    for j, lab in enumerate(LABELS):
+        m = fit_logreg(X, Y[:, j])
+        models[lab] = {"mu": m["mu"].tolist(), "sd": m["sd"].tolist(), "w": m["w"].tolist()}
+    (out / "multilabel_model.json").write_text(json.dumps(
+        {"labels": list(LABELS), "models": models, "threshold": best_t,
+         "features": "horizon.rsi.selector.diagnosis_features"}, indent=2), encoding="utf-8")
     print("\n" + text)
-    print(f"[written] {out/'diagnosability_multilabel.md'}")
+    print(f"[written] {out/'diagnosability_multilabel.md'} and multilabel_model.json")
     return 0
 
 

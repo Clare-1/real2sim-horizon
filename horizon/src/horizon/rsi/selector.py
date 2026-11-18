@@ -104,6 +104,20 @@ def profile_vector(p: FailureProfile) -> tuple[float, ...]:
             + tuple(ft.get(t, 0) / total for t in _FAILURE_TYPES) + (1.0,))
 
 
+def diagnosis_features(p: FailureProfile) -> tuple[float, ...]:
+    """Feature vector used by the learned diagnosers (no bias term; the model adds it).
+
+    Kept separate from ``profile_vector`` because the diagnoser was trained on this exact order and
+    the selector must reproduce it. Both are observable-only.
+    """
+    per = p.per_subgoal_failure or {}
+    ft = p.failure_types or {}
+    total = sum(ft.values()) or 1
+    return ((1000.0 * (p.calibration_residual or 0.0), p.concentration, float(len(per)),
+             float(sum(per.values())), p.sr)
+            + tuple(ft.get(t, 0) / total for t in _FAILURE_TYPES))
+
+
 @dataclass(frozen=True)
 class Budget:
     deploy_spent: int = 0
@@ -434,3 +448,66 @@ class LearnedValueSelector:
             if val > best_val:
                 best, best_val = a, val
         return Decision(best, None, f"learned value {best_val:+.3f}", 4)
+
+
+_MULTILABEL_CAUSE = {
+    frozenset({"geometry_bias"}): "geometry_bias",
+    frozenset({"coverage_deficit"}): "coverage_deficit",
+    frozenset({"recovery_deficit"}): "recovery_deficit",
+    frozenset({"geometry_bias", "coverage_deficit"}): "mixed_gc",
+    frozenset({"geometry_bias", "recovery_deficit"}): "mixed_gr",
+    frozenset({"coverage_deficit", "recovery_deficit"}): "mixed_cr",
+    frozenset({"geometry_bias", "coverage_deficit", "recovery_deficit"}): "mixed_gcr",
+}
+
+
+@dataclass
+class MultiLabelSelector:
+    """Learned multi-label diagnosis -> an operation sequence.
+
+    A single-label classifier collapses every mixture to its dominant component. This selector
+    predicts each component independently and maps the predicted set to the corresponding sequence:
+    {geometry, coverage} -> calibrate then targeted, and so on. An empty set with high SR stops.
+    """
+
+    name: str = "multilabel"
+    model_path: str = ""
+    threshold: float = 0.5
+    model: dict = field(default_factory=dict)
+
+    def __post_init__(self):
+        if self.model_path:
+            import json
+            from pathlib import Path
+            self.model = json.loads(Path(self.model_path).read_text(encoding="utf-8"))
+            self.threshold = float(self.model.get("threshold", self.threshold))
+
+    def _labels(self, p: FailureProfile) -> list[str]:
+        if not self.model:
+            raise RuntimeError("multilabel selector needs cfg['multilabel_model']")
+        x = np.asarray(diagnosis_features(p), float)
+        on = []
+        for lab in self.model["labels"]:
+            m = self.model["models"][lab]
+            z = np.append((x - np.asarray(m["mu"], float)) / np.asarray(m["sd"], float), 1.0)
+            prob = 1.0 / (1.0 + np.exp(-float(z @ np.asarray(m["w"], float))))
+            if prob >= self.threshold:
+                on.append(lab)
+        return on
+
+    def decide(self, obs: Observation) -> Decision:
+        stop = _guard(obs)
+        if stop:
+            return stop
+        on = self._labels(obs.profile)
+        cause = _MULTILABEL_CAUSE.get(frozenset(on))
+        if cause is None:
+            if not on and obs.profile.sr >= 0.85:
+                return Decision("stop", None, "multilabel: no component and already healthy", 0)
+            return Decision("dagger_round", None, f"multilabel: unknown set {sorted(on)}", 4)
+        seq = ORACLE_SEQUENCE[cause]
+        done = {h.action for h in obs.history}
+        for action in seq:
+            if action not in done:
+                return Decision(action, None, f"multilabel {cause} step {len(done) + 1}", 4)
+        return Decision(seq[-1], None, "multilabel: repeat the best operation", 4)

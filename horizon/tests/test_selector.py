@@ -5,9 +5,8 @@ import pytest
 
 from horizon.rsi.selector import (
     ACTIONS, CAUSE_ACTION, Budget, Decision, FailureProfile, FixedRecipeSelector, HistoryEntry,
-    LearnedValueSelector, LinUCBSelector, Observation, OracleSelector, RulePlannerSelector,
-    first_step_correct,
-    profile_vector,
+    LearnedValueSelector, LinUCBSelector, MultiLabelSelector, Observation, OracleSelector,
+    RulePlannerSelector, diagnosis_features, first_step_correct, profile_vector,
 )
 
 
@@ -200,6 +199,39 @@ def test_learned_value_selector_picks_the_highest_predicted_arm(tmp_path):
     path.write_text(json.dumps(model), encoding="utf-8")
     sel = LearnedValueSelector(model_path=str(path))
     assert sel.decide(obs(sr=0.4)).action == "calibrate_geometry"
+
+
+def test_multilabel_selector_maps_component_set_to_sequence(tmp_path):
+    import json
+
+    n = len(diagnosis_features(FailureProfile()))
+    labels = ["geometry_bias", "coverage_deficit", "recovery_deficit"]
+
+    def lab(bias):
+        return {"mu": [0.0] * n, "sd": [1.0] * n, "w": [0.0] * n + [bias]}
+
+    def write(name, bg, bc, br):
+        path = tmp_path / name
+        path.write_text(json.dumps({
+            "labels": labels, "threshold": 0.5,
+            "models": {"geometry_bias": lab(bg), "coverage_deficit": lab(bc),
+                       "recovery_deficit": lab(br)}}), encoding="utf-8")
+        return str(path)
+
+    geo = MultiLabelSelector(model_path=write("geo.json", 8, -8, -8))
+    assert geo.decide(obs(sr=0.3)).action == "calibrate_geometry"
+    h = HistoryEntry("calibrate_geometry", 0.3, 0.7)
+    assert geo.decide(Observation(FailureProfile(sr=0.7), Budget(deploy_total=72),
+                                  (h,))).action == "regenerate_uniform"
+
+    mixed = MultiLabelSelector(model_path=write("mixed.json", 8, 8, -8))
+    assert mixed.decide(obs(sr=0.3)).action == "calibrate_geometry"
+    h2 = HistoryEntry("calibrate_geometry", 0.3, 0.6)
+    assert mixed.decide(Observation(FailureProfile(sr=0.6), Budget(deploy_total=72),
+                                    (h2,))).action == "regenerate_targeted"
+
+    healthy = MultiLabelSelector(model_path=write("healthy.json", -8, -8, -8))
+    assert healthy.decide(obs(sr=0.9)).action == "stop"
 
 
 def test_every_action_is_reachable_and_valid():
