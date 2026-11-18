@@ -43,19 +43,21 @@
 |---|---|
 | 网格 | 4 原因 × 2 场景实例（bank）× 6 选择器 = **48 runs** |
 | 协议预算 | 初始化 80k / 每轮 40k / 8000 步训练 / 24 反馈 episode / 3 轮 |
-| 快照进度 | **31 / 48**（本仓库构建时；以 `partial_report.md` 为准） |
-| 已完成原因 | 几何、覆盖、恢复（健康待跑） |
+| 快照进度 | **40 / 48**（本仓库构建时；healthy 4/12；以 `partial_report.md` 为准） |
+| 已完成原因 | 几何、覆盖、恢复（各 12/12）；健康进行中 |
 
 快照中（2 样本/格，**筛查级，不能直接上主表**）：
 
-| 选择器 | 几何 | 覆盖 | 恢复 |
-|---|---:|---:|---:|
-| fixed | 0.775 | 0.675 | 0.850 |
-| rule | 0.875 | 0.925 | 0.950 |
-| random | 0.450 | 0.925 | 1.000 |
-| round_robin | 0.875 | 0.825 | 0.650 |
-| bandit | 0.925 | 1.000 | 0.850 |
-| oracle | 0.925 | 0.950 | 0.900 |
+| 选择器 | 几何 | 覆盖 | 恢复 | 健康 |
+|---|---:|---:|---:|---:|
+| fixed | 0.775 | 0.675 | 0.850 | 0.950 |
+| rule | 0.875 | 0.925 | **0.525\*** | 0.950 |
+| random | 0.450 | 0.925 | 1.000 | 0.950 |
+| round_robin | 0.875 | 0.825 | 0.650 | 0.950 |
+| bandit | 0.925 | 1.000 | 0.850 | - |
+| oracle | 0.925 | 0.950 | 0.875 | - |
+
+> **2026-11-18 11:30 追加（重要）**：`rule` 行由**旧版内存模块**产生——批处理 08:34 启动时加载的 `RulePlannerSelector` 还带 `slip/drop failures dominate → randomize_physics` 分支，而当前源码已删除该分支。6 个 rule 格中 3 个受影响（recovery bank1 被连选 3 次 `randomize_physics`，最终 SR 0.100）。已准备 `configs/minimal_validation_4causes_rulefix.yaml` 与 `scripts/merge_rule_records.py`，主批结束后由 `scripts/finish_four_causes.sh` 自动重跑 8 个 rule 格并合并。**上表 rule 行在合并前不可引用**；详见审计第十节。
 
 > 读数注意：每格只有 1–2 个样本（95% CI 约 ±6–8 pp），这里只用于方向筛查；论文主表需要 5 实例 × 3 种子（`configs/minimal_validation_4causes_paper.yaml`，216 runs）。
 

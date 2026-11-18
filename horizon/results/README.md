@@ -6,7 +6,7 @@
 
 | 目录 | 内容 | 用途 |
 |---|---|---|
-| `four_causes_20261118/` | `experiment.json`、`shared/*/*/effective_config.json`、每 run 的 `record.json` + `feedback.json`、`partial_report.md`、`probe_recovery_signal.{md,json}` | 当前四类原因 × 6 选择器批次（构建时 31/48） |
+| `four_causes_20261118/` | `experiment.json`、`shared/*/*/effective_config.json`、每 run 的 `record.json` + `feedback.json`、`partial_report.md`、`probe_recovery_signal.{md,json}` | 当前四类原因 × 6 选择器批次（构建时 40/48；rule 列待重跑） |
 | `fig3_action_20261118/` | 原因 × 第一步操作热图（总图 + 分选择器） | 图 3 |
 | `fig4_trajectory_20261118/` | 典型场景逐轮 SR 与操作链 | 附录图 4 |
 | `friction_calibration_20261118/friction_sweep.json` | 物体摩擦 1.0 → 0.01 的 SR 扫描 | 动力学不可表达的负结果 |

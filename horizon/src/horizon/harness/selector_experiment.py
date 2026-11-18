@@ -266,15 +266,20 @@ def run_selector_experiment(cfg, out, project_root, workers=4):
             store_deploy = _store(out / "tasks_deploy" / name, cfg_scn, project_root, "full")
             recon0 = ReconModel.from_dict(scenario.get("conditions", {}).get("recon", {}))
             data_path = shared / "data.npz"
-            if data_path.exists():
-                blocks = load_blocks({"path": str(data_path), "sha256": ""})
+            manifest_path = shared / "data.manifest.json"
+            if manifest_path.exists():
+                blocks = load_blocks(json.loads(manifest_path.read_text(encoding="utf-8")))
                 print(f"INIT {name}/s{seed}: reused {sum(b.n for b in blocks)} labels", flush=True)
             else:
+                if data_path.exists():
+                    print(f"INIT {name}/s{seed}: data.npz without manifest, re-collecting", flush=True)
                 with Runner(workers) as runner:
                     blocks, ledger, _ = collect_recorded(
                         runner, nominal_factory(store_train, cfg_scn, recon0, seed),
                         cfg_scn["init_budget"], recon0, require_success=True)
-                save_blocks(data_path, blocks)
+                # Save the manifest too: loading needs path + hashes + block counts, and an
+                # empty/garbage sha256 would otherwise fail verification on every reuse.
+                write_json(manifest_path, save_blocks(data_path, blocks))
                 write_json(shared / "collection.json", {"ledger": ledger})
                 print(f"INIT {name}/s{seed}: {sum(b.n for b in blocks)} labels", flush=True)
             base_blocks = list(blocks)

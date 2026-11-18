@@ -1,0 +1,101 @@
+{
+  "bank_index": 0,
+  "calibrations": 0,
+  "cause": "recovery_deficit",
+  "cost": {
+    "accepted_labels": 120000,
+    "available_labels": 124232,
+    "episodes": 432,
+    "eval_episodes": 120,
+    "sim_steps": 4955875,
+    "worker_seconds": 523.8967931279913
+  },
+  "decisions": [
+    {
+      "action": "add_recovery_data",
+      "est_cost": 0,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "drop": 1,
+          "grasp": 5,
+          "placement": 4,
+          "transition": 4
+        },
+        "per_subgoal": {
+          "subgoal0": 7,
+          "subgoal1": 3,
+          "subgoal2": 3,
+          "subgoal3": 1
+        },
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0007207866634765456,
+        "sr": 0.41666666666666663
+      },
+      "reason": "oracle: recovery_deficit step 1",
+      "round": 1,
+      "sr_after": 0.8,
+      "sr_before": 0.35,
+      "target": null
+    },
+    {
+      "action": "add_recovery_data",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.3333333333333333,
+        "failure_types": {
+          "grasp": 2,
+          "placement": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 1,
+          "subgoal1": 1,
+          "subgoal2": 1
+        },
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.001487780610221947,
+        "sr": 0.875
+      },
+      "reason": "oracle: repeat the cause's best operation",
+      "round": 2,
+      "sr_after": 0.9,
+      "sr_before": 0.8,
+      "target": null
+    },
+    {
+      "action": "add_recovery_data",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.3333333333333333,
+        "failure_types": {
+          "placement": 1,
+          "transition": 2
+        },
+        "per_subgoal": {
+          "subgoal1": 1,
+          "subgoal2": 1,
+          "subgoal3": 1
+        },
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0013228774658573077,
+        "sr": 0.875
+      },
+      "reason": "oracle: repeat the cause's best operation",
+      "round": 3,
+      "sr_after": 0.9,
+      "sr_before": 0.9,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 0.9,
+  "first_action": "add_recovery_data",
+  "first_step_correct": true,
+  "new_labels": 120000,
+  "scenario": "recovery",
+  "seed": 0,
+  "selector": "oracle"
+}

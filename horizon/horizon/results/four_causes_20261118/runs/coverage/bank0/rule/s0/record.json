@@ -1,0 +1,96 @@
+{
+  "bank_index": 0,
+  "calibrations": 0,
+  "cause": "coverage_deficit",
+  "cost": {
+    "accepted_labels": 120000,
+    "available_labels": 130275,
+    "episodes": 432,
+    "eval_episodes": 120,
+    "sim_steps": 4614450,
+    "worker_seconds": 487.5170016668271
+  },
+  "decisions": [
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.9565217391304348,
+        "failure_types": {
+          "grasp": 3,
+          "placement": 1,
+          "stall": 2,
+          "transition": 17
+        },
+        "per_subgoal": {
+          "subgoal0": 22,
+          "subgoal3": 1
+        },
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": null,
+        "sr": 0.04166666666666663
+      },
+      "reason": "96% of failures in subgoal0",
+      "round": 1,
+      "sr_after": 0.85,
+      "sr_before": 0.1,
+      "target": "subgoal0"
+    },
+    {
+      "action": "randomize_physics",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "drop": 2
+        },
+        "per_subgoal": {
+          "subgoal0": 1,
+          "subgoal3": 1
+        },
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0016879644573378136,
+        "sr": 0.9166666666666666
+      },
+      "reason": "slip/drop failures dominate",
+      "round": 2,
+      "sr_after": 0.95,
+      "sr_before": 0.85,
+      "target": null
+    },
+    {
+      "action": "randomize_physics",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 1.0,
+        "failure_types": {
+          "drop": 2,
+          "grasp": 2,
+          "transition": 2
+        },
+        "per_subgoal": {
+          "subgoal0": 6
+        },
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.002125210000200991,
+        "sr": 0.75
+      },
+      "reason": "slip/drop failures dominate",
+      "round": 3,
+      "sr_after": 0.95,
+      "sr_before": 0.95,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 0.95,
+  "first_action": "regenerate_targeted",
+  "first_step_correct": true,
+  "new_labels": 120000,
+  "scenario": "coverage",
+  "seed": 0,
+  "selector": "rule"
+}

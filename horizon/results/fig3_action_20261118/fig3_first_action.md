@@ -1,6 +1,6 @@
 # Fig. 3  first operation per cause (row = cause, column = chosen operation)
 
-runs=29  causes=['geometry_bias', 'coverage_deficit', 'recovery_deficit']  selectors=['bandit', 'fixed', 'oracle', 'random', 'round_robin', 'rule']
+runs=38  causes=['geometry_bias', 'coverage_deficit', 'recovery_deficit', 'healthy']  selectors=['bandit', 'fixed', 'oracle', 'random', 'round_robin', 'rule']
 
 ## all selectors pooled
 
@@ -8,7 +8,8 @@ runs=29  causes=['geometry_bias', 'coverage_deficit', 'recovery_deficit']  selec
 |---|---|---|---|---|---|---|---|---|
 | geometry_bias | 83% |  |  |  |  | 17% |  | 12 |
 | coverage_deficit | 50% |  | 33% |  |  | 17% |  | 12 |
-| recovery_deficit | 60% |  |  |  |  | 40% |  | 5 |
+| recovery_deficit | 50% |  |  | 17% | 8% | 25% |  | 12 |
+| healthy | 50% |  |  |  |  | 50% |  | 2 |
 
 ## bandit
 
@@ -16,7 +17,8 @@ runs=29  causes=['geometry_bias', 'coverage_deficit', 'recovery_deficit']  selec
 |---|---|---|---|---|---|---|---|---|
 | geometry_bias | 100% |  |  |  |  |  |  | 2 |
 | coverage_deficit | 100% |  |  |  |  |  |  | 2 |
-| recovery_deficit | 100% |  |  |  |  |  |  | 1 |
+| recovery_deficit | 100% |  |  |  |  |  |  | 2 |
+| healthy |  |  |  |  |  |  |  | 0 |
 
 ## fixed
 
@@ -24,7 +26,8 @@ runs=29  causes=['geometry_bias', 'coverage_deficit', 'recovery_deficit']  selec
 |---|---|---|---|---|---|---|---|---|
 | geometry_bias | 100% |  |  |  |  |  |  | 2 |
 | coverage_deficit | 100% |  |  |  |  |  |  | 2 |
-| recovery_deficit | 100% |  |  |  |  |  |  | 1 |
+| recovery_deficit | 100% |  |  |  |  |  |  | 2 |
+| healthy | 100% |  |  |  |  |  |  | 1 |
 
 ## oracle
 
@@ -32,7 +35,8 @@ runs=29  causes=['geometry_bias', 'coverage_deficit', 'recovery_deficit']  selec
 |---|---|---|---|---|---|---|---|---|
 | geometry_bias | 100% |  |  |  |  |  |  | 2 |
 | coverage_deficit |  |  | 100% |  |  |  |  | 2 |
-| recovery_deficit |  |  |  |  |  |  |  | 0 |
+| recovery_deficit |  |  |  | 100% |  |  |  | 2 |
+| healthy |  |  |  |  |  |  |  | 0 |
 
 ## random
 
@@ -40,7 +44,8 @@ runs=29  causes=['geometry_bias', 'coverage_deficit', 'recovery_deficit']  selec
 |---|---|---|---|---|---|---|---|---|
 | geometry_bias |  |  |  |  |  | 100% |  | 2 |
 | coverage_deficit |  |  |  |  |  | 100% |  | 2 |
-| recovery_deficit |  |  |  |  |  | 100% |  | 1 |
+| recovery_deficit |  |  |  |  |  | 100% |  | 2 |
+| healthy |  |  |  |  |  |  |  | 0 |
 
 ## round_robin
 
@@ -48,7 +53,8 @@ runs=29  causes=['geometry_bias', 'coverage_deficit', 'recovery_deficit']  selec
 |---|---|---|---|---|---|---|---|---|
 | geometry_bias | 100% |  |  |  |  |  |  | 2 |
 | coverage_deficit | 100% |  |  |  |  |  |  | 2 |
-| recovery_deficit | 100% |  |  |  |  |  |  | 1 |
+| recovery_deficit | 100% |  |  |  |  |  |  | 2 |
+| healthy |  |  |  |  |  |  |  | 0 |
 
 ## rule
 
@@ -56,4 +62,5 @@ runs=29  causes=['geometry_bias', 'coverage_deficit', 'recovery_deficit']  selec
 |---|---|---|---|---|---|---|---|---|
 | geometry_bias | 100% |  |  |  |  |  |  | 2 |
 | coverage_deficit |  |  | 100% |  |  |  |  | 2 |
-| recovery_deficit |  |  |  |  |  | 100% |  | 1 |
+| recovery_deficit |  |  |  |  | 50% | 50% |  | 2 |
+| healthy |  |  |  |  |  | 100% |  | 1 |

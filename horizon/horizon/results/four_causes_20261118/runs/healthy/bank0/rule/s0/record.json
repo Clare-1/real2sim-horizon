@@ -1,0 +1,65 @@
+{
+  "bank_index": 0,
+  "calibrations": 0,
+  "cause": "healthy",
+  "cost": {
+    "accepted_labels": 40000,
+    "available_labels": 43110,
+    "episodes": 192,
+    "eval_episodes": 80,
+    "sim_steps": 1756850,
+    "worker_seconds": 249.2184701100923
+  },
+  "decisions": [
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "placement": 1,
+          "verifier": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 1,
+          "subgoal3": 1
+        },
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0015249082722125322,
+        "sr": 0.9166666666666666
+      },
+      "reason": "default: one DAgger round",
+      "round": 1,
+      "sr_after": 0.95,
+      "sr_before": 0.85,
+      "target": null
+    },
+    {
+      "action": "stop",
+      "est_cost": 0,
+      "profile": {
+        "concentration": 0.0,
+        "failure_types": {},
+        "per_subgoal": {},
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0016060039528674984,
+        "sr": 1.0
+      },
+      "reason": "already solved",
+      "round": 2,
+      "sr_after": 0.95,
+      "sr_before": 0.95,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 48,
+  "final_sr": 0.95,
+  "first_action": "dagger_round",
+  "first_step_correct": false,
+  "new_labels": 40000,
+  "scenario": "healthy",
+  "seed": 0,
+  "selector": "rule"
+}
