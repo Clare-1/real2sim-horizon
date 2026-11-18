@@ -1,5 +1,7 @@
 # Breaking the Horizon — 代码实现
 
+> **仓库快照说明（2026-11-18）**：本仓库只保留当前论文线所需的代码、协议文档与结果快照；下方历史结果目录（`results/long_horizon_dev_20261028`、`results/harness_e1_20261026`、`results/protocol_screen_20261025` 等）未随仓库分发，相关链接会失效。已保留的快照见 [`results/README.md`](results/README.md)。
+
 > **2026-10-31 三种子复验完成：** 五系统×三个训练种子、三任务族×H2/4/6/8/10，共45次CUDA训练，15/15系统及独立重校验通过。偏差下首轮校准＋DAgger的H≥8 SR为75.56±4.59%／71.94±6.03%，比校准冻结策略高40.00／44.17个百分点，三个seed均为正。健康DAgger长程均值较高，但seed2退步且任务族间有权衡。204项测试通过；评测复用避免3,600次重复rollout，主实验保持legacy观测。[中文工作进展](../实验记录_长程复验_2026-10-31.md) · [完整结果与核验](results/long_horizon_replication_20261028/README.md) · [复现命令](results/long_horizon_replication_20261028/REPRODUCIBILITY.md)。这些是同MuJoCo开发代理的学习证据，尚非agent决策或真机迁移证明。
 
 > **2026-10-28 单种子开发记录：** 已恢复三任务族、H2/4/6/8/10完整训练覆盖，完成五系统单种子开发实验与15次CUDA训练。健康DAgger长程H≥8 SR为75.0%／75.0%；偏差下首轮校准＋DAgger为73.3%／68.3%，校准后冻结策略为38.3%／20.0%（名义／扰动）。当时145项测试与全部产物核验通过。尺度修正单独干预仍未解决短H外推，任务族之间存在收益权衡，不能宣称稳定领先或agent决策优势。[当批实验记录](../实验记录_长程机制_2026-10-28.md) · [完整结果](results/long_horizon_dev_20261028/RESULTS.md) · [基线设计](docs/long_horizon_baseline_design.md) · [当时的复验计划，现已执行](results/long_horizon_dev_20261028/NEXT_EXPERIMENT.md)
