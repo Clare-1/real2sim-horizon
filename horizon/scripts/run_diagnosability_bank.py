@@ -36,6 +36,7 @@ SOURCES = [
     "results/minimal_validation_n50_20261116",
     "results/minimal_validation_mixed_20261116",
     "results/four_causes_20261118",
+    "results/mixed_grid_20261118",
 ]
 
 
@@ -51,6 +52,8 @@ def load() -> list[dict]:
                     for x in sorted(p.glob("runs/*/*/*/*/record.json"))]
         for r in recs:
             r["_source"] = d
+            if r["cause"].startswith("mixed_"):
+                r["cause"] = "mixed_cause"   # the grid has four mixture conditions
             if r.get("decisions") and r["decisions"][0].get("profile"):
                 out.append(r)
     # Independent profiles collected by scripts/collect_profiles.py (one per cause x bank).
