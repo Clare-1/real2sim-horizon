@@ -124,6 +124,32 @@ cd horizon
 
 **多标签修正**：把单标签换成 3 个二分类后（阈值 0.3，按混合 recall 选），mixed 从 0% 变成“任一成分命中 100%、两成分全中 67%”（n=12，bank-grouped LOO；exact-set 86%）。论文接口应写成多标签后验，而不是单原因分类；`MultiLabelSelector` 已把预测集合映射为操作序列。
 
+### 5.5 Gap 1：混合原因（48 runs）
+
+| 条件 | fixed | rule | bandit | oracle | rule gap | bandit gap |
+|---|---:|---:|---:|---:|---:|---:|
+| mixed_gc | 0.650 | 0.725 | 0.925 | 0.925 | +27% | **+100%** |
+| mixed_gr | 0.775 | 0.725 | 0.800 | 0.925 | −33% | **+17%** |
+| mixed_cr | 0.550 | 0.900 | 0.925 | 0.950 | +88% | **+94%** |
+| mixed_gcr | 0.575 | 0.575 | 0.800 | 0.800 | 0% | **+100%** |
+
+gap = (SR − fixed)/(oracle − fixed)。bandit 在四个条件全部 ≥ rule；mixed_gr 上 rule 甚至负收益。**混合场景是 exploring/learned selector 的空间，规则不是天花板。**
+
+### 5.6 Gap 2：learned selectors
+
+| 选择器 | 几何 | 覆盖 | 恢复 | 健康 | 平均 | 首步对 |
+|---|---:|---:|---:|---:|---:|---:|
+| bandit | 0.925 | 1.000 | 0.850 | 1.000 | **0.944** | 2/8 |
+| rule | 0.900 | 0.875 | 1.000 | 0.875 | 0.912 | 6/8 |
+| multilabel (held-out) | 0.900 | 0.925 | 0.800 | 0.875 | 0.875 | 7/8 |
+| oracle | 0.925 | 0.950 | 0.875 | 0.875 | 0.906 | 8/8 |
+| linucb | 0.925 | 0.950 | 0.425 | 0.925 | 0.806 | 2/8 |
+| learned_value | 0.350 | 1.000 | 0.875 | 0.950 | 0.794 | 2/8 |
+
+- **multilabel（held-out 诊断 + 序列）首步 7/8，平均 0.875**：learned 诊断接近 oracle（8/8），但没有超过 rule 的最终 SR（0.912）。in-sample v1 的 8/8/0.906 偏高；v2 与 held-out 一致（7/8、0.875）。
+- bandit 最终 SR 最高但首步 2/8（探索型）。
+- learned_value 是负结果：40 条反事实样本的 value model R²=0.138、排序 3/8，首步总选 recovery；且该评估仍是 in-sample。写进 limitations。
+
 ## 6. 数据与可复现性
 
 为控制仓库体积，**只保留元数据、逐次 `record.json`、`effective_config.json`、图表和小型 `summary.json`**；策略权重 `.npz`、任务 payload（`tasks_*`）与原始大规模结果目录未纳入。它们由固定种子确定性生成，重跑同一配置即可复现。完整清单与再生成命令见 [`horizon/results/README.md`](horizon/results/README.md)。

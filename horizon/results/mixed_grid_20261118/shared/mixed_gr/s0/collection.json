@@ -1,0 +1,10 @@
+{
+  "ledger": {
+    "accepted_labels": 80000,
+    "available_labels": 81666,
+    "episodes": 216,
+    "sim_steps": 2131175,
+    "successful_episodes": 215,
+    "worker_seconds": 207.32525264564902
+  }
+}

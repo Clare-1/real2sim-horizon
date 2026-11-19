@@ -1,0 +1,80 @@
+{
+  "bank_index": 0,
+  "calibrations": 0,
+  "cause": "recovery_deficit",
+  "cost": {
+    "accepted_labels": 40000,
+    "available_labels": 41015,
+    "episodes": 168,
+    "eval_episodes": 80,
+    "sim_steps": 2004900,
+    "worker_seconds": 221.52755553158931
+  },
+  "decisions": [
+    {
+      "action": "add_recovery_data",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "drop": 1,
+          "grasp": 5,
+          "placement": 4,
+          "transition": 4
+        },
+        "per_subgoal": {
+          "subgoal0": 7,
+          "subgoal1": 3,
+          "subgoal2": 3,
+          "subgoal3": 1
+        },
+        "perturbation_events": 65,
+        "perturbation_failure_rate": 0.5652173913043478,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0007207866634765456,
+        "sr": 0.41666666666666663
+      },
+      "reason": "multilabel recovery_deficit step 1",
+      "round": 1,
+      "sr_after": 0.8,
+      "sr_before": 0.35,
+      "target": null
+    },
+    {
+      "action": "stop",
+      "est_cost": 0,
+      "profile": {
+        "concentration": 0.3333333333333333,
+        "failure_types": {
+          "grasp": 2,
+          "placement": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 1,
+          "subgoal1": 1,
+          "subgoal2": 1
+        },
+        "perturbation_events": 84,
+        "perturbation_failure_rate": 0.125,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.001487780610221947,
+        "sr": 0.875
+      },
+      "reason": "multilabel: no component and already healthy",
+      "round": 2,
+      "sr_after": 0.8,
+      "sr_before": 0.8,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 48,
+  "final_sr": 0.8,
+  "first_action": "add_recovery_data",
+  "first_step_correct": true,
+  "new_labels": 40000,
+  "scenario": "recovery",
+  "seed": 0,
+  "selector": "multilabel"
+}

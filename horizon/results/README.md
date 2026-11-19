@@ -7,6 +7,11 @@
 | 目录 | 内容 | 用途 |
 |---|---|---|
 | `four_causes_20261118/` | `experiment.json`、`shared/*/*/effective_config.json`、每 run 的 `record.json` + `feedback.json`、`report.md`、`probe_recovery_signal*.{md,json}` | 当前四类原因 × 6 选择器批次（48/48；rule 列已用当前代码重跑） |
+| `mixed_grid_20261118/` | 4 种混合条件 × 6 选择器的 48 runs + `mixed_report.md` | Gap 1：混合原因与 gap recovery |
+| `operation_sweep_20261118/` | 40 条反事实 `(profile, action, ΔSR)` + `value_model.json` | Gap 2：learned value 的负结果 |
+| `four_causes_learned_20261118/` | linucb / learned_value 的 16 runs | Gap 2：learned selector |
+| `four_causes_multilabel_20261118/` | multilabel selector 的 8 runs（v1 模型） | Gap 2：8/8 首步 |
+| `four_causes_multilabel_v2_20261118/` | 用完整混合样本重训后的 8 runs | v2 复验 |
 | `diagnosability_bank_20261118/` | 按 bank 分组留一的 5 类混淆矩阵与 recall | learned diagnoser 的可信版本 |
 | `diagnosability_multilabel_20261118/` | 3 个二分类的 recall/precision + 混合成分命中率 | 多标签接口（mixed 0% → 任一 100%） |
 | `diagnosis_profiles_20261118/` | 4 类 × 20 个独立 feedback profile（只跑 feedback） | 去重后的诊断数据 |

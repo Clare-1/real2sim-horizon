@@ -1,0 +1,112 @@
+{
+  "bank_index": 0,
+  "calibrations": 0,
+  "cause": "mixed_gcr",
+  "cost": {
+    "accepted_labels": 120000,
+    "available_labels": 130961,
+    "episodes": 480,
+    "eval_episodes": 120,
+    "sim_steps": 5914875,
+    "worker_seconds": 783.4430265277624
+  },
+  "decisions": [
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 1.0,
+        "failure_types": {
+          "drop": 2,
+          "grasp": 1,
+          "placement": 3,
+          "stall": 1,
+          "transition": 17
+        },
+        "per_subgoal": {
+          "subgoal0": 24
+        },
+        "perturbation_events": 12,
+        "perturbation_failure_rate": 1.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.009449913790541952,
+        "sr": 0.0
+      },
+      "reason": "random draw",
+      "round": 1,
+      "sr_after": 0.05,
+      "sr_before": 0.0,
+      "target": null
+    },
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5416666666666666,
+        "failure_types": {
+          "grasp": 6,
+          "placement": 9,
+          "stall": 6,
+          "transition": 3
+        },
+        "per_subgoal": {
+          "subgoal0": 13,
+          "subgoal1": 7,
+          "subgoal2": 3,
+          "subgoal3": 1
+        },
+        "perturbation_events": 29,
+        "perturbation_failure_rate": 1.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.011976005867324214,
+        "sr": 0.0
+      },
+      "reason": "random draw",
+      "round": 2,
+      "sr_after": 0.0,
+      "sr_before": 0.05,
+      "target": null
+    },
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.55,
+        "failure_types": {
+          "drop": 1,
+          "grasp": 2,
+          "placement": 11,
+          "stall": 5,
+          "transition": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 11,
+          "subgoal1": 2,
+          "subgoal2": 5,
+          "subgoal3": 2
+        },
+        "perturbation_events": 61,
+        "perturbation_failure_rate": 0.8095238095238095,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.011194229715007022,
+        "sr": 0.16666666666666663
+      },
+      "reason": "random draw",
+      "round": 3,
+      "sr_after": 0.15,
+      "sr_before": 0.0,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 0.15,
+  "first_action": "dagger_round",
+  "first_step_correct": false,
+  "new_labels": 120000,
+  "scenario": "mixed_gcr",
+  "seed": 0,
+  "selector": "random"
+}

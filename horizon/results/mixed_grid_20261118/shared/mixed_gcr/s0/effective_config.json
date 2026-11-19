@@ -1,0 +1,22 @@
+{
+  "curve_n_per": 20,
+  "eval_mode": "perturbed",
+  "eval_pert": 0.7,
+  "feedback_pert": 0.5,
+  "friction_range": null,
+  "init_budget": 80000,
+  "open_loop": {
+    "latency_choices": [
+      0,
+      0,
+      1
+    ],
+    "recovery_frac": 0.0
+  },
+  "round_budget": 40000,
+  "rounds": 3,
+  "world": {
+    "plate_half": 0.01,
+    "tray_height": 0.02
+  }
+}
