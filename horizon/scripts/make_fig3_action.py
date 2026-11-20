@@ -68,13 +68,17 @@ def write_table(title: str, causes, rows, n_by_cause) -> list[str]:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--per-selector", action="store_true")
+    ap.add_argument("--results", default="results/four_causes_20261118",
+                    help="result directory to read (default: the screening batch)")
     args = ap.parse_args()
 
-    recs = load(SOURCES)
+    recs = load([args.results])
     causes = [c for c in CAUSES if any(r["cause"] == c for r in recs)]
     causes += sorted({r["cause"] for r in recs} - set(causes))
     sels = sorted({r["selector"] for r in recs})
-    out = ROOT / "results/fig3_action_20261118"
+    name = Path(args.results).name
+    out_name = "fig3_action_20261118" if name == "four_causes_20261118" else f"fig3_action_{name}"
+    out = ROOT / "results" / out_name
     out.mkdir(parents=True, exist_ok=True)
     lines = ["# Fig. 3  first operation per cause (row = cause, column = chosen operation)",
              "", f"runs={len(recs)}  causes={causes}  selectors={sels}", ""]
