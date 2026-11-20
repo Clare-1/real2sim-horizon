@@ -30,6 +30,10 @@ SOURCES = [
     "results/mixed_grid_20261118",
 ]
 LABELS = ("geometry_bias", "coverage_deficit", "recovery_deficit")
+# The selector evaluation uses the four-cause scenarios with banks 0 and 1. The final model must
+# not see those banks, otherwise the online evaluation is in-sample.
+HELDOUT_SOURCES = {"results/four_causes_20261118"}
+HELDOUT_PROFILE_BANKS = {0, 1}
 COMPONENTS = {
     "geometry_bias": {"geometry_bias"},
     "coverage_deficit": {"coverage_deficit"},
@@ -109,6 +113,14 @@ def predict(model, X) -> np.ndarray:
 
 
 def main() -> int:
+    import argparse
+
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--heldout-banks", default="0,1",
+                    help="profile bank indices excluded from the held-out model")
+    ap.add_argument("--suffix", default="", help="suffix for the held-out model file")
+    args = ap.parse_args()
+    heldout_banks = {int(x) for x in args.heldout_banks.split(",") if x.strip()}
     units = load()
     groups = sorted({(u["cause"], u["_source"], u.get("bank_index", 0)) for u in units})
     X = np.array([features(u) for u in units], float)
@@ -179,6 +191,23 @@ def main() -> int:
     (out / "multilabel_model.json").write_text(json.dumps(
         {"labels": list(LABELS), "models": models, "threshold": best_t,
          "features": "horizon.rsi.selector.diagnosis_features"}, indent=2), encoding="utf-8")
+
+    # held-out model for the online selector evaluation: excludes the four-cause eval banks
+    train_mask = np.array([
+        not (u["_source"] in HELDOUT_SOURCES or
+             (u["_source"] == "profiles" and u.get("bank_index", 0) in heldout_banks))
+        for u in units])
+    models_ho = {}
+    for j, lab in enumerate(LABELS):
+        m = fit_logreg(X[train_mask], Y[train_mask, j])
+        models_ho[lab] = {"mu": m["mu"].tolist(), "sd": m["sd"].tolist(), "w": m["w"].tolist()}
+    (out / f"multilabel_model_heldout{args.suffix}.json").write_text(json.dumps(
+        {"labels": list(LABELS), "models": models_ho, "threshold": best_t,
+         "features": "horizon.rsi.selector.diagnosis_features",
+         "trained_without": sorted(HELDOUT_SOURCES) +
+                            [f"profiles banks {sorted(heldout_banks)}"],
+         "train_profiles": int(train_mask.sum())}, indent=2), encoding="utf-8")
+    print(f"held-out model: train profiles={int(train_mask.sum())} / {len(units)}")
     print("\n" + text)
     print(f"[written] {out/'diagnosability_multilabel.md'} and multilabel_model.json")
     return 0
