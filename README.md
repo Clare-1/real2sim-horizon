@@ -10,7 +10,7 @@
 
 给定一个与真实部署存在偏差的孪生体，系统能否**只根据部署反馈**判断该修什么，并在同一预算下比固定配方更好？
 
-- **选择器**：`fixed` / `rule` / `oracle` / `random` / `round_robin` / `bandit`（后三个是对照，用于堵住“挑软柿子”的质疑）
+- **选择器**：`fixed` / `rule` / `oracle` / `random` / `round_robin` / `bandit` / `linucb` / `multilabel`（`learned_value` 作为负结果保留）
 - **操作集**：`calibrate_geometry`、`regenerate_uniform`、`regenerate_targeted`、`add_recovery_data`、`dagger_round`、`stop`
 - **可分级原因（四类）**：几何偏差 / 覆盖不足 / 恢复不足 / 健康
 - **动力学原因**：本平台**不可表达**（见 §5 的扫描证据），论文中写作 limitation，不硬凑第五类
@@ -35,16 +35,17 @@
 
 `horizon/README.md` 中有更细的模块—论文方案对应表；本文件中的相对链接（`../*.md`）在仓库根目录可正常解析。
 
-## 3. 当前状态（2026-11-18 13:00）
+## 3. 当前状态（2026-11-20）
 
-已完成：`results/four_causes_20261118`（rule 列已用当前代码重跑并合并）
+- 筛查批次 `results/four_causes_20261118`：**48/48 完成**（4 causes × 2 banks × 6 selectors，1 seed）。
+- 论文批次 `results/four_causes_paper8_20261120`：**正在跑**（4 causes × 3 banks × 3 seeds × **8 selectors** = 288 runs，2026-11-20 10:45 启动，ETA ~19 h）。
 
 | 项 | 值 |
 |---|---|
-| 网格 | 4 原因 × 2 场景实例（bank）× 6 选择器 = **48 runs** |
+| 筛查批次 | 48/48，rule 首步 6/8；每格 1–2 样本，仅供方向 |
+| 论文批次 | 288 runs；`configs/minimal_validation_4causes_paper8.yaml`；日志 `/tmp/paper8.log` |
+| 论文 multilabel | `multilabel_model_heldout_paper.json`（训练排除 profile banks 0–2 与 four_causes） |
 | 协议预算 | 初始化 80k / 每轮 40k / 8000 步训练 / 24 反馈 episode / 3 轮 |
-| 进度 | **48 / 48**（`completion.json` = true） |
-| rule 首步对 | **6 / 8**（几何 2/2、覆盖 2/2、健康 2/2；恢复 0/2） |
 
 最终表（2 样本/格，**筛查级，不能直接上主表**）：
 
@@ -63,7 +64,7 @@
 >
 > 详见审计 §12。历史 note：11:30 之前的 rule 行来自旧版内存模块（含 `slip/drop → randomize_physics` 分支），已在 13:00 被替换。
 
-> 读数注意：每格只有 1–2 个样本（95% CI 约 ±6–8 pp），这里只用于方向筛查；论文主表需要 5 实例 × 3 种子（`configs/minimal_validation_4causes_paper.yaml`，216 runs）。
+> 读数注意：筛查批次每格 1–2 个样本（95% CI 约 ±6–8 pp），只用于方向；论文批次是 `configs/minimal_validation_4causes_paper8.yaml`（4 causes × 3 banks × 3 seeds × 8 selectors = **288 runs**，约 19 h），正在跑。
 
 ## 4. 快速开始
 
@@ -118,11 +119,11 @@ cd horizon
 
 ### 5.4 learned diagnoser 的可信数字（Phase 1）
 
-按 bank 分组留一（同一 bank 的多个 selector 看到同一 profile，旧脚本把它们当独立样本，88.9% 被放大），并补 4 类 × 20 个独立 feedback profile 后：**176 个独立 profile / 148 组**，几何 100%、覆盖 95%、健康 92%、恢复 100%，**mixed 0%**（10 个混合样本全被判成覆盖）。
+按 bank 分组留一（同一 bank 的多个 selector 看到同一 profile，旧脚本把它们当独立样本，88.9% 被放大），并补 4 类 × 20 个独立 feedback profile 后：**184 个独立 profile / 156 组**，几何 100%、覆盖 93%、健康 92%、恢复 100%，单标签 **mixed 6%**（18 个里 16 个判成覆盖）。
 
 → 纯原因可分；混合原因不可靠。论文主张应是“单原因探针 + 混合压力测试 + 弃权”，而不是“分类器能分四类”。详见审计 §13。
 
-**多标签修正**：把单标签换成 3 个二分类后（阈值 0.3，按混合 recall 选），mixed 从 0% 变成“任一成分命中 100%、两成分全中 67%”（n=12，bank-grouped LOO；exact-set 86%）。论文接口应写成多标签后验，而不是单原因分类；`MultiLabelSelector` 已把预测集合映射为操作序列。
+**多标签修正**：把单标签换成 3 个二分类后（阈值 0.3，按混合 recall 选），mixed 从 6% 变成“任一成分命中 100%、两成分全中 72%”（n=18，bank-grouped LOO；exact-set 82%）。论文接口应写成多标签后验，而不是单原因分类；`MultiLabelSelector` 已把预测集合映射为操作序列。
 
 ### 5.5 Gap 1：混合原因（48 runs）
 
@@ -145,10 +146,27 @@ gap = (SR − fixed)/(oracle − fixed)。bandit 在四个条件全部 ≥ rule�
 | oracle | 0.925 | 0.950 | 0.875 | 0.875 | 0.906 | 8/8 |
 | linucb | 0.925 | 0.950 | 0.425 | 0.925 | 0.806 | 2/8 |
 | learned_value | 0.350 | 1.000 | 0.875 | 0.950 | 0.794 | 2/8 |
+| fixed | 0.775 | 0.675 | 0.850 | 0.975 | 0.819 | 2/8 |
+| random | 0.450 | 0.925 | 1.000 | 0.950 | 0.831 | 0/8 |
+| round_robin | 0.875 | 0.825 | 0.650 | 0.850 | 0.800 | 2/8 |
+
+> learned 行来自独立目录（`four_causes_learned/multilabel*`），仍是 1 seed × 2 banks 的筛查级；论文批次用 3 seeds × 3 banks 重跑。
 
 - **multilabel（held-out 诊断 + 序列）首步 7/8，平均 0.875**：learned 诊断接近 oracle（8/8），但没有超过 rule 的最终 SR（0.912）。in-sample v1 的 8/8/0.906 偏高；v2 与 held-out 一致（7/8、0.875）。
 - bandit 最终 SR 最高但首步 2/8（探索型）。
 - learned_value 是负结果：40 条反事实样本的 value model R²=0.138、排序 3/8，首步总选 recovery；且该评估仍是 in-sample。写进 limitations。
+
+### 5.7 论文批次（288 runs）
+
+```bash
+cd horizon
+PYTHONPATH=src .venv-linux/bin/python scripts/run_minimal_validation.py \
+  --config configs/minimal_validation_4causes_paper8.yaml \
+  --out results/four_causes_paper8_20261120 --workers 12
+```
+
+- multilabel 模型 `multilabel_model_heldout_paper.json` 训练时排除 profile banks 0–2 与 four_causes，因此 3 个评估 bank 是 **held-out**；
+- 跑完后 `.venv-linux/bin/python scripts/report_four_causes.py results/four_causes_paper8_20261120` 出 8 行主表（3 seeds × 3 banks，可算 95% CI）。
 
 ## 6. 数据与可复现性
 
