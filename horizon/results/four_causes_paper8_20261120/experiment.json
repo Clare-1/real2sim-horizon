@@ -1,0 +1,119 @@
+{
+  "config": {
+    "H_values": [
+      4
+    ],
+    "banks": {
+      "curve": 83000000,
+      "feedback": 82000000,
+      "final": 84000000,
+      "training": 81000000
+    },
+    "collection_pert": 0.1,
+    "curve_n_per": 20,
+    "deploy_budget": 100000,
+    "families": [
+      "pack"
+    ],
+    "feedback_episodes": 24,
+    "feedback_pert": 0.1,
+    "final_n_per": 20,
+    "init_budget": 80000,
+    "label_budget": 1000000,
+    "multilabel_model": "results/diagnosability_multilabel_20261118/multilabel_model_heldout_paper.json",
+    "name": "minimal_validation_4causes_paper8",
+    "open_loop": {
+      "latency_choices": [
+        0,
+        0,
+        1
+      ],
+      "recovery_frac": 0.3
+    },
+    "round_budget": 40000,
+    "rounds": 3,
+    "scenario_banks": 3,
+    "scenarios": [
+      {
+        "cause": "geometry_bias",
+        "conditions": {
+          "recon": {
+            "bias": {
+              "plate": 0.46,
+              "tray": 0.46
+            }
+          }
+        },
+        "name": "geometry",
+        "train_randomization": {
+          "layout_prior": "full"
+        }
+      },
+      {
+        "cause": "coverage_deficit",
+        "conditions": {
+          "recon": {}
+        },
+        "name": "coverage",
+        "train_randomization": {
+          "layout_prior": "left_half"
+        }
+      },
+      {
+        "cause": "recovery_deficit",
+        "conditions": {
+          "recon": {}
+        },
+        "eval_mode": "perturbed",
+        "eval_pert": 0.7,
+        "feedback_pert": 0.5,
+        "name": "recovery",
+        "open_loop": {
+          "recovery_frac": 0.0
+        },
+        "train_randomization": {
+          "layout_prior": "full"
+        }
+      },
+      {
+        "cause": "healthy",
+        "conditions": {
+          "recon": {}
+        },
+        "name": "healthy",
+        "train_randomization": {
+          "layout_prior": "full"
+        }
+      }
+    ],
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "selectors": [
+      "fixed",
+      "rule",
+      "random",
+      "round_robin",
+      "bandit",
+      "linucb",
+      "multilabel",
+      "oracle"
+    ],
+    "torch_threads": 4,
+    "train": {
+      "batch": 2048,
+      "device": "cuda",
+      "hidden": 512,
+      "layers": 3,
+      "lr": 0.001,
+      "steps": 8000
+    },
+    "world": {
+      "plate_half": 0.01,
+      "tray_height": 0.02
+    }
+  },
+  "fingerprint": "30d43261b46cecbbc76ae32bf8e858a4825d4a7c9ea3af0d98a14e80463031c8"
+}

@@ -1,0 +1,99 @@
+{
+  "bank_index": 1,
+  "calibrations": 0,
+  "cause": "healthy",
+  "cost": {
+    "accepted_labels": 120000,
+    "available_labels": 129058,
+    "episodes": 480,
+    "eval_episodes": 120,
+    "sim_steps": 4589775,
+    "worker_seconds": 587.0369532445911
+  },
+  "decisions": [
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "grasp": 1,
+          "transition": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 1,
+          "subgoal2": 1
+        },
+        "perturbation_events": 14,
+        "perturbation_failure_rate": 0.07692307692307693,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.001079126916854474,
+        "sr": 0.9166666666666666
+      },
+      "reason": "random draw",
+      "round": 1,
+      "sr_after": 0.95,
+      "sr_before": 0.85,
+      "target": null
+    },
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 1.0,
+        "failure_types": {
+          "grasp": 1,
+          "transition": 1
+        },
+        "per_subgoal": {
+          "subgoal1": 2
+        },
+        "perturbation_events": 20,
+        "perturbation_failure_rate": 0.06666666666666667,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0016412826601150121,
+        "sr": 0.9166666666666666
+      },
+      "reason": "random draw",
+      "round": 2,
+      "sr_after": 0.95,
+      "sr_before": 0.95,
+      "target": null
+    },
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "placement": 2
+        },
+        "per_subgoal": {
+          "subgoal0": 1,
+          "subgoal2": 1
+        },
+        "perturbation_events": 23,
+        "perturbation_failure_rate": 0.1111111111111111,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0017525070353660716,
+        "sr": 0.9166666666666666
+      },
+      "reason": "random draw",
+      "round": 3,
+      "sr_after": 0.9,
+      "sr_before": 0.95,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 0.9,
+  "first_action": "dagger_round",
+  "first_step_correct": false,
+  "new_labels": 120000,
+  "scenario": "healthy",
+  "seed": 2,
+  "selector": "random"
+}

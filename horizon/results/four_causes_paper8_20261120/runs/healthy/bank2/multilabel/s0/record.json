@@ -1,0 +1,50 @@
+{
+  "bank_index": 2,
+  "calibrations": 0,
+  "cause": "healthy",
+  "cost": {
+    "accepted_labels": 0,
+    "available_labels": 0,
+    "episodes": 24,
+    "eval_episodes": 40,
+    "sim_steps": 255925,
+    "worker_seconds": 34.47409151378088
+  },
+  "decisions": [
+    {
+      "action": "stop",
+      "est_cost": 0,
+      "profile": {
+        "concentration": 0.6666666666666666,
+        "failure_types": {
+          "grasp": 1,
+          "placement": 1,
+          "transition": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 2,
+          "subgoal2": 1
+        },
+        "perturbation_events": 19,
+        "perturbation_failure_rate": 0.13333333333333333,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0012233270291282967,
+        "sr": 0.875
+      },
+      "reason": "multilabel: no component and already healthy",
+      "round": 1,
+      "sr_after": 0.9,
+      "sr_before": 0.9,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 24,
+  "final_sr": 0.9,
+  "first_action": "stop",
+  "first_step_correct": true,
+  "new_labels": 0,
+  "scenario": "healthy",
+  "seed": 0,
+  "selector": "multilabel"
+}

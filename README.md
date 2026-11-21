@@ -38,12 +38,12 @@
 ## 3. 当前状态（2026-11-20）
 
 - 筛查批次 `results/four_causes_20261118`：**48/48 完成**（4 causes × 2 banks × 6 selectors，1 seed）。
-- 论文批次 `results/four_causes_paper8_20261120`：**正在跑**（4 causes × 3 banks × 3 seeds × **8 selectors** = 288 runs，2026-11-20 10:45 启动，ETA ~19 h）。
+- 论文批次 `results/four_causes_paper8_20261120`：**288/288 完成**（4 causes × 3 banks × 3 seeds × 8 selectors，2026-11-21 03:22）；最终表见 §5.7。
 
 | 项 | 值 |
 |---|---|
 | 筛查批次 | 48/48，rule 首步 6/8；每格 1–2 样本，仅供方向 |
-| 论文批次 | 288 runs；`configs/minimal_validation_4causes_paper8.yaml`；日志 `/tmp/paper8.log` |
+| 论文批次 | 288/288，9 cells/格；`configs/minimal_validation_4causes_paper8.yaml` |
 | 论文 multilabel | `multilabel_model_heldout_paper.json`（训练排除 profile banks 0–2 与 four_causes） |
 | 协议预算 | 初始化 80k / 每轮 40k / 8000 步训练 / 24 反馈 episode / 3 轮 |
 
@@ -156,7 +156,23 @@ gap = (SR − fixed)/(oracle − fixed)。bandit 在四个条件全部 ≥ rule�
 - bandit 最终 SR 最高但首步 2/8（探索型）。
 - learned_value 是负结果：40 条反事实样本的 value model R²=0.138、排序 3/8，首步总选 recovery；且该评估仍是 in-sample。写进 limitations。
 
-### 5.7 论文批次（288 runs）
+### 5.7 论文批次结果（288/288，9 cells/格）
+
+| 选择器 | 几何 | 覆盖 | 恢复 | 健康 | 平均 | 首步对 |
+|---|---:|---:|---:|---:|---:|---:|
+| bandit | 0.961 | 0.983 | 0.817 | 0.978 | **0.935** | 9/36 |
+| oracle | 0.939 | 0.972 | 0.939 | 0.844 | 0.924 | 36/36 |
+| rule | 0.900 | 0.928 | 0.900 | 0.928 | 0.914 | 21/36 |
+| round_robin | 0.894 | 0.872 | 0.822 | 0.939 | 0.882 | 9/36 |
+| multilabel | 0.828 | 0.928 | 0.828 | 0.883 | 0.867 | **28/36** |
+| linucb | 0.939 | 0.917 | 0.356 | 0.961 | 0.793 | 9/36 |
+| fixed | 0.772 | 0.600 | 0.833 | 0.911 | 0.779 | 9/36 |
+| random | 0.300 | 0.939 | 0.867 | 0.972 | 0.769 | 0/36 |
+
+- **bandit 最终 SR 最高（0.935）**；oracle 0.924；rule 0.914 是强 baseline。
+- **multilabel 首步 28/36（78%）**，显著高于 rule 的 21/36（58%），接近 oracle；标签成本最低（55.6k）。但最终 SR 0.867 低于 rule/bandit——诊断对不等于序列最优，false positive 会浪费一轮。
+- **oracle 的健康 SR 反而比 fixed/bandit 低 6.7 pp**：正确动作是 stop，停止放弃了 DAgger 的提升。**oracle 是诊断正确性上界，不是 SR 上界**。
+- 完整 CI / 配对差 / 成本见 [`论文批次结果_2026-11-21.md`](论文批次结果_2026-11-21.md)。
 
 ```bash
 cd horizon
@@ -164,9 +180,6 @@ PYTHONPATH=src .venv-linux/bin/python scripts/run_minimal_validation.py \
   --config configs/minimal_validation_4causes_paper8.yaml \
   --out results/four_causes_paper8_20261120 --workers 12
 ```
-
-- multilabel 模型 `multilabel_model_heldout_paper.json` 训练时排除 profile banks 0–2 与 four_causes，因此 3 个评估 bank 是 **held-out**；
-- 跑完后 `.venv-linux/bin/python scripts/report_four_causes.py results/four_causes_paper8_20261120` 出 8 行主表（3 seeds × 3 banks，可算 95% CI）。
 
 ## 6. 数据与可复现性
 

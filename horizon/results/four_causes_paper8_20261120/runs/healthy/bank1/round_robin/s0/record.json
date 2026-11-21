@@ -1,0 +1,97 @@
+{
+  "bank_index": 1,
+  "calibrations": 1,
+  "cause": "healthy",
+  "cost": {
+    "accepted_labels": 80000,
+    "available_labels": 87604,
+    "episodes": 336,
+    "eval_episodes": 120,
+    "sim_steps": 3268450,
+    "worker_seconds": 403.23129021492787
+  },
+  "decisions": [
+    {
+      "action": "calibrate_geometry",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "drop": 1,
+          "placement": 1
+        },
+        "per_subgoal": {
+          "subgoal1": 1,
+          "subgoal2": 1
+        },
+        "perturbation_events": 22,
+        "perturbation_failure_rate": 0.0625,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0014470335690941229,
+        "sr": 0.9166666666666666
+      },
+      "reason": "round-robin step 0",
+      "round": 1,
+      "sr_after": 0.9,
+      "sr_before": 0.9,
+      "target": null
+    },
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 1.0,
+        "failure_types": {
+          "grasp": 1
+        },
+        "per_subgoal": {
+          "subgoal1": 1
+        },
+        "perturbation_events": 15,
+        "perturbation_failure_rate": 0.07142857142857142,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.001607902534872696,
+        "sr": 0.9583333333333334
+      },
+      "reason": "round-robin step 1",
+      "round": 2,
+      "sr_after": 0.95,
+      "sr_before": 0.9,
+      "target": null
+    },
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 1.0,
+        "failure_types": {
+          "transition": 2
+        },
+        "per_subgoal": {
+          "subgoal2": 2
+        },
+        "perturbation_events": 15,
+        "perturbation_failure_rate": 0.07692307692307693,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0014781118529361564,
+        "sr": 0.9166666666666666
+      },
+      "reason": "round-robin step 2",
+      "round": 3,
+      "sr_after": 0.75,
+      "sr_before": 0.95,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 0.75,
+  "first_action": "calibrate_geometry",
+  "first_step_correct": false,
+  "new_labels": 80000,
+  "scenario": "healthy",
+  "seed": 0,
+  "selector": "round_robin"
+}

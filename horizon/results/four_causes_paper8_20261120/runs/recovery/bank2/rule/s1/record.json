@@ -1,0 +1,108 @@
+{
+  "bank_index": 2,
+  "calibrations": 0,
+  "cause": "recovery_deficit",
+  "cost": {
+    "accepted_labels": 80000,
+    "available_labels": 86266,
+    "episodes": 360,
+    "eval_episodes": 120,
+    "sim_steps": 3496525,
+    "worker_seconds": 483.56106262351386
+  },
+  "decisions": [
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.36363636363636365,
+        "failure_types": {
+          "drop": 1,
+          "grasp": 5,
+          "placement": 3,
+          "stall": 1,
+          "transition": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 4,
+          "subgoal1": 2,
+          "subgoal2": 3,
+          "subgoal3": 2
+        },
+        "perturbation_events": 74,
+        "perturbation_failure_rate": 0.42857142857142855,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.001146428147156462,
+        "sr": 0.5416666666666667
+      },
+      "reason": "default: one DAgger round",
+      "round": 1,
+      "sr_after": 0.7,
+      "sr_before": 0.6,
+      "target": null
+    },
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.2857142857142857,
+        "failure_types": {
+          "grasp": 2,
+          "placement": 2,
+          "transition": 3
+        },
+        "per_subgoal": {
+          "subgoal0": 2,
+          "subgoal1": 2,
+          "subgoal2": 2,
+          "subgoal3": 1
+        },
+        "perturbation_events": 74,
+        "perturbation_failure_rate": 0.22727272727272727,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0015250416586850002,
+        "sr": 0.7083333333333333
+      },
+      "reason": "default: one DAgger round",
+      "round": 2,
+      "sr_after": 0.8,
+      "sr_before": 0.7,
+      "target": null
+    },
+    {
+      "action": "stop",
+      "est_cost": 0,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "grasp": 2
+        },
+        "per_subgoal": {
+          "subgoal0": 1,
+          "subgoal2": 1
+        },
+        "perturbation_events": 86,
+        "perturbation_failure_rate": 0.08333333333333333,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0014359738433987398,
+        "sr": 0.9166666666666666
+      },
+      "reason": "nothing localised and SR 0.92 >= 0.85",
+      "round": 3,
+      "sr_after": 0.8,
+      "sr_before": 0.8,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 0.8,
+  "first_action": "dagger_round",
+  "first_step_correct": false,
+  "new_labels": 80000,
+  "scenario": "recovery",
+  "seed": 1,
+  "selector": "rule"
+}

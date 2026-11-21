@@ -1,0 +1,76 @@
+{
+  "bank_index": 0,
+  "calibrations": 0,
+  "cause": "healthy",
+  "cost": {
+    "accepted_labels": 40000,
+    "available_labels": 43140,
+    "episodes": 192,
+    "eval_episodes": 80,
+    "sim_steps": 1807750,
+    "worker_seconds": 254.59038653899916
+  },
+  "decisions": [
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "placement": 1,
+          "transition": 3
+        },
+        "per_subgoal": {
+          "subgoal0": 2,
+          "subgoal1": 1,
+          "subgoal2": 1
+        },
+        "perturbation_events": 15,
+        "perturbation_failure_rate": 0.09090909090909091,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0015351866950733435,
+        "sr": 0.8333333333333334
+      },
+      "reason": "default: one DAgger round",
+      "round": 1,
+      "sr_after": 1.0,
+      "sr_before": 0.9,
+      "target": null
+    },
+    {
+      "action": "stop",
+      "est_cost": 0,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "transition": 1,
+          "verifier": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 1,
+          "subgoal3": 1
+        },
+        "perturbation_events": 20,
+        "perturbation_failure_rate": 0.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0011799326889465542,
+        "sr": 0.9166666666666666
+      },
+      "reason": "nothing localised and SR 0.92 >= 0.85",
+      "round": 2,
+      "sr_after": 1.0,
+      "sr_before": 1.0,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 48,
+  "final_sr": 1.0,
+  "first_action": "dagger_round",
+  "first_step_correct": false,
+  "new_labels": 40000,
+  "scenario": "healthy",
+  "seed": 1,
+  "selector": "rule"
+}

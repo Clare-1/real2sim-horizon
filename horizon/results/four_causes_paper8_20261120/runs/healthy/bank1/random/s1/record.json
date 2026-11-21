@@ -1,0 +1,95 @@
+{
+  "bank_index": 1,
+  "calibrations": 0,
+  "cause": "healthy",
+  "cost": {
+    "accepted_labels": 120000,
+    "available_labels": 128823,
+    "episodes": 480,
+    "eval_episodes": 120,
+    "sim_steps": 4582350,
+    "worker_seconds": 589.6420995942317
+  },
+  "decisions": [
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 1.0,
+        "failure_types": {
+          "grasp": 2
+        },
+        "per_subgoal": {
+          "subgoal1": 2
+        },
+        "perturbation_events": 14,
+        "perturbation_failure_rate": 0.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.001786565372328651,
+        "sr": 0.9166666666666666
+      },
+      "reason": "random draw",
+      "round": 1,
+      "sr_after": 0.95,
+      "sr_before": 0.75,
+      "target": null
+    },
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 1.0,
+        "failure_types": {
+          "placement": 1
+        },
+        "per_subgoal": {
+          "subgoal1": 1
+        },
+        "perturbation_events": 25,
+        "perturbation_failure_rate": 0.05263157894736842,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.001365924283933135,
+        "sr": 0.9583333333333334
+      },
+      "reason": "random draw",
+      "round": 2,
+      "sr_after": 1.0,
+      "sr_before": 0.95,
+      "target": null
+    },
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 1.0,
+        "failure_types": {
+          "grasp": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 1
+        },
+        "perturbation_events": 20,
+        "perturbation_failure_rate": 0.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.000940820457648324,
+        "sr": 0.9583333333333334
+      },
+      "reason": "random draw",
+      "round": 3,
+      "sr_after": 1.0,
+      "sr_before": 1.0,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 1.0,
+  "first_action": "dagger_round",
+  "first_step_correct": false,
+  "new_labels": 120000,
+  "scenario": "healthy",
+  "seed": 1,
+  "selector": "random"
+}

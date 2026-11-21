@@ -1,0 +1,73 @@
+{
+  "bank_index": 1,
+  "calibrations": 0,
+  "cause": "healthy",
+  "cost": {
+    "accepted_labels": 40000,
+    "available_labels": 42445,
+    "episodes": 168,
+    "eval_episodes": 80,
+    "sim_steps": 1703975,
+    "worker_seconds": 184.27385741798207
+  },
+  "decisions": [
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 1.0,
+        "failure_types": {
+          "grasp": 2
+        },
+        "per_subgoal": {
+          "subgoal1": 2
+        },
+        "perturbation_events": 14,
+        "perturbation_failure_rate": 0.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.001786565372328651,
+        "sr": 0.9166666666666666
+      },
+      "reason": "100% of failures in subgoal1",
+      "round": 1,
+      "sr_after": 0.9,
+      "sr_before": 0.75,
+      "target": "subgoal1"
+    },
+    {
+      "action": "stop",
+      "est_cost": 0,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "grasp": 1,
+          "placement": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 1,
+          "subgoal1": 1
+        },
+        "perturbation_events": 25,
+        "perturbation_failure_rate": 0.10526315789473684,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0010318434892702018,
+        "sr": 0.9166666666666666
+      },
+      "reason": "nothing localised and SR 0.92 >= 0.85",
+      "round": 2,
+      "sr_after": 0.9,
+      "sr_before": 0.9,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 48,
+  "final_sr": 0.9,
+  "first_action": "regenerate_targeted",
+  "first_step_correct": false,
+  "new_labels": 40000,
+  "scenario": "healthy",
+  "seed": 1,
+  "selector": "rule"
+}

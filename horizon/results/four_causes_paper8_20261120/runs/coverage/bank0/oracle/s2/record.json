@@ -1,0 +1,96 @@
+{
+  "bank_index": 0,
+  "calibrations": 0,
+  "cause": "coverage_deficit",
+  "cost": {
+    "accepted_labels": 80000,
+    "available_labels": 87271,
+    "episodes": 312,
+    "eval_episodes": 120,
+    "sim_steps": 3380225,
+    "worker_seconds": 360.3164037899114
+  },
+  "decisions": [
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 0,
+      "profile": {
+        "concentration": 0.9565217391304348,
+        "failure_types": {
+          "drop": 1,
+          "grasp": 7,
+          "stall": 1,
+          "transition": 14
+        },
+        "per_subgoal": {
+          "subgoal0": 22,
+          "subgoal3": 1
+        },
+        "perturbation_events": 0,
+        "perturbation_failure_rate": 0.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": null,
+        "sr": 0.04166666666666663
+      },
+      "reason": "oracle: coverage_deficit step 1",
+      "round": 1,
+      "sr_after": 0.9,
+      "sr_before": 0.05,
+      "target": null
+    },
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 1.0,
+        "failure_types": {
+          "placement": 1,
+          "transition": 2
+        },
+        "per_subgoal": {
+          "subgoal0": 3
+        },
+        "perturbation_events": 13,
+        "perturbation_failure_rate": 0.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.001190482192378134,
+        "sr": 0.875
+      },
+      "reason": "oracle: repeat the cause's best operation",
+      "round": 2,
+      "sr_after": 0.9,
+      "sr_before": 0.9,
+      "target": null
+    },
+    {
+      "action": "stop",
+      "est_cost": 0,
+      "profile": {
+        "concentration": 0.0,
+        "failure_types": {},
+        "per_subgoal": {},
+        "perturbation_events": 25,
+        "perturbation_failure_rate": 0.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.001757397388156421,
+        "sr": 1.0
+      },
+      "reason": "already solved",
+      "round": 3,
+      "sr_after": 0.9,
+      "sr_before": 0.9,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 0.9,
+  "first_action": "regenerate_targeted",
+  "first_step_correct": true,
+  "new_labels": 80000,
+  "scenario": "coverage",
+  "seed": 2,
+  "selector": "oracle"
+}

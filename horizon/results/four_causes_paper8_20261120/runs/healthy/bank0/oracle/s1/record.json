@@ -1,0 +1,50 @@
+{
+  "bank_index": 0,
+  "calibrations": 0,
+  "cause": "healthy",
+  "cost": {
+    "accepted_labels": 0,
+    "available_labels": 0,
+    "episodes": 24,
+    "eval_episodes": 40,
+    "sim_steps": 258025,
+    "worker_seconds": 34.87586806900799
+  },
+  "decisions": [
+    {
+      "action": "stop",
+      "est_cost": 0,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "placement": 1,
+          "transition": 3
+        },
+        "per_subgoal": {
+          "subgoal0": 2,
+          "subgoal1": 1,
+          "subgoal2": 1
+        },
+        "perturbation_events": 15,
+        "perturbation_failure_rate": 0.09090909090909091,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0015351866950733435,
+        "sr": 0.8333333333333334
+      },
+      "reason": "oracle: nothing to fix for healthy",
+      "round": 1,
+      "sr_after": 0.9,
+      "sr_before": 0.9,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 24,
+  "final_sr": 0.9,
+  "first_action": "stop",
+  "first_step_correct": true,
+  "new_labels": 0,
+  "scenario": "healthy",
+  "seed": 1,
+  "selector": "oracle"
+}

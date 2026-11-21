@@ -1,0 +1,103 @@
+{
+  "bank_index": 1,
+  "calibrations": 0,
+  "cause": "coverage_deficit",
+  "cost": {
+    "accepted_labels": 120000,
+    "available_labels": 128763,
+    "episodes": 480,
+    "eval_episodes": 120,
+    "sim_steps": 5538775,
+    "worker_seconds": 719.2765635666437
+  },
+  "decisions": [
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.875,
+        "failure_types": {
+          "drop": 2,
+          "grasp": 2,
+          "stall": 1,
+          "transition": 19
+        },
+        "per_subgoal": {
+          "subgoal0": 21,
+          "subgoal1": 2,
+          "subgoal3": 1
+        },
+        "perturbation_events": 3,
+        "perturbation_failure_rate": 1.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": null,
+        "sr": 0.0
+      },
+      "reason": "random draw",
+      "round": 1,
+      "sr_after": 0.65,
+      "sr_before": 0.05,
+      "target": null
+    },
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "grasp": 3,
+          "transition": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 1,
+          "subgoal1": 2,
+          "subgoal2": 1
+        },
+        "perturbation_events": 23,
+        "perturbation_failure_rate": 0.16666666666666666,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0013385099148215118,
+        "sr": 0.8333333333333334
+      },
+      "reason": "random draw",
+      "round": 2,
+      "sr_after": 0.85,
+      "sr_before": 0.65,
+      "target": null
+    },
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 1.0,
+        "failure_types": {
+          "transition": 1
+        },
+        "per_subgoal": {
+          "subgoal3": 1
+        },
+        "perturbation_events": 19,
+        "perturbation_failure_rate": 0.07142857142857142,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0015088182694405518,
+        "sr": 0.9583333333333334
+      },
+      "reason": "random draw",
+      "round": 3,
+      "sr_after": 0.9,
+      "sr_before": 0.85,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 0.9,
+  "first_action": "dagger_round",
+  "first_step_correct": false,
+  "new_labels": 120000,
+  "scenario": "coverage",
+  "seed": 1,
+  "selector": "random"
+}

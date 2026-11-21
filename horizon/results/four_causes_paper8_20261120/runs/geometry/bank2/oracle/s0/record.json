@@ -1,0 +1,105 @@
+{
+  "bank_index": 2,
+  "calibrations": 1,
+  "cause": "geometry_bias",
+  "cost": {
+    "accepted_labels": 40000,
+    "available_labels": 43071,
+    "episodes": 192,
+    "eval_episodes": 120,
+    "sim_steps": 2184625,
+    "worker_seconds": 256.6474806352053
+  },
+  "decisions": [
+    {
+      "action": "calibrate_geometry",
+      "est_cost": 0,
+      "profile": {
+        "concentration": 0.47058823529411764,
+        "failure_types": {
+          "drop": 1,
+          "grasp": 2,
+          "placement": 10,
+          "stall": 3,
+          "transition": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 8,
+          "subgoal1": 2,
+          "subgoal2": 6,
+          "subgoal3": 1
+        },
+        "perturbation_events": 15,
+        "perturbation_failure_rate": 0.75,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.010773676506511985,
+        "sr": 0.29166666666666663
+      },
+      "reason": "oracle: geometry_bias step 1",
+      "round": 1,
+      "sr_after": 0.6,
+      "sr_before": 0.2,
+      "target": null
+    },
+    {
+      "action": "regenerate_uniform",
+      "est_cost": 0,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "drop": 1,
+          "grasp": 3,
+          "placement": 1,
+          "stall": 4,
+          "transition": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 5,
+          "subgoal1": 2,
+          "subgoal2": 2,
+          "subgoal3": 1
+        },
+        "perturbation_events": 14,
+        "perturbation_failure_rate": 0.18181818181818182,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.000646389002156942,
+        "sr": 0.5833333333333333
+      },
+      "reason": "oracle: geometry_bias step 2",
+      "round": 2,
+      "sr_after": 0.9,
+      "sr_before": 0.6,
+      "target": null
+    },
+    {
+      "action": "stop",
+      "est_cost": 0,
+      "profile": {
+        "concentration": 0.0,
+        "failure_types": {},
+        "per_subgoal": {},
+        "perturbation_events": 26,
+        "perturbation_failure_rate": 0.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.00024045808733422214,
+        "sr": 1.0
+      },
+      "reason": "already solved",
+      "round": 3,
+      "sr_after": 0.9,
+      "sr_before": 0.9,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 0.9,
+  "first_action": "calibrate_geometry",
+  "first_step_correct": true,
+  "new_labels": 40000,
+  "scenario": "geometry",
+  "seed": 0,
+  "selector": "oracle"
+}

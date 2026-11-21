@@ -1,0 +1,105 @@
+{
+  "bank_index": 0,
+  "calibrations": 0,
+  "cause": "recovery_deficit",
+  "cost": {
+    "accepted_labels": 80000,
+    "available_labels": 86317,
+    "episodes": 360,
+    "eval_episodes": 120,
+    "sim_steps": 3544825,
+    "worker_seconds": 494.5977981793694
+  },
+  "decisions": [
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5454545454545454,
+        "failure_types": {
+          "grasp": 4,
+          "placement": 3,
+          "transition": 4
+        },
+        "per_subgoal": {
+          "subgoal0": 6,
+          "subgoal1": 5
+        },
+        "perturbation_events": 65,
+        "perturbation_failure_rate": 0.45454545454545453,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0014961677013477052,
+        "sr": 0.5416666666666667
+      },
+      "reason": "multilabel: unknown set []",
+      "round": 1,
+      "sr_after": 0.65,
+      "sr_before": 0.5,
+      "target": null
+    },
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "grasp": 1,
+          "placement": 6,
+          "transition": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 1,
+          "subgoal1": 3,
+          "subgoal2": 4
+        },
+        "perturbation_events": 89,
+        "perturbation_failure_rate": 0.3333333333333333,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0010317407318647838,
+        "sr": 0.6666666666666667
+      },
+      "reason": "multilabel: unknown set []",
+      "round": 2,
+      "sr_after": 0.75,
+      "sr_before": 0.65,
+      "target": null
+    },
+    {
+      "action": "stop",
+      "est_cost": 0,
+      "profile": {
+        "concentration": 0.3333333333333333,
+        "failure_types": {
+          "grasp": 2,
+          "placement": 1
+        },
+        "per_subgoal": {
+          "subgoal1": 1,
+          "subgoal2": 1,
+          "subgoal3": 1
+        },
+        "perturbation_events": 86,
+        "perturbation_failure_rate": 0.125,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0011728088533472202,
+        "sr": 0.875
+      },
+      "reason": "multilabel: no component and already healthy",
+      "round": 3,
+      "sr_after": 0.75,
+      "sr_before": 0.75,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 0.75,
+  "first_action": "dagger_round",
+  "first_step_correct": false,
+  "new_labels": 80000,
+  "scenario": "recovery",
+  "seed": 2,
+  "selector": "multilabel"
+}

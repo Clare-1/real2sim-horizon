@@ -1,0 +1,101 @@
+{
+  "bank_index": 0,
+  "calibrations": 0,
+  "cause": "coverage_deficit",
+  "cost": {
+    "accepted_labels": 120000,
+    "available_labels": 130669,
+    "episodes": 480,
+    "eval_episodes": 120,
+    "sim_steps": 4894875,
+    "worker_seconds": 622.3852055103052
+  },
+  "decisions": [
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.9565217391304348,
+        "failure_types": {
+          "drop": 1,
+          "grasp": 7,
+          "stall": 1,
+          "transition": 14
+        },
+        "per_subgoal": {
+          "subgoal0": 22,
+          "subgoal3": 1
+        },
+        "perturbation_events": 0,
+        "perturbation_failure_rate": 0.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": null,
+        "sr": 0.04166666666666663
+      },
+      "reason": "96% of failures in subgoal0",
+      "round": 1,
+      "sr_after": 0.9,
+      "sr_before": 0.05,
+      "target": "subgoal0"
+    },
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 1.0,
+        "failure_types": {
+          "placement": 1,
+          "transition": 2
+        },
+        "per_subgoal": {
+          "subgoal0": 3
+        },
+        "perturbation_events": 13,
+        "perturbation_failure_rate": 0.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.001190482192378134,
+        "sr": 0.875
+      },
+      "reason": "default: one DAgger round",
+      "round": 2,
+      "sr_after": 0.9,
+      "sr_before": 0.9,
+      "target": null
+    },
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 1.0,
+        "failure_types": {
+          "grasp": 1,
+          "transition": 2
+        },
+        "per_subgoal": {
+          "subgoal0": 3
+        },
+        "perturbation_events": 21,
+        "perturbation_failure_rate": 0.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0015538591975122126,
+        "sr": 0.875
+      },
+      "reason": "default: one DAgger round",
+      "round": 3,
+      "sr_after": 1.0,
+      "sr_before": 0.9,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 1.0,
+  "first_action": "regenerate_targeted",
+  "first_step_correct": true,
+  "new_labels": 120000,
+  "scenario": "coverage",
+  "seed": 2,
+  "selector": "rule"
+}
