@@ -14,6 +14,7 @@
 | `four_causes_multilabel_v2_20261118/` | 用完整混合样本重训后的 8 runs | v2 复验 |
 | `diagnosability_bank_20261118/` | 按 bank 分组留一的 5 类混淆矩阵与 recall | learned diagnoser 的可信版本 |
 | `diagnosability_multilabel_20261118/` | 3 个二分类的 recall/precision + 混合成分命中率 | 多标签接口（mixed 0% → 任一 100%） |
+| `fig_R1_recipe_cause_20261121/` | 8 配方 × 4 原因的最终 SR 热力图 | 导师 §4.4 的 R1 |
 | `diagnosis_profiles_20261118/` | 4 类 × 20 个独立 feedback profile（只跑 feedback） | 去重后的诊断数据 |
 | `fig3_action_20261118/` | 原因 × 第一步操作热图（总图 + 分选择器） | 图 3 |
 | `fig4_trajectory_20261118/` | 典型场景逐轮 SR 与操作链 | 附录图 4 |

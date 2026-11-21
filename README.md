@@ -23,7 +23,9 @@
 ├── 重跑风险审计_2026-11-18.md      # 逐表逐图对照导师意见的审计（含自我更正）
 ├── 实验进展_2026-11-16.md          # 最近一轮实验进展
 ├── 最小验证规格_2026-11-12.md      # 选择器实验协议（预算/指标/场景）
-├── v7_论文主张与验证路线.md        # 主张与验证路线
+├── v7_论文主张与验证路线.md          # 主张与验证路线
+├── 导师意见回应_2026-11-21.md       # 对导师意见的逐条回应（主张/最小验证/计划/故事线/相关工作）
+├── 论文批次结果_2026-11-21.md       # 288-run 8 选择器主表 + 95% CI
 ├── 汇报_2026-11-17/                # 组会材料、图、表、数据
 └── horizon/                        # 代码（Python 包 + 脚本 + 配置 + 测试）
     ├── src/horizon/                # 任务图、数据生成、策略、监控归因、RSI、选择器
@@ -64,7 +66,9 @@
 >
 > 详见审计 §12。历史 note：11:30 之前的 rule 行来自旧版内存模块（含 `slip/drop → randomize_physics` 分支），已在 13:00 被替换。
 
-> 读数注意：筛查批次每格 1–2 个样本（95% CI 约 ±6–8 pp），只用于方向；论文批次是 `configs/minimal_validation_4causes_paper8.yaml`（4 causes × 3 banks × 3 seeds × 8 selectors = **288 runs**，约 19 h），正在跑。
+> 读数注意：筛查批次每格 1–2 个样本（95% CI 约 ±6–8 pp），只用于方向；论文批次是 `configs/minimal_validation_4causes_paper8.yaml`（4 causes × 3 banks × 3 seeds × 8 selectors = **288 runs**，约 19 h），已完成。
+>
+> **导师最小验证：PASS**——rule 几何 +12.8 pp、覆盖 +32.8 pp；multilabel +5.6 / +32.8 pp；详见 §5.8 与 [`导师意见回应_2026-11-21.md`](导师意见回应_2026-11-21.md)。
 
 ## 4. 快速开始
 
@@ -180,6 +184,27 @@ PYTHONPATH=src .venv-linux/bin/python scripts/run_minimal_validation.py \
   --config configs/minimal_validation_4causes_paper8.yaml \
   --out results/four_causes_paper8_20261120 --workers 12
 ```
+
+### 5.8 导师意见与最小验证（go/no-go）
+
+- 逐条回应：[`导师意见回应_2026-11-21.md`](导师意见回应_2026-11-21.md)（主张、最小验证、修订计划、故事线、相关工作、7 条冲突）。
+- 图 R1（8 配方 × 4 原因，无一行通吃）：[`horizon/results/fig_R1_recipe_cause_20261121/fig_R1_recipe_cause.png`](horizon/results/fig_R1_recipe_cause_20261121/fig_R1_recipe_cause.png)。
+
+| 选择器 | 几何 SR | 覆盖 SR | 首步对（几何/覆盖） | 标签/格 |
+|---|---:|---:|---:|---:|
+| fixed | 0.772 | 0.600 | 9/9, 0/9 | 80,000 |
+| rule | 0.900 | 0.928 | 9/9, 9/9 | 81,111 |
+| multilabel | 0.828 | 0.928 | 9/9, 9/9 | **55,556** |
+| bandit | 0.961 | 0.983 | 9/9, 0/9 | 77,778 |
+| oracle | 0.939 | 0.972 | 9/9, 9/9 | 74,444 |
+
+- 过关标准（开跑前写死）：rule 或 agent 两类都不低于 fixed，且至少一类 ≥10 pp → **PASS**。
+- 必须说明的偏差：
+  1. 现有 3 banks × 3 seeds（导师要 10 场景 × 3 seeds）；
+  2. 无 LLM key，multilabel 作为 learned 代理；
+  3. 规则阈值未做 dev/test 划分；
+  4. oracle 是**诊断正确性上界**，不是 SR 上界（healthy 0.844 < fixed 0.911）。
+- 下一步：10 banks 最小验证（80 或 240 runs）、R2 混合比例扫描（60 runs）、dev/test 划分。
 
 ## 6. 数据与可复现性
 
