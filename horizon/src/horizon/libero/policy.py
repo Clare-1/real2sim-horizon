@@ -83,3 +83,18 @@ class ImageBC:
         obj.model.load_state_dict(blob["state_dict"])
         obj.model.eval()
         return obj
+
+
+class DPAdapter:
+    """Wrap an already-loaded Diffusion Policy predictor as ``act(image) -> action``.
+
+    Diffusion Policy itself is not vendored in this repository. Load your checkpoint with the
+    official ``diffusion_policy`` package (or your own trainer) and pass the predictor here; the
+    eval loop only needs the ``act`` interface.
+    """
+
+    def __init__(self, act_fn):
+        self.act_fn = act_fn
+
+    def act(self, image: np.ndarray) -> np.ndarray:
+        return np.asarray(self.act_fn(np.asarray(image)), dtype=np.float32)

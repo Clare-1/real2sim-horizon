@@ -14,11 +14,13 @@ import json
 import sys
 from pathlib import Path
 
+import numpy as np
+
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
 from horizon.real import (load_jsonl_robot, make_mock_robot, make_mock_robot_for_task,
-                          run_episodes)  # noqa: E402
+                          rows_to_episode, run_episodes)  # noqa: E402
 
 
 def main() -> int:
@@ -30,6 +32,7 @@ def main() -> int:
     ap.add_argument("--out", default="results/real_deploy_20261122.jsonl")
     ap.add_argument("--task", default="", help="task payload JSON (enables the learned controller)")
     ap.add_argument("--policy", default="", help="policy weights .npz")
+    ap.add_argument("--episode-out", default="", help="optional .npz for the EpisodeLog arrays")
     args = ap.parse_args()
 
     if args.robot == "csv":
@@ -54,6 +57,13 @@ def main() -> int:
         if args.robot == "mock":
             robot = make_mock_robot_for_task(task, frames=args.max_steps)
 
+        from horizon.monitor.verifier import Verifier
+        verifier = Verifier(task.scene, VerifierConfig(tol_scale=1.0))
+
+        def success_fn(sample):
+            sat = verifier.eng.satisfied_vector(verifier.perceive(sample.to_world_state()), task.graph)
+            return bool(np.all(sat))
+
         def policy_fn(sample):
             action, _ = controller.act(sample.to_world_state(), sample.to_world_state())
             return action
@@ -67,17 +77,24 @@ def main() -> int:
             params = load_params(args.policy)
             print(f"policy input dim = {params['x_mu'].shape[0]} (TaskFeaturizer.hier output)")
             NumpyMLP(params)  # validates the checkpoint shape
+        success_fn = None
 
         # Placeholder policy when no task payload is given.
         def policy_fn(sample):
             return [0.0, 0.0, 0.0, 0.0, 1.0]
 
-    rows = run_episodes(robot, policy_fn, args.episodes, args.max_steps, args.out)
+    rows = run_episodes(robot, policy_fn, args.episodes, args.max_steps, args.out,
+                        success_fn=success_fn)
     by_ep: dict[int, bool] = {}
     for r in rows:
         by_ep[r["episode"]] = by_ep.get(r["episode"], False) or r["success"]
     print(f"episodes={args.episodes}  steps={len(rows)}  success={sum(by_ep.values())}/{len(by_ep)}")
     print(f"[written] {args.out}")
+    if args.episode_out and args.task:
+        log = rows_to_episode(rows, task)
+        np.savez(args.episode_out, grip=log.grip, obj_obs=log.obj_obs, action=log.action,
+                 held=log.held_est, success=np.array([log.success]))
+        print(f"[written] {args.episode_out}  (EpisodeLog arrays; phase/valid are placeholders)")
     return 0
 
 

@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import time
 from dataclasses import dataclass, field
 from typing import Callable
 
@@ -25,7 +26,7 @@ SYSTEM_PROMPT = (
 )
 
 
-def build_user_prompt(obs: Observation) -> str:
+def build_user_prompt(obs: Observation, memory: tuple = ()) -> str:
     p, b = obs.profile, obs.budget
     payload = {
         "n_episodes": p.n_episodes,
@@ -40,6 +41,9 @@ def build_user_prompt(obs: Observation) -> str:
         "history": [{"action": h.action, "sr_before": round(h.sr_before, 3),
                      "sr_after": round(h.sr_after, 3)} for h in obs.history],
     }
+    if memory:
+        # Past-scenario lessons supplied by the operator; they must not contain the true cause.
+        payload["memory"] = list(memory)
     return json.dumps(payload, ensure_ascii=False, sort_keys=True)
 
 
@@ -65,13 +69,26 @@ class LLMPlannerSelector:
     api_key_env: str = "ANTHROPIC_API_KEY"
     max_tokens: int = 512
     name: str = "llm"
-    usage: list = field(default_factory=list)   # per-decision token records
+    usage: list = field(default_factory=list)   # per-decision token/cost records
     # Optional injected transport for pilots/tests: (system, user) -> (reply, usage).
     # When set, no network call is made and the API key is not required.
     client: Callable[[str, str], tuple[str, dict]] | None = None
+    # Cost/robustness guards. Prices are per million tokens; set them to the current model price.
+    max_retries: int = 3
+    retry_backoff: float = 2.0
+    max_calls: int | None = None
+    max_usd: float | None = None
+    price_in_per_mtok: float = 3.0
+    price_out_per_mtok: float = 15.0
+    # Past-scenario lessons for the "LLM + experience" row; never include the true cause.
+    memory: tuple = ()
 
     def available(self) -> bool:
         return bool(os.environ.get(self.api_key_env))
+
+    @property
+    def spent_usd(self) -> float:
+        return sum(float(u.get("usd", 0.0)) for u in self.usage)
 
     def decide(self, obs: Observation) -> Decision:
         stop = _guard(obs)
@@ -81,11 +98,26 @@ class LLMPlannerSelector:
             raise RuntimeError(
                 f"LLM selector needs {self.api_key_env}; refusing to substitute a rule planner. "
                 "Set the key or remove 'llm' from the selector list.")
-        reply, usage = self._call(build_user_prompt(obs))
+        if self.max_calls is not None and len(self.usage) >= self.max_calls:
+            raise RuntimeError(f"LLM call cap reached ({self.max_calls}); stopping instead of overspending")
+        if self.max_usd is not None and self.spent_usd >= self.max_usd:
+            raise RuntimeError(f"LLM cost cap reached (${self.max_usd:.2f}); stopping instead of overspending")
+        reply, usage = self._call(build_user_prompt(obs, self.memory))
         self.usage.append(usage)
         return parse_decision(reply)
 
     def _call(self, user_prompt: str) -> tuple[str, dict]:
+        last: Exception | None = None
+        for attempt in range(self.max_retries + 1):
+            try:
+                return self._once(user_prompt)
+            except (OSError, TimeoutError) as exc:  # URLError and socket errors are OSError
+                last = exc
+                if attempt < self.max_retries:
+                    time.sleep(self.retry_backoff * (2 ** attempt))
+        raise RuntimeError(f"LLM call failed after {self.max_retries + 1} attempts: {last}")
+
+    def _once(self, user_prompt: str) -> tuple[str, dict]:
         if self.client is not None:
             return self.client(SYSTEM_PROMPT, user_prompt)
         import urllib.request
@@ -101,7 +133,9 @@ class LLMPlannerSelector:
         with urllib.request.urlopen(req, timeout=120) as resp:
             data = json.loads(resp.read())
         text = "".join(block.get("text", "") for block in data.get("content", []))
-        usage = {"model": self.model, "input_tokens": data.get("usage", {}).get("input_tokens", 0),
-                 "output_tokens": data.get("usage", {}).get("output_tokens", 0),
+        inp = int(data.get("usage", {}).get("input_tokens", 0))
+        out = int(data.get("usage", {}).get("output_tokens", 0))
+        usage = {"model": self.model, "input_tokens": inp, "output_tokens": out,
+                 "usd": (inp * self.price_in_per_mtok + out * self.price_out_per_mtok) / 1e6,
                  "prompt_chars": len(user_prompt), "reply_chars": len(text)}
         return text, usage

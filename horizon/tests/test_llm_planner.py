@@ -57,3 +57,35 @@ def test_client_injection_allows_deterministic_pilot():
     sel = LLMPlannerSelector(client=fake)
     assert sel.decide(obs()).action == "calibrate_geometry"
     assert sel.usage == [{"input_tokens": 10, "output_tokens": 5}]
+
+
+def test_client_retries_then_succeeds():
+    calls = {"n": 0}
+
+    def flaky(system: str, user: str):
+        calls["n"] += 1
+        if calls["n"] == 1:
+            raise OSError("transient")
+        return '{"action": "dagger_round", "target": null, "reason": "retry"}', {
+            "input_tokens": 1, "output_tokens": 1}
+
+    sel = LLMPlannerSelector(client=flaky, max_retries=1, retry_backoff=0)
+    assert sel.decide(obs()).action == "dagger_round"
+    assert calls["n"] == 2
+
+
+def test_call_cap_stops_before_overspending():
+    def fake(system: str, user: str):
+        return '{"action": "stop", "target": null, "reason": "x"}', {
+            "input_tokens": 1, "output_tokens": 1}
+
+    sel = LLMPlannerSelector(client=fake, max_calls=1)
+    sel.decide(obs())
+    with pytest.raises(RuntimeError, match="call cap"):
+        sel.decide(obs())
+
+
+def test_memory_is_visible_to_the_llm_row():
+    text = build_user_prompt(obs(), memory=("past coverage scenario: targeted helped",))
+    assert "memory" in text and "targeted helped" in text
+    assert "true_cause" not in text

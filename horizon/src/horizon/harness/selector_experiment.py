@@ -43,9 +43,10 @@ WIRED = {"random": "RandomSelector", "round_robin": "RoundRobinSelector",
 def make_selector(name: str, cause: str, cfg: dict | None = None):
     if name == "oracle":
         return OracleSelector(true_cause=cause)
-    if name == "llm":
+    if name in ("llm", "llm_memory"):
         from ..rsi.llm_planner import LLMPlannerSelector
-        return LLMPlannerSelector()
+        memory = tuple((cfg or {}).get("llm_memory", ()) or ())
+        return LLMPlannerSelector(memory=memory)
     if name in WIRED:
         from ..rsi import selector as _sel
         return getattr(_sel, WIRED[name])()

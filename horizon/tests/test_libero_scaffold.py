@@ -51,3 +51,19 @@ def test_image_bc_smoke(tmp_path):
     path = tmp_path / "bc.pt"
     model.save(path)
     assert ImageBC.load(path).act(images[0]).shape == (7,)
+
+
+def test_dp_adapter_accepts_an_injected_predictor():
+    from horizon.libero import DPAdapter
+    adapter = DPAdapter(lambda image: np.zeros(7, dtype=np.float32))
+    assert adapter.act(np.zeros((8, 8, 3), dtype=np.uint8)).shape == (7,)
+
+
+def test_official_adapter_fails_clearly_without_libero():
+    from horizon.libero import LiberoEnvAdapter
+    try:
+        LiberoEnvAdapter("missing.bddl")
+    except RuntimeError as exc:
+        assert "LIBERO is not installed" in str(exc)
+    else:  # pragma: no cover - only when libero happens to be installed
+        pytest.skip("libero is installed; the missing-package path is not testable")

@@ -8,10 +8,12 @@ import argparse
 import sys
 from pathlib import Path
 
+import numpy as np
+
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
-from horizon.libero import ImageBC, MockLiberoEnv  # noqa: E402
+from horizon.libero import ImageBC, LiberoEnvAdapter, MockLiberoEnv  # noqa: E402
 
 
 def main() -> int:
@@ -21,16 +23,22 @@ def main() -> int:
     ap.add_argument("--episodes", type=int, default=3)
     ap.add_argument("--task-id", type=int, default=0)
     ap.add_argument("--horizon", type=int, default=5)
+    ap.add_argument("--bddl", default="", help="BDDL file for --env libero")
+    ap.add_argument("--init-state", default="", help="optional .npz with an init_state array")
+    ap.add_argument("--camera", type=int, default=128)
+    ap.add_argument("--settle", type=int, default=10)
     args = ap.parse_args()
 
     if args.env == "libero":
-        try:
-            import libero  # noqa: F401
-        except ImportError as exc:
-            raise SystemExit("real LIBERO env is not installed; use --env mock for the smoke test") from exc
-        raise SystemExit("wire the official LIBERO env here: reset(task_id) / step(action)")
-
-    env = MockLiberoEnv(horizon=args.horizon)
+        if not args.bddl:
+            raise SystemExit("--env libero needs --bddl (official LIBERO BDDL file)")
+        init_state = None
+        if args.init_state:
+            init_state = np.load(args.init_state)["init_state"]
+        env = LiberoEnvAdapter(args.bddl, args.camera, args.camera,
+                               init_state=init_state, settle_steps=args.settle)
+    else:
+        env = MockLiberoEnv(horizon=args.horizon)
     model = ImageBC.load(args.policy)
     wins = 0
     for ep in range(args.episodes):
