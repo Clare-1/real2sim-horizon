@@ -1,8 +1,8 @@
 name: minimal_validation_advisor
-# Advisor §3.6 minimal validation: pack H=4, 2 causes x 10 banks x 1 seed x 4 selectors.
-# Stage 1 is seed 0 only (80 runs, ~5 h); no offline-trained selector, so no model leakage.
-# If it passes, add seeds 1-2 (160 more runs).
-seeds: [0]
+# Advisor §3.6 minimal validation: pack H=4, 2 causes x 10 banks x 3 seeds x 4 selectors.
+# Seed 0 is already done (80 runs, 2026-11-21); this run adds seeds 1-2 (160 runs, ~11 h) and
+# reuses the existing seed-0 records. No offline-trained selector, so no model leakage.
+seeds: [0, 1, 2]
 selectors: [fixed, rule, bandit, oracle]
 families: [pack]
 H_values: [4]

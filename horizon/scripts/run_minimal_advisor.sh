@@ -11,7 +11,7 @@ for d in shared tasks_train tasks_deploy; do
     cp -al "results/four_causes_20261118_rule/$d/." "$OUT/$d/" 2>/dev/null || true
 done
 
-echo "[$(date +%H:%M:%S)] minimal validation: 2 x 10 banks x 4 selectors = 80 runs"
+echo "[$(date +%H:%M:%S)] minimal validation: 2 x 10 banks x 3 seeds x 4 selectors (240 cells; seed 0 records are reused)"
 PYTHONPATH=src .venv-linux/bin/python scripts/run_minimal_validation.py \
     --config configs/minimal_validation_advisor.yaml --out "$OUT" --workers 12
 
