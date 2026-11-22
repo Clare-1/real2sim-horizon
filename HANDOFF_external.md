@@ -1,8 +1,8 @@
 # 外部三条线 handoff（LLM / 真机 / LIBERO）
 
-> **完整性核验**：逐项证据与缺口见 [`DEPLOYMENT_AUDIT.md`](DEPLOYMENT_AUDIT.md)。真机的 sim/mock 路径已端到端验证；LLM 待 key；LIBERO 仍是骨架。
+> **完整性核验**：逐项证据与缺口见 [`DEPLOYMENT_AUDIT.md`](DEPLOYMENT_AUDIT.md)。真机的 sim/mock 路径已端到端验证；LLM 已用真实端点跑通（20 次调用）；LIBERO 仍是骨架。
 
-**一句话**：代码路径、接口、mock、测试和 MuJoCo 权重都已就绪；LLM 只差 API key，真机只差驱动/位姿源，LIBERO 只差数据/环境。
+**一句话**：代码路径、接口、mock、测试和 MuJoCo 权重都已就绪；LLM 已接通真实端点（只差论文级网格），真机只差驱动/位姿源，LIBERO 只差数据/环境。
 
 ## 1. 目录与权重
 
@@ -19,22 +19,27 @@
 | `configs/minimal_validation_llm.yaml` | fixed/rule/llm/oracle 的最小验证配置 |
 | `tests/test_llm_planner.py` / `test_real_interfaces.py` / `test_libero_scaffold.py` | 对应测试 |
 
-## 2. LLM（代码已支持两种端点，只差可用的 key/endpoint）
+## 2. LLM（真实端点已跑通；下一步是论文级网格）
+
+**已验证的端点**：`https://minara.cloud/v1`，模型 `openai/gpt-6.2-astra`（模型名必须带厂商前缀，否则 404 `model_not_found`）。实测约 **$18/Mtok**，20 次调用共 $0.039。
 
 ```bash
-# 方式 A：Anthropic 原生
-export ANTHROPIC_API_KEY=sk-ant-...
+# 已验证的真实调用（凭据在仓库外，chmod 600）
 cd horizon
-PYTHONPATH=src python scripts/llm_pilot.py --results results/four_causes_paper8_20261120 --limit 8
+PYTHONPATH=src python scripts/llm_pilot.py --provider openai --env-file ~/.config/horizon/llm.env --probe
+PYTHONPATH=src python scripts/llm_pilot.py --provider openai --env-file ~/.config/horizon/llm.env \
+    --results results/four_causes_paper8_20261120 --per-cause 3 --max-usd 0.5
+PYTHONPATH=src python scripts/report_llm_pilot.py     # LLM vs 脚本选择器同表
 
-# 方式 B：任意 OpenAI 兼容端点（DeepSeek / Moonshot / 通义 / vLLM / 代理）
-export HORIZON_LLM_KEY=sk-...
-PYTHONPATH=src python scripts/llm_pilot.py --results results/four_causes_paper8_20261120 --limit 8 \
-    --provider openai --base-url https://<endpoint>/v1 --model <model>
+# 方式 A：Anthropic 原生（若换回官方端点）
+export ANTHROPIC_API_KEY=sk-ant-...
+PYTHONPATH=src python scripts/llm_pilot.py --results results/four_causes_paper8_20261120 --limit 8
 
 # 无 key 的管线自测：
 PYTHONPATH=src python scripts/llm_pilot.py --results ... --limit 8 --mock
 ```
+
+实测结果（`results/llm_vs_rule_20261122.md`）：20 次调用，首步 **12/20**；几何 5/5、覆盖 4/5、健康 3/5、**恢复 0/5**（与规则一致——观测通道里没有恢复信号）。
 
 - `LLMPlannerSelector`：每轮一次调用、temperature 0、token 记账；**没有 key 会硬失败**，不会静默退回规则。
 - `provider="openai"` 走 `/chat/completions`，`provider="anthropic"` 走 `/v1/messages`；`client=` 可注入传输。
@@ -129,6 +134,6 @@ PYTHONPATH=src python -m pytest -q tests/test_llm_planner.py tests/test_real_int
 # 12 passed, 1 skipped (h5py missing on this machine)
 ```
 
-- LLM：代码/记账/无 key 硬失败/注入传输全部就绪；**只差 key**。
+- LLM：**真实端点已跑通**（20 次调用 $0.039，首步 12/20）；下一步是论文级网格。
 - 真机：接口/mock/日志/校准就绪；**只差驱动与位姿源**。
 - LIBERO：数据/训练/评测/布局先验骨架就绪；**只差数据与环境，权重需训练**。

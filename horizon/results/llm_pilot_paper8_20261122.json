@@ -1,0 +1,346 @@
+{
+  "mock": false,
+  "model": "openai/gpt-6.2-astra",
+  "base_url": "https://minara.cloud/v1",
+  "provider": "openai",
+  "n_calls": 12,
+  "spent_usd": 0.023574,
+  "per_cause": {
+    "geometry_bias": {
+      "n": 3,
+      "ok": 3,
+      "actions": {
+        "calibrate_geometry": 3
+      }
+    },
+    "coverage_deficit": {
+      "n": 3,
+      "ok": 2,
+      "actions": {
+        "regenerate_targeted": 2,
+        "calibrate_geometry": 1
+      }
+    },
+    "recovery_deficit": {
+      "n": 3,
+      "ok": 0,
+      "actions": {
+        "regenerate_targeted": 1,
+        "dagger_round": 1,
+        "calibrate_geometry": 1
+      }
+    },
+    "healthy": {
+      "n": 3,
+      "ok": 2,
+      "actions": {
+        "stop": 2,
+        "calibrate_geometry": 1
+      }
+    }
+  },
+  "decisions": [
+    {
+      "scenario": "geometry",
+      "cause": "geometry_bias",
+      "bank_index": 0,
+      "seed": 0,
+      "action": "calibrate_geometry",
+      "expected": "calibrate_geometry",
+      "correct": true,
+      "reason": "The 11.23 mm residual makes geometry the first calibration priority. Subgoal0 accounts for 13 of 24 failures.",
+      "profile": {
+        "sr": 0.0,
+        "residual_mm": 11.2,
+        "concentration": 0.54
+      }
+    },
+    {
+      "scenario": "geometry",
+      "cause": "geometry_bias",
+      "bank_index": 1,
+      "seed": 0,
+      "action": "calibrate_geometry",
+      "expected": "calibrate_geometry",
+      "correct": true,
+      "reason": "The 10.78 mm calibration residual suggests a possible source of failures across subgoals; address it before spending labels on targeted training.",
+      "profile": {
+        "sr": 0.25,
+        "residual_mm": 10.8,
+        "concentration": 0.44
+      }
+    },
+    {
+      "scenario": "geometry",
+      "cause": "geometry_bias",
+      "bank_index": 2,
+      "seed": 0,
+      "action": "calibrate_geometry",
+      "expected": "calibrate_geometry",
+      "correct": true,
+      "reason": "The 10.77 mm residual suggests geometric misalignment. Calibrate first, then check whether subgoal failures decrease.",
+      "profile": {
+        "sr": 0.29166666666666663,
+        "residual_mm": 10.8,
+        "concentration": 0.47
+      }
+    },
+    {
+      "scenario": "coverage",
+      "cause": "coverage_deficit",
+      "bank_index": 0,
+      "seed": 0,
+      "action": "regenerate_targeted",
+      "expected": "regenerate_targeted",
+      "correct": true,
+      "reason": "Subgoal0 accounts for 22 of 23 failures, making it the strongest target for new training examples without assuming a specific cause.",
+      "profile": {
+        "sr": 0.04166666666666663,
+        "residual_mm": null,
+        "concentration": 0.96
+      }
+    },
+    {
+      "scenario": "coverage",
+      "cause": "coverage_deficit",
+      "bank_index": 1,
+      "seed": 0,
+      "action": "regenerate_targeted",
+      "expected": "regenerate_targeted",
+      "correct": true,
+      "reason": "Subgoal0 accounts for 22 of 24 failures. Target it first, then check whether its failure count falls.",
+      "profile": {
+        "sr": 0.0,
+        "residual_mm": null,
+        "concentration": 0.92
+      }
+    },
+    {
+      "scenario": "coverage",
+      "cause": "coverage_deficit",
+      "bank_index": 2,
+      "seed": 0,
+      "action": "calibrate_geometry",
+      "expected": "regenerate_targeted",
+      "correct": false,
+      "reason": "All 21 failures occurred at subgoal0. The 2.55 mm residual makes geometry calibration a plausible first step.",
+      "profile": {
+        "sr": 0.125,
+        "residual_mm": 2.5,
+        "concentration": 1.0
+      }
+    },
+    {
+      "scenario": "recovery",
+      "cause": "recovery_deficit",
+      "bank_index": 0,
+      "seed": 0,
+      "action": "regenerate_targeted",
+      "expected": "add_recovery_data",
+      "correct": false,
+      "reason": "Subgoal0 accounts for 7 of 14 failures, making it the clearest target. No recovery triggers or perturbation failures were observed.",
+      "profile": {
+        "sr": 0.41666666666666663,
+        "residual_mm": 0.7,
+        "concentration": 0.5
+      }
+    },
+    {
+      "scenario": "recovery",
+      "cause": "recovery_deficit",
+      "bank_index": 1,
+      "seed": 0,
+      "action": "dagger_round",
+      "expected": "add_recovery_data",
+      "correct": false,
+      "reason": "Failures span all four subgoals. Collect expert labels on policy-visited states rather than assume a single subgoal needs correction.",
+      "profile": {
+        "sr": 0.41666666666666663,
+        "residual_mm": 0.8,
+        "concentration": 0.36
+      }
+    },
+    {
+      "scenario": "recovery",
+      "cause": "recovery_deficit",
+      "bank_index": 2,
+      "seed": 0,
+      "action": "calibrate_geometry",
+      "expected": "add_recovery_data",
+      "correct": false,
+      "reason": "The 1.25 mm residual suggests a possible shared alignment error across subgoal0 and subgoal1, which account for 14 of 16 failures.",
+      "profile": {
+        "sr": 0.33333333333333337,
+        "residual_mm": 1.2,
+        "concentration": 0.44
+      }
+    },
+    {
+      "scenario": "healthy",
+      "cause": "healthy",
+      "bank_index": 0,
+      "seed": 0,
+      "action": "stop",
+      "expected": "stop",
+      "correct": true,
+      "reason": "Success is 91.7%. Neither subgoal failed repeatedly, no recoveries triggered, and no perturbation failures were observed. No intervention is clearly indicated.",
+      "profile": {
+        "sr": 0.9166666666666666,
+        "residual_mm": 1.5,
+        "concentration": 0.5
+      }
+    },
+    {
+      "scenario": "healthy",
+      "cause": "healthy",
+      "bank_index": 1,
+      "seed": 0,
+      "action": "stop",
+      "expected": "stop",
+      "correct": true,
+      "reason": "Success was 22/24, with one failure per subgoal, no recovery triggers, and no perturbation failures. No clear intervention is indicated.",
+      "profile": {
+        "sr": 0.9166666666666666,
+        "residual_mm": 1.4,
+        "concentration": 0.5
+      }
+    },
+    {
+      "scenario": "healthy",
+      "cause": "healthy",
+      "bank_index": 2,
+      "seed": 0,
+      "action": "calibrate_geometry",
+      "expected": "stop",
+      "correct": false,
+      "reason": "The 1.22 mm residual suggests a possible alignment issue. Three failures provide little evidence for targeting a specific subgoal.",
+      "profile": {
+        "sr": 0.875,
+        "residual_mm": 1.2,
+        "concentration": 0.67
+      }
+    }
+  ],
+  "usage": [
+    {
+      "model": "openai/gpt-6.2-astra",
+      "input_tokens": 284,
+      "output_tokens": 44,
+      "usd": 0.001512,
+      "prompt_chars": 351,
+      "reply_chars": 166,
+      "provider": "openai",
+      "base_url": "https://minara.cloud/v1"
+    },
+    {
+      "model": "openai/gpt-6.2-astra",
+      "input_tokens": 284,
+      "output_tokens": 46,
+      "usd": 0.001542,
+      "prompt_chars": 351,
+      "reply_chars": 202,
+      "provider": "openai",
+      "base_url": "https://minara.cloud/v1"
+    },
+    {
+      "model": "openai/gpt-6.2-astra",
+      "input_tokens": 284,
+      "output_tokens": 42,
+      "usd": 0.001482,
+      "prompt_chars": 352,
+      "reply_chars": 174,
+      "provider": "openai",
+      "base_url": "https://minara.cloud/v1"
+    },
+    {
+      "model": "openai/gpt-6.2-astra",
+      "input_tokens": 265,
+      "output_tokens": 129,
+      "usd": 0.00273,
+      "prompt_chars": 322,
+      "reply_chars": 196,
+      "provider": "openai",
+      "base_url": "https://minara.cloud/v1"
+    },
+    {
+      "model": "openai/gpt-6.2-astra",
+      "input_tokens": 265,
+      "output_tokens": 105,
+      "usd": 0.00237,
+      "prompt_chars": 320,
+      "reply_chars": 165,
+      "provider": "openai",
+      "base_url": "https://minara.cloud/v1"
+    },
+    {
+      "model": "openai/gpt-6.2-astra",
+      "input_tokens": 260,
+      "output_tokens": 43,
+      "usd": 0.001425,
+      "prompt_chars": 307,
+      "reply_chars": 166,
+      "provider": "openai",
+      "base_url": "https://minara.cloud/v1"
+    },
+    {
+      "model": "openai/gpt-6.2-astra",
+      "input_tokens": 284,
+      "output_tokens": 73,
+      "usd": 0.001947,
+      "prompt_chars": 351,
+      "reply_chars": 195,
+      "provider": "openai",
+      "base_url": "https://minara.cloud/v1"
+    },
+    {
+      "model": "openai/gpt-6.2-astra",
+      "input_tokens": 284,
+      "output_tokens": 70,
+      "usd": 0.001902,
+      "prompt_chars": 351,
+      "reply_chars": 184,
+      "provider": "openai",
+      "base_url": "https://minara.cloud/v1"
+    },
+    {
+      "model": "openai/gpt-6.2-astra",
+      "input_tokens": 284,
+      "output_tokens": 68,
+      "usd": 0.001872,
+      "prompt_chars": 351,
+      "reply_chars": 187,
+      "provider": "openai",
+      "base_url": "https://minara.cloud/v1"
+    },
+    {
+      "model": "openai/gpt-6.2-astra",
+      "input_tokens": 268,
+      "output_tokens": 75,
+      "usd": 0.001929,
+      "prompt_chars": 321,
+      "reply_chars": 202,
+      "provider": "openai",
+      "base_url": "https://minara.cloud/v1"
+    },
+    {
+      "model": "openai/gpt-6.2-astra",
+      "input_tokens": 268,
+      "output_tokens": 141,
+      "usd": 0.002919,
+      "prompt_chars": 321,
+      "reply_chars": 179,
+      "provider": "openai",
+      "base_url": "https://minara.cloud/v1"
+    },
+    {
+      "model": "openai/gpt-6.2-astra",
+      "input_tokens": 268,
+      "output_tokens": 76,
+      "usd": 0.001944,
+      "prompt_chars": 321,
+      "reply_chars": 187,
+      "provider": "openai",
+      "base_url": "https://minara.cloud/v1"
+    }
+  ]
+}

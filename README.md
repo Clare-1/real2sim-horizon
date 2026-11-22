@@ -221,7 +221,7 @@ PYTHONPATH=src .venv-linux/bin/python scripts/run_minimal_validation.py \
 
 | 块 | 现状 | 缺什么 |
 |---|---|---|
-| LLM agent / LLM+经验 | `llm_planner.py` 已实现，**0 runs** | `ANTHROPIC_API_KEY` + API 预算 |
+| LLM agent / LLM+经验 | **已跑通真实调用**（20 次，$0.039，`openai/gpt-6.2-astra` via `minara.cloud`） | 论文级网格（LLM 选择器进主表） |
 | 真机 | 0 | 机器人、相机、AprilTag/位姿链路 |
 | LIBERO / 外部 benchmark | 0 | checkout、Diffusion Policy 管线、磁盘 |
 
@@ -277,7 +277,7 @@ PYTHONPATH=src .venv-linux/bin/python scripts/run_minimal_validation.py \
 
 | 线 | 已就绪 | 只差 |
 |---|---|---|
-| **LLM** | `LLMPlannerSelector`（token/成本记账、无 key 硬失败、`client=` 注入、retry/backoff、`max_calls/max_usd`、`memory`）、`scripts/llm_pilot.py`（`--mock` 无 key 可跑）、`configs/minimal_validation_llm.yaml`、7 tests | **API key + 真实模型名校验** |
+| **LLM** | `LLMPlannerSelector`（token/成本记账、无 key 硬失败、`client=` 注入、retry/backoff、`max_calls/max_usd`、`memory`）、`scripts/llm_pilot.py`（`--mock` / `--probe` / `--per-cause`）、`scripts/report_llm_pilot.py`、7 tests；**真实端点已验证**：`openai/gpt-6.2-astra` @ `https://minara.cloud/v1`，20 次调用 $0.039，首步 12/20（几何 5/5、覆盖 4/5、健康 3/5、恢复 0/5） | 论文级网格（LLM 行进主表） |
 | **真机** | `horizon/real/` 接口/mock/JSONL/日志/校准；**task payload → TaskInstance → HierarchicalController → TaskFeaturizer → NumpyMLP 端到端**（dim=55，7 steps）；**Verifier 成功判定 + EpisodeLog 构建**；示例 payload + 状态权重 | 机器人驱动、AprilTag/位姿源 + 外参、夹爪映射、安全限位；EpisodeLog phase/valid 标注 |
 | **LIBERO** | `horizon/libero/` HDF5 读取、布局先验、`MockLiberoEnv`、**`LiberoEnvAdapter`**、**`DPAdapter`**、`ImageBC`、`train_libero.py`/`eval_libero.py --bddl`、6 tests | **libero 包/数据 + DP 权重 + 新布局演示生成** |
 
@@ -286,9 +286,12 @@ PYTHONPATH=src .venv-linux/bin/python scripts/run_minimal_validation.py \
 ```bash
 git clone https://github.com/Clare-1/real2sim-horizon.git
 cd real2sim-horizon/horizon
-# LLM
-export ANTHROPIC_API_KEY=...
-PYTHONPATH=src python scripts/llm_pilot.py --results results/four_causes_paper8_20261120 --limit 8
+# LLM（凭据放在仓库外：~/.config/horizon/llm.env，chmod 600）
+PYTHONPATH=src python scripts/llm_pilot.py --provider openai --env-file ~/.config/horizon/llm.env \
+  --probe                                  # 1 次调用验证端点/模型/key
+PYTHONPATH=src python scripts/llm_pilot.py --provider openai --env-file ~/.config/horizon/llm.env \
+  --results results/four_causes_paper8_20261120 --per-cause 3 --max-usd 0.5
+PYTHONPATH=src python scripts/report_llm_pilot.py     # LLM vs 脚本选择器同表
 # 真机（先 mock 自测）
 PYTHONPATH=src python scripts/run_real_deploy.py --robot mock --out /tmp/deploy.jsonl
 # LIBERO
@@ -312,5 +315,6 @@ PYTHONPATH=src python -m pytest -q tests/test_llm_planner.py tests/test_real_int
 - **实验一 8 条 pipeline 已实现**：`open_loop` / `always_dagger` / `domain_randomize` / `deploy_dagger` / `mixed_train` / `fixed` / `calibrate_alternate` / `true_params`，配置 `configs/experiment1_table1_pilot.yaml`（3 条件 × 2 banks × 8 方法），输出 `results/experiment1_table1_20261122`。
 - **旧协议 / 部分**：表 2 的 mixed 列、表 8/9/11、图 2/图 7。
 - **未做（可跑）**：实验一 8 条 pipeline × 3 条件、dev/test 30/60、H 外推新编码、图 2/7 的当前版本。
-- **外部**：LLM 行、LIBERO（表 4/图 5）、真机（表 5/6/7/图 6）。
+- **外部**：LIBERO（表 4/图 5）、真机（表 5/6/7/图 6）。
+- **LLM 行已可用**：`results/llm_vs_rule_20261122.md`（LLM 首步 12/20 vs rule 6/8，同为几何/覆盖可分、恢复不可分）。
 - **可不跑**：最小验证（导师明确不进论文；stage-1 已 PASS）、动力学原因（平台不可表达）、RoboDojo/RoboCasa。

@@ -1,0 +1,244 @@
+{
+  "mock": false,
+  "model": "openai/gpt-6.2-astra",
+  "base_url": "https://minara.cloud/v1",
+  "provider": "openai",
+  "n_calls": 8,
+  "spent_usd": 0.015246,
+  "per_cause": {
+    "geometry_bias": {
+      "n": 2,
+      "ok": 2,
+      "actions": {
+        "calibrate_geometry": 2
+      }
+    },
+    "coverage_deficit": {
+      "n": 2,
+      "ok": 2,
+      "actions": {
+        "regenerate_targeted": 2
+      }
+    },
+    "recovery_deficit": {
+      "n": 2,
+      "ok": 0,
+      "actions": {
+        "regenerate_targeted": 1,
+        "dagger_round": 1
+      }
+    },
+    "healthy": {
+      "n": 2,
+      "ok": 1,
+      "actions": {
+        "calibrate_geometry": 1,
+        "stop": 1
+      }
+    }
+  },
+  "decisions": [
+    {
+      "scenario": "geometry",
+      "cause": "geometry_bias",
+      "bank_index": 0,
+      "seed": 0,
+      "action": "calibrate_geometry",
+      "expected": "calibrate_geometry",
+      "correct": true,
+      "reason": "The 11.23 mm residual suggests geometric misalignment. Calibrate first, then reassess before targeting subgoal0.",
+      "profile": {
+        "sr": 0.0,
+        "residual_mm": 11.2,
+        "concentration": 0.54
+      }
+    },
+    {
+      "scenario": "geometry",
+      "cause": "geometry_bias",
+      "bank_index": 1,
+      "seed": 0,
+      "action": "calibrate_geometry",
+      "expected": "calibrate_geometry",
+      "correct": true,
+      "reason": "The 10.78 mm residual suggests geometric misalignment across subgoals; correct it before spending labels on targeted training.",
+      "profile": {
+        "sr": 0.25,
+        "residual_mm": 10.8,
+        "concentration": 0.44
+      }
+    },
+    {
+      "scenario": "coverage",
+      "cause": "coverage_deficit",
+      "bank_index": 0,
+      "seed": 0,
+      "action": "regenerate_targeted",
+      "expected": "regenerate_targeted",
+      "correct": true,
+      "reason": "Subgoal0 accounts for 22 of 23 failures. Targeted regeneration addresses the observed bottleneck without assuming a geometric cause.",
+      "profile": {
+        "sr": 0.04166666666666663,
+        "residual_mm": null,
+        "concentration": 0.96
+      }
+    },
+    {
+      "scenario": "coverage",
+      "cause": "coverage_deficit",
+      "bank_index": 1,
+      "seed": 0,
+      "action": "regenerate_targeted",
+      "expected": "regenerate_targeted",
+      "correct": true,
+      "reason": "Subgoal0 accounts for 22 of 24 failures, making it the strongest target for new training data despite the unknown cause.",
+      "profile": {
+        "sr": 0.0,
+        "residual_mm": null,
+        "concentration": 0.92
+      }
+    },
+    {
+      "scenario": "recovery",
+      "cause": "recovery_deficit",
+      "bank_index": 0,
+      "seed": 0,
+      "action": "regenerate_targeted",
+      "expected": "add_recovery_data",
+      "correct": false,
+      "reason": "Subgoal0 accounts for 7 of 14 failures, making it the clearest target. No recovery triggers or perturbation failures were observed.",
+      "profile": {
+        "sr": 0.41666666666666663,
+        "residual_mm": 0.7,
+        "concentration": 0.5
+      }
+    },
+    {
+      "scenario": "recovery",
+      "cause": "recovery_deficit",
+      "bank_index": 1,
+      "seed": 0,
+      "action": "dagger_round",
+      "expected": "add_recovery_data",
+      "correct": false,
+      "reason": "Failures span all four subgoals. A DAgger round can collect corrective labels on visited states without assuming a single failure cause.",
+      "profile": {
+        "sr": 0.41666666666666663,
+        "residual_mm": 0.8,
+        "concentration": 0.36
+      }
+    },
+    {
+      "scenario": "healthy",
+      "cause": "healthy",
+      "bank_index": 0,
+      "seed": 0,
+      "action": "calibrate_geometry",
+      "expected": "stop",
+      "correct": false,
+      "reason": "The 1.52 mm residual is worth testing first. Neither subgoal dominates failures, and no perturbation failures or recovery triggers were observed.",
+      "profile": {
+        "sr": 0.9166666666666666,
+        "residual_mm": 1.5,
+        "concentration": 0.5
+      }
+    },
+    {
+      "scenario": "healthy",
+      "cause": "healthy",
+      "bank_index": 1,
+      "seed": 0,
+      "action": "stop",
+      "expected": "stop",
+      "correct": true,
+      "reason": "Success is 91.7%, with one failure per subgoal, no recovery triggers, and no observed perturbation failures. No intervention is clearly indicated.",
+      "profile": {
+        "sr": 0.9166666666666666,
+        "residual_mm": 1.4,
+        "concentration": 0.5
+      }
+    }
+  ],
+  "usage": [
+    {
+      "model": "openai/gpt-6.2-astra",
+      "input_tokens": 284,
+      "output_tokens": 43,
+      "usd": 0.001497,
+      "prompt_chars": 351,
+      "reply_chars": 169,
+      "provider": "openai",
+      "base_url": "https://minara.cloud/v1"
+    },
+    {
+      "model": "openai/gpt-6.2-astra",
+      "input_tokens": 284,
+      "output_tokens": 43,
+      "usd": 0.001497,
+      "prompt_chars": 351,
+      "reply_chars": 183,
+      "provider": "openai",
+      "base_url": "https://minara.cloud/v1"
+    },
+    {
+      "model": "openai/gpt-6.2-astra",
+      "input_tokens": 265,
+      "output_tokens": 81,
+      "usd": 0.00201,
+      "prompt_chars": 322,
+      "reply_chars": 196,
+      "provider": "openai",
+      "base_url": "https://minara.cloud/v1"
+    },
+    {
+      "model": "openai/gpt-6.2-astra",
+      "input_tokens": 265,
+      "output_tokens": 84,
+      "usd": 0.002055,
+      "prompt_chars": 320,
+      "reply_chars": 184,
+      "provider": "openai",
+      "base_url": "https://minara.cloud/v1"
+    },
+    {
+      "model": "openai/gpt-6.2-astra",
+      "input_tokens": 284,
+      "output_tokens": 72,
+      "usd": 0.001932,
+      "prompt_chars": 351,
+      "reply_chars": 195,
+      "provider": "openai",
+      "base_url": "https://minara.cloud/v1"
+    },
+    {
+      "model": "openai/gpt-6.2-astra",
+      "input_tokens": 284,
+      "output_tokens": 72,
+      "usd": 0.001932,
+      "prompt_chars": 351,
+      "reply_chars": 187,
+      "provider": "openai",
+      "base_url": "https://minara.cloud/v1"
+    },
+    {
+      "model": "openai/gpt-6.2-astra",
+      "input_tokens": 268,
+      "output_tokens": 97,
+      "usd": 0.002259,
+      "prompt_chars": 321,
+      "reply_chars": 202,
+      "provider": "openai",
+      "base_url": "https://minara.cloud/v1"
+    },
+    {
+      "model": "openai/gpt-6.2-astra",
+      "input_tokens": 268,
+      "output_tokens": 84,
+      "usd": 0.002064,
+      "prompt_chars": 321,
+      "reply_chars": 189,
+      "provider": "openai",
+      "base_url": "https://minara.cloud/v1"
+    }
+  ]
+}

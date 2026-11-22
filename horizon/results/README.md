@@ -27,6 +27,8 @@
 | `long_horizon_replication_20261028/` | README / RESULTS / 审计文档 | 长程复验结论（`comparison.json` 18 MB 未纳入） |
 | `paper_figures_20261116/` | 图 1/3/7 与表 | 历史图件 |
 | `diagnosability5_20261117/` | 五类可诊断性（已作废，保留为记录） | 审计证据 |
+| `llm_pilot_20261122.json`、`llm_pilot_paper8_20261122.json` | LLM 真实端点逐条决策（20 次调用，$0.039） | 审计 §22 |
+| `llm_vs_rule_20261122.md` | LLM vs 6 个脚本选择器的首步正确率同表 | 审计 §22 |
 
 ## 未纳入的内容与再生成
 

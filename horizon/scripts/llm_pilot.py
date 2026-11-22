@@ -19,7 +19,8 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
 from horizon.rsi.llm_planner import LLMPlannerSelector  # noqa: E402
-from horizon.rsi.selector import Budget, FailureProfile, Observation  # noqa: E402
+from horizon.rsi.selector import (CAUSE_ACTION, Budget, Decision, FailureProfile,  # noqa: E402
+                                  Observation, first_step_correct)
 
 
 def load(path: Path) -> list[dict]:
@@ -80,6 +81,8 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--results", default="results/four_causes_paper8_20261120")
     ap.add_argument("--limit", type=int, default=8)
+    ap.add_argument("--per-cause", type=int, default=0,
+                    help="pick up to N distinct (bank, seed) per scenario; overrides --limit")
     ap.add_argument("--mock", action="store_true")
     ap.add_argument("--provider", choices=("anthropic", "openai"), default="anthropic")
     ap.add_argument("--model", default="", help="model name; empty keeps the provider default")
@@ -101,13 +104,21 @@ def main() -> int:
     path = (ROOT / args.results).resolve()
     recs = load(path)
     seen, picked = set(), []
+    per_cause: dict[str, int] = {}
+    scenarios = {r["scenario"] for r in recs}
     for r in recs:
         key = (r["scenario"], r.get("bank_index", 0), r.get("seed", 0))
         if key in seen:
             continue
+        if args.per_cause and per_cause.get(r["scenario"], 0) >= args.per_cause:
+            continue
         seen.add(key)
         picked.append(r)
-        if len(picked) >= args.limit:
+        per_cause[r["scenario"]] = per_cause.get(r["scenario"], 0) + 1
+        if args.per_cause:
+            if all(per_cause.get(s, 0) >= args.per_cause for s in scenarios):
+                break
+        elif len(picked) >= args.limit:
             break
 
     sel = LLMPlannerSelector(client=mock_transport if args.mock else None)
@@ -153,22 +164,44 @@ def main() -> int:
     for r in picked:
         obs = observation(r)
         decision = sel.decide(obs)
-        rows.append({"scenario": r["scenario"], "bank_index": r.get("bank_index", 0),
+        cause = r.get("cause") or r["scenario"]
+        expected = CAUSE_ACTION.get(cause)
+        rows.append({"scenario": r["scenario"], "cause": cause,
+                     "bank_index": r.get("bank_index", 0),
                      "seed": r.get("seed", 0), "action": decision.action,
+                     "expected": expected,
+                     "correct": first_step_correct(decision, cause),
                      "reason": decision.reason,
                      "profile": {"sr": obs.profile.sr,
                                  "residual_mm": None if obs.profile.calibration_residual is None
                                  else round(1000 * obs.profile.calibration_residual, 1),
                                  "concentration": round(obs.profile.concentration, 2)}})
         print(f"{r['scenario']:9s} b{r.get('bank_index', 0)} -> {decision.action:20s} "
-              f"({decision.reason})")
+              f"{'OK ' if rows[-1]['correct'] else 'MISS'} ({decision.reason})")
+
+    # Per-cause summary: the LLM's job is the first-step choice, not the final SR.
+    print("\nper-cause first-step accuracy:")
+    summary = {}
+    for row in rows:
+        s = summary.setdefault(row["cause"], {"n": 0, "ok": 0, "actions": {}})
+        s["n"] += 1
+        s["ok"] += int(row["correct"])
+        s["actions"][row["action"]] = s["actions"].get(row["action"], 0) + 1
+    for cause in sorted(summary):
+        s = summary[cause]
+        dist = ", ".join(f"{a}={c}" for a, c in sorted(s["actions"].items()))
+        print(f"  {cause:16s} {s['ok']}/{s['n']}  expected={CAUSE_ACTION.get(cause)}  [{dist}]")
 
     out = (ROOT / args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
+    spent = sum(float(u.get("usd", 0.0)) for u in sel.usage)
     out.write_text(json.dumps({"mock": args.mock, "model": sel.model,
+                               "base_url": sel.base_url, "provider": sel.provider,
+                               "n_calls": len(rows), "spent_usd": round(spent, 6),
+                               "per_cause": summary,
                                "decisions": rows, "usage": sel.usage}, indent=2),
                    encoding="utf-8")
-    print(f"\n[written] {out}  calls={len(rows)}  usage={sel.usage}")
+    print(f"\n[written] {out}  calls={len(rows)}  spent=${spent:.6f}")
     if args.mock:
         print("MOCK transport: no API call and no cost; use without --mock for the real row.")
     return 0

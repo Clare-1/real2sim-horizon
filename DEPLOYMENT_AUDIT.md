@@ -7,7 +7,7 @@
 
 | 线 | 代码侧已完成（有测试/ smoke） | 外部仍缺 | 判定 |
 |---|---|---|---|
-| **LLM** | prompt 无泄漏、parser、无 key 硬失败、`client=` 注入、**retry/backoff**、**max_calls/max_usd**、**memory（LLM+经验）**、usage 含 usd；7 tests | `ANTHROPIC_API_KEY`、真实模型名校验 | **code-side complete；key pending** |
+| **LLM** | prompt 无泄漏、parser、无 key 硬失败、`client=` 注入、**retry/backoff**、**max_calls/max_usd**、**memory（LLM+经验）**、usage 含 usd；7 tests；**真实端点已跑通**（`openai/gpt-6.2-astra` @ `https://minara.cloud/v1`，`--probe` + 20 次调用，$0.039） | 论文级网格（LLM 行进主表） | **runs end-to-end；grid pending** |
 | **真机** | PoseSource/Robot、mock/JSONL、部署日志、twin 校准、**Verifier 成功判定**、**EpisodeLog 构建**、**task→TaskInstance→HierarchicalController→TaskFeaturizer→NumpyMLP**（dim=55，7 步）；6 tests + smoke | 机器人驱动、AprilTag/位姿源 + 相机→基座外参、夹爪映射、安全限位；EpisodeLog 的 phase/valid 需人工标注 | **code-side complete；hardware pending** |
 | **LIBERO** | HDF5 读取、布局先验、MockEnv、**官方 env 适配器**、**DPAdapter**、ImageBC、train/eval（`--bddl`）；6 tests | `libero` 包 + 数据 + BDDL、**训练权重**、新布局演示生成（MimicGen/专家） | **code-side complete；env/data/weights pending** |
 
@@ -31,8 +31,9 @@ PYTHONPATH=src python scripts/eval_libero.py --policy weights/libero/bc.pt --env
 
 ## LLM：还差什么
 
-- 真实 key 下的 8-profile pilot（模型名、价格、超时需在真实端点确认）。
-- API 成本上限已实现（`max_usd`/`max_calls`），但价格表是占位值，接 key 后按实际模型改 `price_in_per_mtok/price_out_per_mtok`。
+- ~~真实 key 下的 pilot~~ **已完成**：`--probe` 单次验证 + 20 次真实调用（8 个 four_causes 唯一 profile + 12 个 paper8 唯一 profile），总花费 $0.039。
+- 论文级网格：把 LLM 作为第 9 行接入主表（需要在线 rollout，不只是首步决策）。
+- 价格表需按实际端点校准：`minara.cloud` 实测约 **$18/Mtok**（`--price-in/--price-out` 可覆盖脚本内的占位值）。
 - “LLM + 经验”已实现为 `memory` 字段 + `llm_memory` selector；经验内容必须由开发场景产生，不能含真值原因。
 
 ## 真机：还差什么
@@ -51,6 +52,6 @@ PYTHONPATH=src python scripts/eval_libero.py --policy weights/libero/bc.pt --env
 
 ## 交接判定
 
-- **LLM**：代码可交；给 key 即可跑 pilot。
+- **LLM**：代码可交；**真实端点已验证**（`openai/gpt-6.2-astra` @ `minara.cloud`，20 次调用 $0.039，首步 12/20）；下一步是把 LLM 行接入论文主表。
 - **真机**：代码可交；接驱动/位姿源即可上真机；sim/mock 已证明策略链路。
 - **LIBERO**：代码可交；接包/数据/权重后先跑 ImageBC，DP 需另接。
