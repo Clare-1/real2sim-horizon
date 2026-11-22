@@ -24,10 +24,10 @@ from ..monitor.attribution import attribute_auto
 from ..monitor.verifier import VerifierConfig
 from ..policy.dataset import Dataset
 from ..real2sim.recon_error import ReconModel
-from ..rsi.selector import (CAUSE_ACTION, Budget, FailureProfile, FixedRecipeSelector, HistoryEntry,
+from ..rsi.selector import (CAUSE_ACTION, AlternatingCalibrationSelector, AlwaysDaggerSelector,
+                            Budget, FailureProfile, FixedRecipeSelector, HistoryEntry,
                             LearnedValueSelector, MultiLabelSelector, Observation, OracleSelector,
-                            RulePlannerSelector,
-                            profile_vector)
+                            RulePlannerSelector, profile_vector)
 from ..rsi.simreal import geometry_repair
 from ..tasks.families import RandomizationConfig
 from .artifacts import canonical_hash, load_blocks, save_blocks, save_policy, write_json
@@ -35,7 +35,9 @@ from .experiment import (TaskStore, check_results, collect_recorded, dagger_fact
                          job_for, nominal_factory, nominal_recovery_factory, observed_feedback,
                          rollout_cost, train_version)
 
-SELECTORS = {"fixed": FixedRecipeSelector, "rule": RulePlannerSelector}
+SELECTORS = {"fixed": FixedRecipeSelector, "rule": RulePlannerSelector,
+             "always_dagger": AlwaysDaggerSelector,
+             "calibrate_alternate": AlternatingCalibrationSelector}
 WIRED = {"random": "RandomSelector", "round_robin": "RoundRobinSelector",
          "bandit": "UCBBanditSelector", "linucb": "LinUCBSelector"}
 

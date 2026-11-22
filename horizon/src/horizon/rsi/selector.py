@@ -268,6 +268,34 @@ class RulePlannerSelector:
 
 
 @dataclass
+class AlwaysDaggerSelector:
+    """Advisor experiment-1 method 2: fixed twin, never calibrate, always DAgger."""
+
+    name: str = "always_dagger"
+
+    def decide(self, obs: Observation) -> Decision:
+        stop = _guard(obs)
+        if stop:
+            return stop
+        return Decision("dagger_round", None, "fixed twin: always DAgger", 4)
+
+
+@dataclass
+class AlternatingCalibrationSelector:
+    """Advisor experiment-1 method 7 (screening version): calibrate and DAgger alternate."""
+
+    name: str = "calibrate_alternate"
+
+    def decide(self, obs: Observation) -> Decision:
+        stop = _guard(obs)
+        if stop:
+            return stop
+        if len(obs.history) % 2 == 0:
+            return Decision("calibrate_geometry", None, "repeated calibration: calibrate", 1)
+        return Decision("dagger_round", None, "repeated calibration: DAgger", 4)
+
+
+@dataclass
 class OracleSelector:
     """Knows the true cause and follows that cause's operation *sequence*; upper bound, never a baseline.
 

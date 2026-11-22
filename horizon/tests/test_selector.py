@@ -6,7 +6,8 @@ import pytest
 from horizon.rsi.selector import (
     ACTIONS, CAUSE_ACTION, Budget, Decision, FailureProfile, FixedRecipeSelector, HistoryEntry,
     LearnedValueSelector, LinUCBSelector, MultiLabelSelector, Observation, OracleSelector,
-    RulePlannerSelector, diagnosis_features, first_step_correct, profile_vector,
+    RulePlannerSelector, AlternatingCalibrationSelector, AlwaysDaggerSelector,
+    diagnosis_features, first_step_correct, profile_vector,
 )
 
 
@@ -232,6 +233,21 @@ def test_multilabel_selector_maps_component_set_to_sequence(tmp_path):
 
     healthy = MultiLabelSelector(model_path=write("healthy.json", -8, -8, -8))
     assert healthy.decide(obs(sr=0.9)).action == "stop"
+
+
+def test_always_dagger_never_calibrates():
+    """Experiment-1 method 2: a fixed twin must not be recalibrated even with a residual."""
+    assert AlwaysDaggerSelector().decide(obs(residual=0.02)).action == "dagger_round"
+
+
+def test_alternating_calibration_calibrates_then_daggers():
+    """Experiment-1 method 7 screening: calibrate, DAgger, calibrate, ..."""
+    sel = AlternatingCalibrationSelector()
+    assert sel.decide(obs()).action == "calibrate_geometry"
+    h1 = (HistoryEntry("calibrate_geometry", 0.3, 0.5),)
+    assert sel.decide(obs(history=h1)).action == "dagger_round"
+    h2 = h1 + (HistoryEntry("dagger_round", 0.5, 0.6),)
+    assert sel.decide(obs(history=h2)).action == "calibrate_geometry"
 
 
 def test_every_action_is_reachable_and_valid():
