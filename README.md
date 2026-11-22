@@ -215,11 +215,51 @@ PYTHONPATH=src .venv-linux/bin/python scripts/run_minimal_validation.py \
 
 ## 9. 外部三条线 handoff（LLM / 真机 / LIBERO）
 
-- 完整说明：[`HANDOFF_external.md`](HANDOFF_external.md)
-- 权重清单：[`weights/README.md`](weights/README.md)（4 场景 × π0/fixed-final + 两个小模型，16 MB，含 SHA256）
-- 状态：**LLM 只差 API key；真机只差驱动/位姿源；LIBERO 只差数据/环境，权重需在 LIBERO 数据上训练**。
-- 代码：`horizon/src/horizon/real/`（PoseSource/Robot/mock/部署/校准）、`horizon/src/horizon/libero/`（HDF5/布局先验/mock/ImageBC）、`horizon/scripts/llm_pilot.py`。
-- 测试：`PYTHONPATH=src pytest -q tests/test_llm_planner.py tests/test_real_interfaces.py tests/test_libero_scaffold.py`（12 passed, 1 skipped）。
+**状态：LLM 只差 API key；真机只差驱动/位姿源；LIBERO 只差数据/环境，权重需在 LIBERO 数据上训练。代码路径、mock、测试和 MuJoCo 权重均已就绪。**
+
+### 9.1 权重（`weights/`，16 MB）
+
+| 文件 | 内容 |
+|---|---|
+| `weights/mujoco_4causes/{geometry,coverage,recovery,healthy}_pi0.npz` | 初始策略 π0 |
+| `weights/mujoco_4causes/{scenario}_fixed_final.npz` | fixed 配方第 3 轮（校准 + DAgger） |
+| `weights/models/multilabel_model_heldout_paper.json` | 多标签诊断（阈值 0.3，训练排除 banks 0–2） |
+| `weights/models/value_model.json` | 40 条反事实的负结果基线 |
+| `weights/SHA256SUMS.txt` / `weights/README.md` | 校验和 + 加载说明 |
+
+注意：这些是**状态策略**（输入 `TaskFeaturizer.hier` 特征），不是图像策略；LIBERO 权重不随仓库分发。
+
+### 9.2 三条线
+
+| 线 | 已就绪 | 只差 |
+|---|---|---|
+| **LLM** | `LLMPlannerSelector`（token 记账、无 key 硬失败、`client=` 注入）、`scripts/llm_pilot.py`（`--mock` 无 key 可跑）、`configs/minimal_validation_llm.yaml`、测试 | `ANTHROPIC_API_KEY` |
+| **真机** | `horizon/real/`：`PoseSource`/`Robot` 协议、`ScriptedRobot`/JSONL 回放、`run_episodes` 日志、`median_support`/`update_recon_bias`、`scripts/run_real_deploy.py`、测试 | 机器人驱动 + AprilTag/位姿源 |
+| **LIBERO** | `horizon/libero/`：HDF5 读取、布局先验、`MockLiberoEnv`、`ImageBC`（可换 DP/ACT）、`train_libero.py`/`eval_libero.py`、测试 | 官方数据/环境；权重需训练 |
+
+### 9.3 最短路径
+
+```bash
+git clone https://github.com/Clare-1/real2sim-horizon.git
+cd real2sim-horizon/horizon
+# LLM
+export ANTHROPIC_API_KEY=...
+PYTHONPATH=src python scripts/llm_pilot.py --results results/four_causes_paper8_20261120 --limit 8
+# 真机（先 mock 自测）
+PYTHONPATH=src python scripts/run_real_deploy.py --robot mock --out /tmp/deploy.jsonl
+# LIBERO
+PYTHONPATH=src python scripts/train_libero.py --dataset /path/libero_10.hdf5 --out weights/libero/bc.pt
+```
+
+### 9.4 测试
+
+```bash
+cd horizon
+PYTHONPATH=src python -m pytest -q tests/test_llm_planner.py tests/test_real_interfaces.py tests/test_libero_scaffold.py
+# 12 passed, 1 skipped
+```
+
+完整说明见 [`HANDOFF_external.md`](HANDOFF_external.md)，权重清单见 [`weights/README.md`](weights/README.md)。
 
 ## 8. 与导师完整方案的完成度（2026-11-21）
 
