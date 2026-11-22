@@ -1,0 +1,102 @@
+{
+  "bank_index": 6,
+  "calibrations": 0,
+  "cause": "coverage_deficit",
+  "cost": {
+    "accepted_labels": 120000,
+    "available_labels": 130808,
+    "episodes": 432,
+    "eval_episodes": 120,
+    "sim_steps": 4602575,
+    "worker_seconds": 486.52974665979855
+  },
+  "decisions": [
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 0,
+      "profile": {
+        "concentration": 0.8260869565217391,
+        "failure_types": {
+          "drop": 1,
+          "grasp": 5,
+          "stall": 1,
+          "transition": 16
+        },
+        "per_subgoal": {
+          "subgoal0": 19,
+          "subgoal1": 2,
+          "subgoal2": 2
+        },
+        "perturbation_events": 3,
+        "perturbation_failure_rate": 0.6666666666666666,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0023466863329876034,
+        "sr": 0.04166666666666663
+      },
+      "reason": "oracle: coverage_deficit step 1",
+      "round": 1,
+      "sr_after": 0.9,
+      "sr_before": 0.15,
+      "target": null
+    },
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "transition": 2
+        },
+        "per_subgoal": {
+          "subgoal1": 1,
+          "subgoal2": 1
+        },
+        "perturbation_events": 12,
+        "perturbation_failure_rate": 0.1111111111111111,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0016683195036703569,
+        "sr": 0.9166666666666666
+      },
+      "reason": "oracle: repeat the cause's best operation",
+      "round": 2,
+      "sr_after": 1.0,
+      "sr_before": 0.9,
+      "target": null
+    },
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 1.0,
+        "failure_types": {
+          "grasp": 1,
+          "placement": 1
+        },
+        "per_subgoal": {
+          "subgoal1": 2
+        },
+        "perturbation_events": 19,
+        "perturbation_failure_rate": 0.13333333333333333,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0013572900405243726,
+        "sr": 0.9166666666666666
+      },
+      "reason": "oracle: repeat the cause's best operation",
+      "round": 3,
+      "sr_after": 1.0,
+      "sr_before": 1.0,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 1.0,
+  "first_action": "regenerate_targeted",
+  "first_step_correct": true,
+  "new_labels": 120000,
+  "scenario": "coverage",
+  "seed": 0,
+  "selector": "oracle"
+}

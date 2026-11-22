@@ -1,0 +1,102 @@
+{
+  "bank_index": 5,
+  "calibrations": 1,
+  "cause": "geometry_bias",
+  "cost": {
+    "accepted_labels": 40000,
+    "available_labels": 43071,
+    "episodes": 192,
+    "eval_episodes": 120,
+    "sim_steps": 2218150,
+    "worker_seconds": 262.7108541885391
+  },
+  "decisions": [
+    {
+      "action": "calibrate_geometry",
+      "est_cost": 1,
+      "profile": {
+        "concentration": 0.6,
+        "failure_types": {
+          "grasp": 1,
+          "placement": 9,
+          "stall": 6,
+          "transition": 4
+        },
+        "per_subgoal": {
+          "subgoal0": 12,
+          "subgoal1": 4,
+          "subgoal2": 3,
+          "subgoal3": 1
+        },
+        "perturbation_events": 8,
+        "perturbation_failure_rate": 0.4,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.011608884803226922,
+        "sr": 0.16666666666666663
+      },
+      "reason": "residual 11.6mm > 4mm",
+      "round": 1,
+      "sr_after": 0.7,
+      "sr_before": 0.15,
+      "target": null
+    },
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.8181818181818182,
+        "failure_types": {
+          "drop": 1,
+          "grasp": 5,
+          "placement": 1,
+          "stall": 2,
+          "transition": 2
+        },
+        "per_subgoal": {
+          "subgoal0": 9,
+          "subgoal1": 2
+        },
+        "perturbation_events": 13,
+        "perturbation_failure_rate": 0.3333333333333333,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0006572075738585093,
+        "sr": 0.5416666666666667
+      },
+      "reason": "82% of failures in subgoal0",
+      "round": 2,
+      "sr_after": 1.0,
+      "sr_before": 0.7,
+      "target": "subgoal0"
+    },
+    {
+      "action": "stop",
+      "est_cost": 0,
+      "profile": {
+        "concentration": 0.0,
+        "failure_types": {},
+        "per_subgoal": {},
+        "perturbation_events": 14,
+        "perturbation_failure_rate": 0.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0006990015816673509,
+        "sr": 1.0
+      },
+      "reason": "already solved",
+      "round": 3,
+      "sr_after": 1.0,
+      "sr_before": 1.0,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 1.0,
+  "first_action": "calibrate_geometry",
+  "first_step_correct": true,
+  "new_labels": 40000,
+  "scenario": "geometry",
+  "seed": 0,
+  "selector": "rule"
+}

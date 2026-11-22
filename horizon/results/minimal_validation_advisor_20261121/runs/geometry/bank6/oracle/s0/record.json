@@ -1,0 +1,103 @@
+{
+  "bank_index": 6,
+  "calibrations": 1,
+  "cause": "geometry_bias",
+  "cost": {
+    "accepted_labels": 80000,
+    "available_labels": 85942,
+    "episodes": 312,
+    "eval_episodes": 120,
+    "sim_steps": 3400850,
+    "worker_seconds": 375.2404686890077
+  },
+  "decisions": [
+    {
+      "action": "calibrate_geometry",
+      "est_cost": 0,
+      "profile": {
+        "concentration": 0.3333333333333333,
+        "failure_types": {
+          "grasp": 2,
+          "placement": 10,
+          "stall": 7,
+          "transition": 2
+        },
+        "per_subgoal": {
+          "subgoal0": 7,
+          "subgoal1": 7,
+          "subgoal2": 5,
+          "subgoal3": 2
+        },
+        "perturbation_events": 9,
+        "perturbation_failure_rate": 1.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.01136042702835328,
+        "sr": 0.125
+      },
+      "reason": "oracle: geometry_bias step 1",
+      "round": 1,
+      "sr_after": 0.45,
+      "sr_before": 0.35,
+      "target": null
+    },
+    {
+      "action": "regenerate_uniform",
+      "est_cost": 0,
+      "profile": {
+        "concentration": 0.75,
+        "failure_types": {
+          "grasp": 1,
+          "stall": 3
+        },
+        "per_subgoal": {
+          "subgoal0": 3,
+          "subgoal1": 1
+        },
+        "perturbation_events": 12,
+        "perturbation_failure_rate": 0.2222222222222222,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.000604579950696401,
+        "sr": 0.8333333333333334
+      },
+      "reason": "oracle: geometry_bias step 2",
+      "round": 2,
+      "sr_after": 0.9,
+      "sr_before": 0.45,
+      "target": null
+    },
+    {
+      "action": "regenerate_uniform",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 1.0,
+        "failure_types": {
+          "grasp": 1
+        },
+        "per_subgoal": {
+          "subgoal1": 1
+        },
+        "perturbation_events": 20,
+        "perturbation_failure_rate": 0.06666666666666667,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.00027369039501693934,
+        "sr": 0.9583333333333334
+      },
+      "reason": "oracle: repeat the cause's best operation",
+      "round": 3,
+      "sr_after": 1.0,
+      "sr_before": 0.9,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 1.0,
+  "first_action": "calibrate_geometry",
+  "first_step_correct": true,
+  "new_labels": 80000,
+  "scenario": "geometry",
+  "seed": 0,
+  "selector": "oracle"
+}

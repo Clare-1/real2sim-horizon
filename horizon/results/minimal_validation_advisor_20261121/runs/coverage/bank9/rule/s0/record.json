@@ -1,0 +1,78 @@
+{
+  "bank_index": 9,
+  "calibrations": 0,
+  "cause": "coverage_deficit",
+  "cost": {
+    "accepted_labels": 40000,
+    "available_labels": 43272,
+    "episodes": 168,
+    "eval_episodes": 80,
+    "sim_steps": 1912675,
+    "worker_seconds": 212.54292163811624
+  },
+  "decisions": [
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.8181818181818182,
+        "failure_types": {
+          "drop": 1,
+          "grasp": 3,
+          "placement": 2,
+          "stall": 1,
+          "transition": 15
+        },
+        "per_subgoal": {
+          "subgoal0": 18,
+          "subgoal1": 3,
+          "subgoal2": 1
+        },
+        "perturbation_events": 7,
+        "perturbation_failure_rate": 0.8571428571428571,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0006801301737317002,
+        "sr": 0.08333333333333337
+      },
+      "reason": "82% of failures in subgoal0",
+      "round": 1,
+      "sr_after": 1.0,
+      "sr_before": 0.1,
+      "target": "subgoal0"
+    },
+    {
+      "action": "stop",
+      "est_cost": 0,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "placement": 2
+        },
+        "per_subgoal": {
+          "subgoal0": 1,
+          "subgoal1": 1
+        },
+        "perturbation_events": 16,
+        "perturbation_failure_rate": 0.15384615384615385,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0016991095843178691,
+        "sr": 0.9166666666666666
+      },
+      "reason": "nothing localised and SR 0.92 >= 0.85",
+      "round": 2,
+      "sr_after": 1.0,
+      "sr_before": 1.0,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 48,
+  "final_sr": 1.0,
+  "first_action": "regenerate_targeted",
+  "first_step_correct": true,
+  "new_labels": 40000,
+  "scenario": "coverage",
+  "seed": 0,
+  "selector": "rule"
+}

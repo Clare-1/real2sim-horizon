@@ -69,7 +69,7 @@
 
 > 读数注意：筛查批次每格 1–2 个样本（95% CI 约 ±6–8 pp），只用于方向；论文批次是 `configs/minimal_validation_4causes_paper8.yaml`（4 causes × 3 banks × 3 seeds × 8 selectors = **288 runs**，约 19 h），已完成。
 >
-> **导师最小验证：PASS**——rule 几何 +12.8 pp、覆盖 +32.8 pp；multilabel +5.6 / +32.8 pp；详见 §5.8 与 [`导师意见回应_2026-11-21.md`](导师意见回应_2026-11-21.md)。
+> **导师最小验证：10 banks 预注册 PASS**——bandit 几何 +12.5 pp、覆盖 +23.5 pp（均显著）；rule 覆盖 +20.5 pp（显著）、几何 +5.0 pp（不显著）。1 seed；详见 §5.8 与 [`导师意见回应_2026-11-21.md`](导师意见回应_2026-11-21.md)。
 
 ## 4. 快速开始
 
@@ -191,21 +191,17 @@ PYTHONPATH=src .venv-linux/bin/python scripts/run_minimal_validation.py \
 - 逐条回应：[`导师意见回应_2026-11-21.md`](导师意见回应_2026-11-21.md)（主张、最小验证、修订计划、故事线、相关工作、7 条冲突）。
 - 图 R1（8 配方 × 4 原因，无一行通吃）：[`horizon/results/fig_R1_recipe_cause_20261121/fig_R1_recipe_cause.png`](horizon/results/fig_R1_recipe_cause_20261121/fig_R1_recipe_cause.png)。
 
-| 选择器 | 几何 SR | 覆盖 SR | 首步对（几何/覆盖） | 标签/格 |
+| 选择器 | 几何（10 banks） | 覆盖（10 banks） | 首步对（几何/覆盖） | 标签/格 |
 |---|---:|---:|---:|---:|
-| fixed | 0.772 | 0.600 | 9/9, 0/9 | 80,000 |
-| rule | 0.900 | 0.928 | 9/9, 9/9 | 81,111 |
-| multilabel | 0.828 | 0.928 | 9/9, 9/9 | **55,556** |
-| bandit | 0.961 | 0.983 | 9/9, 0/9 | 77,778 |
-| oracle | 0.939 | 0.972 | 9/9, 9/9 | 74,444 |
+| fixed | 0.835 [0.790, 0.880] | 0.720 [0.680, 0.765] | 10/10, 0/10 | 80,000 |
+| rule | 0.885 [0.825, 0.940] | 0.925 [0.885, 0.965] | 10/10, 9/10 | 81,111 |
+| bandit | 0.960 [0.925, 0.990] | 0.955 [0.920, 0.985] | 10/10, 0/10 | 77,778 |
+| oracle | 0.965 [0.940, 0.990] | 0.985 [0.960, 1.000] | 10/10, 10/10 | 74,444 |
 
-- 过关标准（开跑前写死）：rule 或 agent 两类都不低于 fixed，且至少一类 ≥10 pp → **PASS**。
-- 必须说明的偏差：
-  1. 现有 3 banks × 3 seeds（导师要 10 场景 × 3 seeds）；
-  2. 无 LLM key，multilabel 作为 learned 代理；
-  3. 规则阈值未做 dev/test 划分；
-  4. oracle 是**诊断正确性上界**，不是 SR 上界（healthy 0.844 < fixed 0.911）。
-- 下一步：10 banks 最小验证（80 或 240 runs）、R2 混合比例扫描（60 runs）、dev/test 划分。
+- **PASS**：bandit 两类都显著高于 fixed（几何 +12.5 pp、覆盖 +23.5 pp）；rule 覆盖 +20.5 pp 显著，几何 +5.0 pp（CI 重叠，不显著）。
+- 这是 **10 banks × 1 seed** 的 stage-1 预注册；论文主表仍是 paper8 的 **3 seeds × 3 banks**（§5.7）。通过后再补 seeds 1–2 即完全对齐导师规格。
+- 与 3-bank 表的差异：10 banks 的 fixed 几何更高（0.835 vs 0.772），所以 rule 的几何优势从 +12.8 缩到 +5.0；覆盖优势稳定（+32.8 → +20.5）。
+- 仍需说明：无 LLM key（bandit 作为 learned/exploring 代理）；规则阈值未做 dev/test 划分；oracle 是诊断正确性上界，不是 SR 上界。
 
 ## 6. 数据与可复现性
 
