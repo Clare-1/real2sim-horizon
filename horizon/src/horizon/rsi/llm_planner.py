@@ -67,6 +67,11 @@ class LLMPlannerSelector:
 
     model: str = "claude-sonnet-4-20250514"
     api_key_env: str = "ANTHROPIC_API_KEY"
+    # "anthropic" posts to /v1/messages; "openai" posts to an OpenAI-compatible
+    # /chat/completions endpoint (OpenAI, DeepSeek, vLLM, most proxies). A key that starts with
+    # "sk-" and has no "ant-" marker belongs to the latter.
+    provider: str = "anthropic"
+    base_url: str = ""
     max_tokens: int = 512
     name: str = "llm"
     usage: list = field(default_factory=list)   # per-decision token/cost records
@@ -120,6 +125,8 @@ class LLMPlannerSelector:
     def _once(self, user_prompt: str) -> tuple[str, dict]:
         if self.client is not None:
             return self.client(SYSTEM_PROMPT, user_prompt)
+        if self.provider == "openai":
+            return self._once_openai(user_prompt)
         import urllib.request
         body = json.dumps({
             "model": self.model, "max_tokens": self.max_tokens, "temperature": 0.0,
@@ -138,4 +145,32 @@ class LLMPlannerSelector:
         usage = {"model": self.model, "input_tokens": inp, "output_tokens": out,
                  "usd": (inp * self.price_in_per_mtok + out * self.price_out_per_mtok) / 1e6,
                  "prompt_chars": len(user_prompt), "reply_chars": len(text)}
+        return text, usage
+
+    def _once_openai(self, user_prompt: str) -> tuple[str, dict]:
+        """OpenAI-compatible chat completion. Same accounting, same hard failure on a bad reply."""
+        import urllib.request
+        base = (self.base_url or "https://api.openai.com/v1").rstrip("/")
+        body = json.dumps({
+            "model": self.model, "max_tokens": self.max_tokens, "temperature": 0.0,
+            "messages": [{"role": "system", "content": SYSTEM_PROMPT},
+                         {"role": "user", "content": user_prompt}],
+        }).encode()
+        req = urllib.request.Request(
+            f"{base}/chat/completions", data=body,
+            headers={"content-type": "application/json",
+                     "authorization": f"Bearer {os.environ[self.api_key_env]}"})
+        with urllib.request.urlopen(req, timeout=120) as resp:
+            data = json.loads(resp.read())
+        choices = data.get("choices") or []
+        if not choices:
+            raise RuntimeError(f"LLM reply had no choices: {json.dumps(data)[:300]}")
+        text = str((choices[0].get("message") or {}).get("content") or "")
+        usage_raw = data.get("usage") or {}
+        inp = int(usage_raw.get("prompt_tokens", 0))
+        out = int(usage_raw.get("completion_tokens", 0))
+        usage = {"model": data.get("model", self.model), "input_tokens": inp, "output_tokens": out,
+                 "usd": (inp * self.price_in_per_mtok + out * self.price_out_per_mtok) / 1e6,
+                 "prompt_chars": len(user_prompt), "reply_chars": len(text),
+                 "provider": "openai", "base_url": base}
         return text, usage

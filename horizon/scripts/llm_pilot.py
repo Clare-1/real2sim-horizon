@@ -65,6 +65,14 @@ def main() -> int:
     ap.add_argument("--results", default="results/four_causes_paper8_20261120")
     ap.add_argument("--limit", type=int, default=8)
     ap.add_argument("--mock", action="store_true")
+    ap.add_argument("--provider", choices=("anthropic", "openai"), default="anthropic")
+    ap.add_argument("--model", default="", help="model name; empty keeps the provider default")
+    ap.add_argument("--base-url", default="", help="OpenAI-compatible base URL, e.g. https://host/v1")
+    ap.add_argument("--key-env", default="", help="env var holding the key; empty picks the provider default")
+    ap.add_argument("--max-calls", type=int, default=0, help="hard cap; 0 = no cap")
+    ap.add_argument("--max-usd", type=float, default=0.0, help="hard cost cap; 0 = no cap")
+    ap.add_argument("--price-in", type=float, default=3.0, help="USD per Mtok input (set yours)")
+    ap.add_argument("--price-out", type=float, default=15.0, help="USD per Mtok output (set yours)")
     ap.add_argument("--out", default="results/llm_pilot_20261122.json")
     args = ap.parse_args()
 
@@ -81,6 +89,20 @@ def main() -> int:
             break
 
     sel = LLMPlannerSelector(client=mock_transport if args.mock else None)
+    if not args.mock:
+        sel.provider = args.provider
+        if args.model:
+            sel.model = args.model
+        if args.base_url:
+            sel.base_url = args.base_url
+        sel.api_key_env = args.key_env or ("HORIZON_LLM_KEY" if args.provider == "openai"
+                                           else "ANTHROPIC_API_KEY")
+        sel.max_calls = args.max_calls or None
+        sel.max_usd = args.max_usd or None
+        sel.price_in_per_mtok = args.price_in
+        sel.price_out_per_mtok = args.price_out
+        print(f"provider={sel.provider} model={sel.model} base={sel.base_url or 'default'} "
+              f"key_env={sel.api_key_env} available={sel.available()}")
     rows = []
     for r in picked:
         obs = observation(r)

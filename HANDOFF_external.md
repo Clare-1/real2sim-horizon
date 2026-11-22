@@ -19,42 +19,92 @@
 | `configs/minimal_validation_llm.yaml` | fixed/rule/llm/oracle 的最小验证配置 |
 | `tests/test_llm_planner.py` / `test_real_interfaces.py` / `test_libero_scaffold.py` | 对应测试 |
 
-## 2. LLM（只差 key）
+## 2. LLM（代码已支持两种端点，只差可用的 key/endpoint）
 
 ```bash
-export ANTHROPIC_API_KEY=...
+# 方式 A：Anthropic 原生
+export ANTHROPIC_API_KEY=sk-ant-...
 cd horizon
 PYTHONPATH=src python scripts/llm_pilot.py --results results/four_causes_paper8_20261120 --limit 8
+
+# 方式 B：任意 OpenAI 兼容端点（DeepSeek / Moonshot / 通义 / vLLM / 代理）
+export HORIZON_LLM_KEY=sk-...
+PYTHONPATH=src python scripts/llm_pilot.py --results results/four_causes_paper8_20261120 --limit 8 \
+    --provider openai --base-url https://<endpoint>/v1 --model <model>
+
 # 无 key 的管线自测：
 PYTHONPATH=src python scripts/llm_pilot.py --results ... --limit 8 --mock
 ```
 
 - `LLMPlannerSelector`：每轮一次调用、temperature 0、token 记账；**没有 key 会硬失败**，不会静默退回规则。
-- `client=` 可注入传输（pilot/测试用）；生产用 urllib 调 Anthropic。
+- `provider="openai"` 走 `/chat/completions`，`provider="anthropic"` 走 `/v1/messages`；`client=` 可注入传输。
+- key 只放在仓库外（`~/.config/horizon/llm.env`，chmod 600），**不要提交**。
 - 全量：`configs/minimal_validation_llm.yaml`（2 causes × 10 banks × 1 seed × [fixed, rule, llm, oracle]）。
 - 成本：每轮 1 次调用；先跑 `--limit 8` 看 token，再决定正式场景数。
 
-## 3. 真机（只差驱动/位姿源）
+## 3. 真机：松灵 AgileX Piper（代码已到位，只差实测标定）
 
-硬件假设：单臂 + 平行夹爪 + 1–2 相机 + AprilTag/位姿估计（状态策略，**不是图像策略**）。
+适配器已实现，不需要你写驱动：
 
-```python
-from horizon.real import PoseSample, run_episodes
-from horizon.policy.model import NumpyMLP
-from horizon.rsi.loop import load_params
-from horizon.policy.features import TaskFeaturizer
+| 文件 | 内容 |
+|---|---|
+| `horizon/src/horizon/real/piper.py` | `PiperArm`（piper_sdk 封装，单位换算）+ `PiperRobot`（与仿真一致的动作空间） |
+| `horizon/src/horizon/real/apriltag.py` | `AprilTagPoseSource`（tag → 物体位姿）+ `StaticPoseSource`（固定布局） |
+| `weights/examples/piper_tag_map.json` | `{tag_id: object_index}` 示例 |
+| `weights/examples/piper_cam_calib.json` | 相机内参 + 相机→基座外参示例 |
+| `horizon/tests/test_piper_adapter.py` | 6 个测试（单位换算、步长上限、夹爪方向、无 SDK 报错） |
 
-mlp = NumpyMLP(load_params("weights/mujoco_4causes/geometry_fixed_final.npz"))
-feat = TaskFeaturizer(scene, graph, verifier)          # 由任务 payload 构建
-policy_fn = lambda s: mlp.act(feat.hier(s.to_world_state(), k))
-run_episodes(robot, policy_fn, episodes=20, max_steps=400, log_path="logs/run.jsonl")
+上机步骤（真机那侧执行）：
+
+```bash
+# 1) CAN（Piper 固定 1 Mbps）
+sudo ip link set up can0 type can bitrate 1000000
+candump can0            # 能看到反馈帧才继续
+
+# 2) SDK
+pip install piper_sdk
+
+# 3) 先只读位姿、不动作（安全）
+python - <<'PY'
+from horizon.real.piper import PiperArm
+arm = PiperArm().connect(); arm.enable()
+print(arm.end_pose())          # (x,y,z) m, (rx,ry,rz) rad
+PY
+
+# 4) 标定 tag 与相机外参后跑一次部署
+PYTHONPATH=src python scripts/run_real_deploy.py \
+    --robot piper --can can0 \
+    --tag-map weights/examples/piper_tag_map.json \
+    --cam-calib weights/examples/piper_cam_calib.json \
+    --task weights/examples/geometry_task.json \
+    --policy weights/mujoco_4causes/geometry_pi0.npz \
+    --episodes 1 --max-steps 200 --out logs/piper_run.jsonl
 ```
 
-- 需要你实现：`Robot.reset/step/close`（驱动）、`PoseSource.read()`（tag/位姿）、安全限位。
+关键约定（与仿真完全一致，改一处就会不匹配）：
+
+- 动作 `[dx, dy, dz, dyaw, grip] ∈ [-1,1]`；单步最大 `max_step=15 mm`、`max_yaw_step=0.15 rad`；
+- 夹爪 `grip=+1` 闭合、`-1` 全开（`gripper_open_m=70 mm`）；
+- 位置单位 0.001 mm、角度单位 0.001°（`PiperArm` 内部换算，上层只用 SI）；
+- **必须实测**：`home_xyz`、`home_rpy_deg`（Piper 竖直抓取常用 `(0,60,0)°`）、`workspace_lo/hi`、相机外参、tag 尺寸。
+
+安全：`PiperRobot.reset()` 会先 `enable()` 再回 home；第一次上电请把手放在急停上，并把 `speed_pct` 降到 10。
+
+通用接口（如果换其它臂，只实现这两个协议）：
+
+```python
+class Robot(Protocol):   # horizon/real/interfaces.py
+    def reset(self) -> PoseSample: ...
+    def step(self, action: np.ndarray) -> PoseSample: ...
+    def close(self) -> None: ...
+class PoseSource(Protocol):
+    def read(self) -> PoseSample: ...
+```
+
 - mock 自测：`PYTHONPATH=src python scripts/run_real_deploy.py --robot mock --episodes 1`
 - CSV 回放：`--robot csv --csv logs/episode.jsonl`
-- twin 校准：`horizon.real.calibrate.median_support/update_recon_bias`；完整鲁棒估计器在 `horizon.rsi.simreal.geometry_repair`。
-- 注意：状态策略在 MuJoCo pack H4 上训练；真机任务必须复用同一 `scene`/`graph` payload，否则特征不匹配。
+- twin 校准：`horizon.real.calibrate.median_support/update_recon_bias`；鲁棒估计器在 `horizon.rsi.simreal.geometry_repair`。
+- 注意：状态策略在 MuJoCo pack H4 上训练；真机任务必须复用同一 `scene`/`graph` payload，否则特征维度不匹配。
 
 ## 4. LIBERO（只差数据/环境）
 

@@ -25,8 +25,11 @@ from horizon.real import (load_jsonl_robot, make_mock_robot, make_mock_robot_for
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--robot", choices=("mock", "csv"), default="mock")
+    ap.add_argument("--robot", choices=("mock", "csv", "piper"), default="mock")
     ap.add_argument("--csv", default="")
+    ap.add_argument("--can", default="can0", help="Piper CAN interface (--robot piper)")
+    ap.add_argument("--tag-map", default="", help="JSON {tag_id: object_index} for the AprilTag source")
+    ap.add_argument("--cam-calib", default="", help="JSON camera params + cam->base transform")
     ap.add_argument("--episodes", type=int, default=1)
     ap.add_argument("--max-steps", type=int, default=50)
     ap.add_argument("--out", default="results/real_deploy_20261122.jsonl")
@@ -39,6 +42,36 @@ def main() -> int:
         if not args.csv:
             ap.error("--robot csv needs --csv")
         robot = load_jsonl_robot(args.csv)
+    elif args.robot == "piper":
+        # Real hardware: the arm supplies the tool pose, the tag board supplies object poses.
+        # Construction is cheap (no CAN access); the first reset() connects and enables the arm.
+        from horizon.real.apriltag import AprilTagPoseSource, TagBoardConfig
+        from horizon.real.piper import PiperArm, PiperConfig, PiperRobot
+
+        if not args.tag_map:
+            ap.error("--robot piper needs --tag-map {tag_id: object_index}")
+        tag_ids = {int(k): int(v) for k, v in json.loads(Path(args.tag_map).read_text()).items()}
+        cfg = TagBoardConfig(tag_ids=tag_ids)
+        if args.cam_calib:
+            for key, value in json.loads(Path(args.cam_calib).read_text()).items():
+                setattr(cfg, key, np.asarray(value) if isinstance(value, list) else value)
+        try:
+            import cv2  # noqa: F401
+        except ImportError:
+            ap.error("--robot piper needs opencv for the camera: pip install opencv-python")
+
+        def frame_fn():
+            import cv2
+            cap = cv2.VideoCapture(0)
+            ok, frame = cap.read()
+            cap.release()
+            if not ok:
+                raise RuntimeError("camera returned no frame")
+            return frame
+
+        robot = PiperRobot(arm=PiperArm(PiperConfig(can_port=args.can)),
+                           pose_source=AprilTagPoseSource(frame_fn, cfg, num_objects=8),
+                           cfg=PiperConfig(can_port=args.can))
     else:
         robot = make_mock_robot()
 
