@@ -18,7 +18,7 @@
 
 | 项 | 状态 | 现有 | 缺 |
 |---|---|---|---|
-| 表 2（5 causes + mixed × 8 selectors） | 🟡 | paper8：4 causes × 8 selectors × 9 cells + CI；mixed grid 独立 48 runs | 动力学列（不可表达）、mixed 并入主表、LLM/LLM+经验行（无 key） |
+| 表 2（5 causes + mixed × 8 selectors） | 🟡 | paper8：4 causes × 8 selectors × 9 cells + CI；**已合并成 `results/table2_full.md`**（混合 = 4 个混合条件均值：fixed 0.637 / rule 0.731 / bandit 0.863 / oracle 0.900） | 动力学列（不可表达）、linucb/multilabel 无混合格、LLM/LLM+经验行（无 key） |
 | 表 3（AUC / oracle-90% / regret / 首步 / 健康花费 / API） | ✅ | `paper8_report.md` 新增 AUC/oracle-90/regret/健康花费（离线算） | 仅 API 花费（无 key） |
 | 图 3（原因 × 第一步操作） | ✅ | `results/fig3_action_four_causes_paper8_20261120/` | 无 |
 | 图 4（典型场景逐轮） | 🟡 | `make_fig4_trajectory.py` 已有，sources 含 four_causes | 用 paper8 重新生成一张当前版本 |
