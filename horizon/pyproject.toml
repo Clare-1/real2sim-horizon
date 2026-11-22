@@ -14,7 +14,8 @@ dependencies = [
 
 [project.optional-dependencies]
 train = ["torch>=2.4"]
-llm = ["anthropic>=0.40"]
+libero = ["h5py>=3.10"]
+llm = ["anthropic>=0.40"]  # optional: the selector uses urllib directly, so this is not required
 dev = ["pytest>=8"]
 
 [build-system]
