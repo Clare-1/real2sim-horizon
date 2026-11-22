@@ -29,8 +29,11 @@ def main() -> int:
     path = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "results/minimal_validation_advisor_20261121"
     if not path.is_absolute():
         path = ROOT / path
-    seed = int(sys.argv[2]) if len(sys.argv) > 2 else 0
-    recs = [r for r in load(path) if r.get("seed") == seed]
+    seed_arg = sys.argv[2] if len(sys.argv) > 2 else "0"
+    recs = load(path)
+    if seed_arg != "all":
+        recs = [r for r in recs if r.get("seed") == int(seed_arg)]
+    label = "all seeds" if seed_arg == "all" else f"seed={seed_arg}"
     sels = [s for s in ("fixed", "rule", "bandit", "oracle")
             if any(r["selector"] == s for r in recs)]
     causes = [c for c in ("geometry_bias", "coverage_deficit")
@@ -43,7 +46,7 @@ def main() -> int:
         return sum(v) / len(v) if v else float("nan")
 
     out = ["# 10-bank 最小验证：dev (0-2) vs held-out (3-9)", "",
-           f"数据：`{path.relative_to(ROOT)}`，seed={seed}；dev={sorted(DEV)}，test={sorted(TEST)}",
+           f"数据：`{path.relative_to(ROOT)}`，{label}；dev={sorted(DEV)}，test={sorted(TEST)}",
            "", "| 选择器 | 原因 | dev (0-2) | held-out (3-9) | 差 (test-dev) |",
            "|---|---|---:|---:|---:|"]
     for s in sels:
