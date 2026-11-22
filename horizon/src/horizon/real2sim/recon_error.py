@@ -47,77 +47,18 @@ class RealWorld:
     # Gripper pad friction in the deployment world. Objects are held by finger friction, so this -
     # not the object-table friction - is the knob that creates a real dynamics gap.
     finger_friction: float | None = None
-    # Control steps of actuation delay in the deployment world (ARSTAG-style latency). The twin
-    # assumes zero delay, so this is a dynamics gap the calibration operators cannot see.
-    latency: int = 0
-    # Gripper pad friction in the deployment world. Objects are held by finger friction, so this -
-    # not the object-table friction - is the knob that creates a real dynamics gap.
-    finger_friction: float | None = None
-    # Global multiplier on object mass in the deployment world. Heavier objects defeat the gripper's
-    # force closure, which is the dynamics gap that actually moves the success rate here.
-    mass_scale: float = 1.0
-    # Control steps of actuation delay in the deployment world (ARSTAG-style latency). The twin
-    # assumes zero delay, so this is a dynamics gap the calibration operators cannot see.
-    latency: int = 0
-    # Gripper pad friction in the deployment world. Objects are held by finger friction, so this -
-    # not the object-table friction - is the knob that creates a real dynamics gap.
-    finger_friction: float | None = None
-    # Control steps of actuation delay in the deployment world (ARSTAG-style latency). The twin
-    # assumes zero delay, so this is a dynamics gap the calibration operators cannot see.
-    latency: int = 0
-    # Gripper pad friction in the deployment world. Objects are held by finger friction, so this -
-    # not the object-table friction - is the knob that creates a real dynamics gap.
-    finger_friction: float | None = None
-    # Rigid translation (metres, +x) of every target fixture in the deployment world. The twin
-    # keeps the nominal layout, so this is a *position* gap rather than a height gap.
-    lateral_offset: float = 0.0
-    # Global multiplier on object mass in the deployment world. Heavier objects defeat the gripper's
-    # force closure, which is the dynamics gap that actually moves the success rate here.
-    mass_scale: float = 1.0
-    # Control steps of actuation delay in the deployment world (ARSTAG-style latency). The twin
-    # assumes zero delay, so this is a dynamics gap the calibration operators cannot see.
-    latency: int = 0
-    # Gripper pad friction in the deployment world. Objects are held by finger friction, so this -
-    # not the object-table friction - is the knob that creates a real dynamics gap.
-    finger_friction: float | None = None
-    # Control steps of actuation delay in the deployment world (ARSTAG-style latency). The twin
-    # assumes zero delay, so this is a dynamics gap the calibration operators cannot see.
-    latency: int = 0
-    # Gripper pad friction in the deployment world. Objects are held by finger friction, so this -
-    # not the object-table friction - is the knob that creates a real dynamics gap.
-    finger_friction: float | None = None
-    # Global multiplier on object mass in the deployment world. Heavier objects defeat the gripper's
-    # force closure, which is the dynamics gap that actually moves the success rate here.
-    mass_scale: float = 1.0
-    # Control steps of actuation delay in the deployment world (ARSTAG-style latency). The twin
-    # assumes zero delay, so this is a dynamics gap the calibration operators cannot see.
-    latency: int = 0
-    # Gripper pad friction in the deployment world. Objects are held by finger friction, so this -
-    # not the object-table friction - is the knob that creates a real dynamics gap.
-    finger_friction: float | None = None
-    # Control steps of actuation delay in the deployment world (ARSTAG-style latency). The twin
-    # assumes zero delay, so this is a dynamics gap the calibration operators cannot see.
-    latency: int = 0
-    # Gripper pad friction in the deployment world. Objects are held by finger friction, so this -
-    # not the object-table friction - is the knob that creates a real dynamics gap.
-    finger_friction: float | None = None
 
     def apply(self, scene: SceneSpec) -> SceneSpec:
+        # NOTE: every block below must appear exactly once. Duplicated copies of this method used to
+        # add ``lateral_offset`` twice, so a configured 2 cm position gap was deployed as 4 cm.
         sc = copy.deepcopy(scene)
+        physics = dict(sc.physics or {})
         if self.friction_scale != 1.0:
-            sc.physics = {**sc.physics, "friction_scale": float(self.friction_scale)}
+            physics["friction_scale"] = float(self.friction_scale)
         if self.mass_scale != 1.0:
-            sc.physics = {**sc.physics, "mass_scale": float(self.mass_scale)}
-        if self.mass_scale != 1.0:
-            sc.physics = {**sc.physics, "mass_scale": float(self.mass_scale)}
-        if self.lateral_offset:
-            for f in sc.fixtures:
-                if f.kind in ("plate", "bin", "slot"):
-                    f.pos = (f.pos[0] + float(self.lateral_offset), f.pos[1], f.pos[2])
-        if self.mass_scale != 1.0:
-            sc.physics = {**sc.physics, "mass_scale": float(self.mass_scale)}
-        if self.mass_scale != 1.0:
-            sc.physics = {**sc.physics, "mass_scale": float(self.mass_scale)}
+            physics["mass_scale"] = float(self.mass_scale)
+        if physics:
+            sc.physics = physics
         if self.lateral_offset:
             for f in sc.fixtures:
                 if f.kind in ("plate", "bin", "slot"):

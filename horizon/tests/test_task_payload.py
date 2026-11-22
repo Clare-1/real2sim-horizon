@@ -137,3 +137,25 @@ def test_world_and_reconstruction_are_applied_to_external_base():
     assert result.log.scene["fixtures"][0]["pos"][2] == 0.02
     assert result.log.meta["belief"]["fixtures"][0]["pos"][2] == pytest.approx(0.006)
     assert payload["scene"]["fixtures"][0]["pos"][2] == 0.0
+
+
+def test_lateral_offset_is_applied_exactly_once():
+    """A position gap used to be added twice (duplicated block in RealWorld.apply).
+
+    The observable x of every target fixture must move by exactly the configured offset, otherwise
+    a 2 cm gap is deployed as 4 cm and the position column of Table 1 is silently mis-scaled.
+    """
+    from horizon.real2sim.recon_error import RealWorld
+
+    task = external_task()
+    base = task.scene
+    targets = [f for f in base.fixtures if f.kind in ("plate", "bin", "slot")]
+    assert targets, "scene must contain target fixtures"
+    off = 0.02
+    moved = RealWorld(lateral_offset=off).apply(base)
+    before = {f.name: f.pos[0] for f in targets}
+    for f in moved.fixtures:
+        if f.name in before:
+            assert f.pos[0] == pytest.approx(before[f.name] + off), f.name
+    # idempotent in the sense that the twin (no offset) is untouched
+    assert [f.pos[0] for f in RealWorld().apply(base).fixtures] == [f.pos[0] for f in base.fixtures]
