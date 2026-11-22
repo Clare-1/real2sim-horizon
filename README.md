@@ -213,6 +213,14 @@ PYTHONPATH=src .venv-linux/bin/python scripts/run_minimal_validation.py \
 
 本仓库是研究原型，尚未附论文。第三方基线代码（如 LiLo-VLA、openpi、mimicgen）未复制进本仓库，只保留引用与笔记。
 
+## 9. 外部三条线 handoff（LLM / 真机 / LIBERO）
+
+- 完整说明：[`HANDOFF_external.md`](HANDOFF_external.md)
+- 权重清单：[`weights/README.md`](weights/README.md)（4 场景 × π0/fixed-final + 两个小模型，16 MB，含 SHA256）
+- 状态：**LLM 只差 API key；真机只差驱动/位姿源；LIBERO 只差数据/环境，权重需在 LIBERO 数据上训练**。
+- 代码：`horizon/src/horizon/real/`（PoseSource/Robot/mock/部署/校准）、`horizon/src/horizon/libero/`（HDF5/布局先验/mock/ImageBC）、`horizon/scripts/llm_pilot.py`。
+- 测试：`PYTHONPATH=src pytest -q tests/test_llm_planner.py tests/test_real_interfaces.py tests/test_libero_scaffold.py`（12 passed, 1 skipped）。
+
 ## 8. 与导师完整方案的完成度（2026-11-21）
 
 **结论：外部阻塞只有 3 块；但方案还有约 10 项内部缺口，不能说“只差真机/LIBERO/LLM”。**

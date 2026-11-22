@@ -45,3 +45,15 @@ def test_budget_exhaustion_still_stops_without_calling_the_api(monkeypatch):
     sel = LLMPlannerSelector()
     done = Observation(FailureProfile(sr=0.3), Budget(deploy_spent=72, deploy_total=72))
     assert sel.decide(done).action == "stop"  # guard fires before any API need
+
+
+def test_client_injection_allows_deterministic_pilot():
+    """A pilot can run without a key by injecting a transport; usage is still recorded."""
+    def fake(system: str, user: str):
+        assert "deployment feedback" in system
+        return '{"action": "calibrate_geometry", "target": null, "reason": "mock"}', {
+            "input_tokens": 10, "output_tokens": 5}
+
+    sel = LLMPlannerSelector(client=fake)
+    assert sel.decide(obs()).action == "calibrate_geometry"
+    assert sel.usage == [{"input_tokens": 10, "output_tokens": 5}]

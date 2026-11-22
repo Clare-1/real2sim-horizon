@@ -11,6 +11,7 @@ import json
 import os
 import re
 from dataclasses import dataclass, field
+from typing import Callable
 
 from .selector import ACTIONS, Decision, Observation, _guard
 
@@ -65,6 +66,9 @@ class LLMPlannerSelector:
     max_tokens: int = 512
     name: str = "llm"
     usage: list = field(default_factory=list)   # per-decision token records
+    # Optional injected transport for pilots/tests: (system, user) -> (reply, usage).
+    # When set, no network call is made and the API key is not required.
+    client: Callable[[str, str], tuple[str, dict]] | None = None
 
     def available(self) -> bool:
         return bool(os.environ.get(self.api_key_env))
@@ -73,7 +77,7 @@ class LLMPlannerSelector:
         stop = _guard(obs)
         if stop:
             return stop
-        if not self.available():
+        if self.client is None and not self.available():
             raise RuntimeError(
                 f"LLM selector needs {self.api_key_env}; refusing to substitute a rule planner. "
                 "Set the key or remove 'llm' from the selector list.")
@@ -82,6 +86,8 @@ class LLMPlannerSelector:
         return parse_decision(reply)
 
     def _call(self, user_prompt: str) -> tuple[str, dict]:
+        if self.client is not None:
+            return self.client(SYSTEM_PROMPT, user_prompt)
         import urllib.request
         body = json.dumps({
             "model": self.model, "max_tokens": self.max_tokens, "temperature": 0.0,

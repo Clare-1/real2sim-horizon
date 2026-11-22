@@ -5,5 +5,6 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 *.npz
+!weights/**/*.npz
 MUJOCO_LOG.TXT
 .DS_Store
