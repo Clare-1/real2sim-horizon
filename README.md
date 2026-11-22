@@ -203,6 +203,7 @@ PYTHONPATH=src .venv-linux/bin/python scripts/run_minimal_validation.py \
 - 与 3-bank 表的差异：10 banks 的 fixed 几何更高（0.835 vs 0.772），所以 rule 的几何优势从 +12.8 缩到 +5.0；覆盖优势稳定（+32.8 → +20.5）。
 - 仍需说明：无 LLM key（bandit 作为 learned/exploring 代理）；规则阈值未做 dev/test 划分；oracle 是诊断正确性上界，不是 SR 上界。
 - **图 R2**（用 10-bank 每类均值算期望遗憾，不新跑）：fixed 13.0/26.5 pp、rule 8.0/6.0 pp、bandit 0.5/3.0 pp（几何/覆盖）；fixed−rule gap 从覆盖 20.5 pp 降到几何 5.0 pp。链接：[`results/fig_R2_regret_20261122/fig_R2_regret.png`](horizon/results/fig_R2_regret_20261122/fig_R2_regret.png)。
+- **dev/test bank 检查**（seed 0，banks 0–2 = dev，3–9 = held-out）：fixed 0.871/0.721、rule 0.907/0.929、bandit 0.979/0.936（几何/覆盖）。排序保持；rule 的几何优势从 +8.3（dev）缩到 +3.6（test），覆盖仍 +20.8 pp。注意 rule 阈值是硬编码的，这不是完整的调参/测试分离。
 
 ## 6. 数据与可复现性
 
