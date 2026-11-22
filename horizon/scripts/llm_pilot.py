@@ -91,6 +91,8 @@ def main() -> int:
     ap.add_argument("--max-usd", type=float, default=0.0, help="hard cost cap; 0 = no cap")
     ap.add_argument("--price-in", type=float, default=3.0, help="USD per Mtok input (set yours)")
     ap.add_argument("--price-out", type=float, default=15.0, help="USD per Mtok output (set yours)")
+    ap.add_argument("--probe", action="store_true",
+                    help="send exactly one tiny call to validate endpoint/model/key, then stop")
     ap.add_argument("--out", default="results/llm_pilot_20261122.json")
     args = ap.parse_args()
 
@@ -134,6 +136,19 @@ def main() -> int:
             print(f"no key in {sel.api_key_env}; nothing was sent. "
                   f"Put it in {args.env_file} (chmod 600) or export it.")
             return 1
+        if args.probe:
+            # One tiny call: proves endpoint + model + key + accounting without spending on a grid.
+            obs = Observation(FailureProfile(n_episodes=24, per_subgoal_failure={"subgoal1": 9},
+                                             calibration_residual=0.011, sr=0.35),
+                              Budget(0, 72, 0, 1_000_000, 0, 3), ())
+            try:
+                decision = sel.decide(obs)
+            except Exception as exc:
+                print(f"PROBE FAILED: {type(exc).__name__}: {exc}")
+                return 1
+            print(f"PROBE OK  action={decision.action}  reason={decision.reason!r}")
+            print(f"usage={sel.usage[-1]}  spent=${sel.spent_usd:.6f}")
+            return 0
     rows = []
     for r in picked:
         obs = observation(r)
