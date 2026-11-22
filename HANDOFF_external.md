@@ -91,6 +91,8 @@ PYTHONPATH=src python scripts/run_real_deploy.py \
 - 动作 `[dx, dy, dz, dyaw, grip] ∈ [-1,1]`；单步最大 `max_step=15 mm`、`max_yaw_step=0.15 rad`；
 - 夹爪 `grip=+1` 闭合、`-1` 全开（`gripper_open_m=70 mm`）；
 - 位置单位 0.001 mm、角度单位 0.001°（`PiperArm` 内部换算，上层只用 SI）；
+- **夹爪反馈单位因 SDK 版本而异**：`PiperConfig.gripper_feedback_unit_m`（默认 `1e-6`）必须实测校准，否则读回的夹爪开度会差 1000 倍；
+- **积分基准**：`integrate_from_measured=False`（默认，与仿真一致，按上一条指令累加）或 `True`（按实测位姿累加，臂被挡住时不会累积幻影目标）；
 - **必须实测**：`home_xyz`、`home_rpy_deg`（Piper 竖直抓取常用 `(0,60,0)°`）、`workspace_lo/hi`、相机外参、tag 尺寸。
 
 安全：`PiperRobot.reset()` 会先 `enable()` 再回 home；第一次上电请把手放在急停上，并把 `speed_pct` 降到 10。
@@ -134,6 +136,6 @@ PYTHONPATH=src python -m pytest -q tests/test_llm_planner.py tests/test_real_int
 # 12 passed, 1 skipped (h5py missing on this machine)
 ```
 
-- LLM：**真实端点已跑通**（20 次调用 $0.039，首步 12/20）；下一步是论文级网格。
-- 真机：接口/mock/日志/校准就绪；**只差驱动与位姿源**。
+- LLM：**真实端点已跑通并进入主表**（`results/four_causes_llm_20261122`，8 格，23 次调用 / $0.044，平均 SR **0.931**，恢复列 1.000）；下一步是 3 seeds 扩样（约 $0.14）。
+- 真机：接口/mock/日志/校准就绪；**Piper 适配器已按松灵 SDK 写实**（CAN 1 Mbps、单位换算、夹爪约定、工作空间裁剪）；**只差驱动与位姿源实测**。
 - LIBERO：数据/训练/评测/布局先验骨架就绪；**只差数据与环境，权重需训练**。

@@ -48,10 +48,18 @@ class PiperConfig:
     gripper_open_m: float = 0.070                # fully open finger separation (Piper: 70 mm)
     gripper_effort: int = 1000                   # SDK effort unit; vendor default
     gripper_hold_effort: int = 500               # effort while closing on an object
+    # ``GripperState.grippers_angle`` is reported in SDK units whose meaning differs between SDK
+    # builds (0.001 mm on some, 0.001 deg on others). Measure it on the robot and set this so that
+    # ``grippers_angle * gripper_feedback_unit_m`` equals the finger separation in metres.
+    gripper_feedback_unit_m: float = 1e-6
     speed_pct: int = 30                          # motion speed percentage
     move_timeout_s: float = 8.0
     settle_s: float = 0.25                       # wait after a command before reading the state
     feedback_timeout_s: float = 2.0
+    # Integrate each step from the *commanded* target (False, same as the simulator) or from the
+    # *measured* pose (True). Measured integration cannot accumulate drift, but it also cannot
+    # reach past a blocked pose, so it changes closed-loop behaviour; verify on hardware.
+    integrate_from_measured: bool = False
     workspace_lo: tuple = (-0.4, -0.4, 0.02)
     workspace_hi: tuple = (0.5, 0.4, 0.45)
 
@@ -145,7 +153,7 @@ class PiperArm:
         grip = getattr(msg, "gripper_state", None) or getattr(msg, "GripperState", None)
         if grip is None:
             return 0.0
-        return float(getattr(grip, "grippers_angle", 0.0)) * POS_UNIT_M
+        return float(getattr(grip, "grippers_angle", 0.0)) * self.cfg.gripper_feedback_unit_m
 
     # ------------------------------------------------------------------ commands
     def command_pose(self, xyz, rpy) -> None:
@@ -237,10 +245,13 @@ class PiperRobot:
 
     def _integrate(self, pos: np.ndarray, yaw: float, action: np.ndarray):
         """One bounded step, clipped to the workspace: the same limits as ``TabletopEnv.step``."""
-        target = self.target if self.target is not None else np.array([*pos, yaw])
-        nxt = target[:3] + action[:3] * self.cfg.max_step
+        if self.cfg.integrate_from_measured:
+            base = np.array([*pos, yaw], dtype=float)
+        else:
+            base = self.target if self.target is not None else np.array([*pos, yaw])
+        nxt = base[:3] + action[:3] * self.cfg.max_step
         nxt = np.clip(nxt, np.asarray(self.cfg.workspace_lo), np.asarray(self.cfg.workspace_hi))
-        nxt_yaw = float(target[3] + action[3] * self.cfg.max_yaw_step)
+        nxt_yaw = float(base[3] + action[3] * self.cfg.max_yaw_step)
         self.target = np.array([nxt[0], nxt[1], nxt[2], nxt_yaw])
         return nxt, nxt_yaw
 

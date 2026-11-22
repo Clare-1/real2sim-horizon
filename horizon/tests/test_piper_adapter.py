@@ -129,3 +129,32 @@ def test_yaw_step_conversion_round_trips_through_the_sdk_units():
     robot.step(np.array([0.0, 0.0, 0.0, 1.0, 0.0]))
     pose_cmd = [c for c in fake.commands if c[0] == "pose"][-1]
     assert pose_cmd[6] == int(round(PiperConfig().max_yaw_step / DEG / 1e-3)), pose_cmd
+
+
+def test_gripper_feedback_unit_is_configurable():
+    """SDK builds disagree on the gripper unit; the config must be able to fix it."""
+    cfg = PiperConfig(settle_s=0.0, gripper_feedback_unit_m=1e-3)
+    fake = _Sdk(cfg.can_port)
+    fake.gripper_angle = 35          # 35 units * 0.001 m = 35 mm
+    arm = PiperArm(cfg, sdk=_sdk_module(fake))
+    arm.connect()
+    assert arm.gripper_feedback_m() == pytest.approx(0.035, abs=1e-9)
+
+
+def test_integrate_from_measured_uses_the_measured_pose():
+    """With measured integration each step is relative to where the arm really is, not to the
+    last command, so a blocked arm cannot accumulate a phantom target."""
+    cfg = PiperConfig(max_step=0.015, settle_s=0.0, integrate_from_measured=True)
+    fake = _Sdk(cfg.can_port)
+    arm = PiperArm(cfg, sdk=_sdk_module(fake))
+    source = StaticPoseSource(obj_pos=np.zeros((2, 3)), obj_quat=np.tile([1.0, 0, 0, 0], (2, 1)))
+    robot = PiperRobot(arm=arm, pose_source=source, cfg=cfg)
+    robot.reset()
+    # Pretend the arm is blocked: the commanded pose never moves, so the measured pose stays put.
+    fake.EndPoseCtrl = lambda *a: fake.commands.append(("pose",) + a)
+    robot.step(np.array([1.0, 0.0, 0.0, 0.0, 1.0]))
+    first_cmd = [c for c in fake.commands if c[0] == "pose"][-1][1]
+    robot.step(np.array([1.0, 0.0, 0.0, 0.0, 1.0]))
+    second_cmd = [c for c in fake.commands if c[0] == "pose"][-1][1]
+    # Both commands are ``measured + 15 mm``, so they are identical: no phantom accumulation.
+    assert second_cmd == first_cmd, (first_cmd, second_cmd)
