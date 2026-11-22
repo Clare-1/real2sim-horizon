@@ -1,0 +1,5 @@
+{
+  "tau_geo": 0.003,
+  "tau_concentration": 0.4,
+  "healthy_sr": 0.8
+}

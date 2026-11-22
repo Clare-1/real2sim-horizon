@@ -66,7 +66,10 @@ def make_selector(name: str, cause: str, cfg: dict | None = None):
     if name == "learned_value":
         return LearnedValueSelector(model_path=(cfg or {}).get("value_model", ""))
     if name == "rule":
-        return RulePlannerSelector(recovery_signal=(cfg or {}).get("recovery_signal", "v1"))
+        # Thresholds may come from a dev-split tuning run; the defaults are the historical values.
+        overrides = dict((cfg or {}).get("rule_thresholds", {}) or {})
+        return RulePlannerSelector(recovery_signal=(cfg or {}).get("recovery_signal", "v1"),
+                                   **overrides)
     return SELECTORS[name]()
 
 
