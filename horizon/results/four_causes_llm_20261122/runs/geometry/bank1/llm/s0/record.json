@@ -1,0 +1,164 @@
+{
+  "bank_index": 1,
+  "calibrations": 1,
+  "cause": "geometry_bias",
+  "cost": {
+    "accepted_labels": 80000,
+    "available_labels": 85942,
+    "episodes": 336,
+    "eval_episodes": 160,
+    "sim_steps": 3731025,
+    "worker_seconds": 419.44246274698526
+  },
+  "decisions": [
+    {
+      "action": "calibrate_geometry",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.4444444444444444,
+        "failure_types": {
+          "drop": 3,
+          "grasp": 1,
+          "placement": 9,
+          "stall": 5
+        },
+        "per_subgoal": {
+          "subgoal0": 4,
+          "subgoal1": 8,
+          "subgoal2": 4,
+          "subgoal3": 2
+        },
+        "perturbation_events": 14,
+        "perturbation_failure_rate": 0.5833333333333334,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.010775307531402198,
+        "sr": 0.25
+      },
+      "reason": "The 10.78 mm residual makes geometry calibration the clearest first step before targeting any single subgoal.",
+      "round": 1,
+      "sr_after": 0.8,
+      "sr_before": 0.15,
+      "target": null
+    },
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.6153846153846154,
+        "failure_types": {
+          "placement": 2,
+          "stall": 7,
+          "transition": 3,
+          "verifier": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 8,
+          "subgoal1": 3,
+          "subgoal2": 1,
+          "subgoal3": 1
+        },
+        "perturbation_events": 10,
+        "perturbation_failure_rate": 0.25,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.001189629062252076,
+        "sr": 0.45833333333333337
+      },
+      "reason": "Subgoal0 accounts for 8 of 13 failures, making it the clearest target without assuming a specific failure cause.",
+      "round": 2,
+      "sr_after": 0.9,
+      "sr_before": 0.8,
+      "target": "subgoal0"
+    },
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.75,
+        "failure_types": {
+          "grasp": 1,
+          "stall": 2,
+          "transition": 1
+        },
+        "per_subgoal": {
+          "subgoal1": 3,
+          "subgoal2": 1
+        },
+        "perturbation_events": 13,
+        "perturbation_failure_rate": 0.16666666666666666,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 1.2202831585948759e-05,
+        "sr": 0.8333333333333334
+      },
+      "reason": "Subgoal1 accounts for three of four observed failures. Targeted regeneration previously improved success, and the calibration residual is low.",
+      "round": 3,
+      "sr_after": 0.9,
+      "sr_before": 0.9,
+      "target": "subgoal1"
+    },
+    {
+      "action": "stop",
+      "est_cost": 0,
+      "profile": {
+        "concentration": 0.0,
+        "failure_types": {},
+        "per_subgoal": {},
+        "perturbation_events": 22,
+        "perturbation_failure_rate": 0.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0003995657194750396,
+        "sr": 1.0
+      },
+      "reason": "already solved",
+      "round": 4,
+      "sr_after": 0.9,
+      "sr_before": 0.9,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 96,
+  "final_sr": 0.9,
+  "first_action": "calibrate_geometry",
+  "first_step_correct": true,
+  "llm_calls": 3,
+  "llm_usage": [
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 285,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 40,
+      "prompt_chars": 355,
+      "provider": "openai",
+      "reply_chars": 166,
+      "usd": 0.001455
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 310,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 95,
+      "prompt_chars": 424,
+      "provider": "openai",
+      "reply_chars": 176,
+      "usd": 0.002355
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 322,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 46,
+      "prompt_chars": 468,
+      "provider": "openai",
+      "reply_chars": 206,
+      "usd": 0.001656
+    }
+  ],
+  "llm_usd": 0.005466,
+  "new_labels": 80000,
+  "scenario": "geometry",
+  "seed": 0,
+  "selector": "llm"
+}

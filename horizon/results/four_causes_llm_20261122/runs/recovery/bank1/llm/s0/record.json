@@ -1,0 +1,180 @@
+{
+  "bank_index": 1,
+  "calibrations": 0,
+  "cause": "recovery_deficit",
+  "cost": {
+    "accepted_labels": 160000,
+    "available_labels": 164956,
+    "episodes": 576,
+    "eval_episodes": 160,
+    "sim_steps": 5941900,
+    "worker_seconds": 675.9459010208957
+  },
+  "decisions": [
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.35714285714285715,
+        "failure_types": {
+          "drop": 5,
+          "grasp": 6,
+          "placement": 2,
+          "transition": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 2,
+          "subgoal1": 5,
+          "subgoal2": 5,
+          "subgoal3": 2
+        },
+        "perturbation_events": 72,
+        "perturbation_failure_rate": 0.5833333333333334,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0008296594814624705,
+        "sr": 0.41666666666666663
+      },
+      "reason": "Failures span all four subgoals. Collect expert labels on policy-visited states rather than targeting only one of the two equally frequent failure points.",
+      "round": 1,
+      "sr_after": 0.8,
+      "sr_before": 0.9,
+      "target": null
+    },
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.42857142857142855,
+        "failure_types": {
+          "drop": 1,
+          "grasp": 3,
+          "placement": 1,
+          "transition": 1,
+          "verifier": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 1,
+          "subgoal1": 2,
+          "subgoal2": 3,
+          "subgoal3": 1
+        },
+        "perturbation_events": 86,
+        "perturbation_failure_rate": 0.2916666666666667,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0013033832803462514,
+        "sr": 0.7083333333333333
+      },
+      "reason": "Subgoal2 accounts for three of seven failures, the largest observed share. No recovery triggers or perturbation failures suggest prioritizing those interventions.",
+      "round": 2,
+      "sr_after": 0.95,
+      "sr_before": 0.8,
+      "target": "subgoal2"
+    },
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.4,
+        "failure_types": {
+          "grasp": 2,
+          "placement": 1,
+          "transition": 2
+        },
+        "per_subgoal": {
+          "subgoal0": 2,
+          "subgoal2": 2,
+          "subgoal3": 1
+        },
+        "perturbation_events": 81,
+        "perturbation_failure_rate": 0.17391304347826086,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.001867133301186607,
+        "sr": 0.7916666666666666
+      },
+      "reason": "Targeted regeneration previously improved success from 80% to 95%. Subgoal0 ties with subgoal2 for the highest observed failure count.",
+      "round": 3,
+      "sr_after": 1.0,
+      "sr_before": 0.95,
+      "target": "subgoal0"
+    },
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 1.0,
+        "failure_types": {
+          "placement": 2
+        },
+        "per_subgoal": {
+          "subgoal1": 2
+        },
+        "perturbation_events": 97,
+        "perturbation_failure_rate": 0.08333333333333333,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.001611836412142114,
+        "sr": 0.9166666666666666
+      },
+      "reason": "Both observed failures occurred at subgoal1, and targeted regeneration improved success in both prior rounds.",
+      "round": 4,
+      "sr_after": 1.0,
+      "sr_before": 1.0,
+      "target": "subgoal1"
+    }
+  ],
+  "deploy_episodes": 96,
+  "final_sr": 1.0,
+  "first_action": "dagger_round",
+  "first_step_correct": false,
+  "llm_calls": 4,
+  "llm_usage": [
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 285,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 98,
+      "prompt_chars": 355,
+      "provider": "openai",
+      "reply_chars": 205,
+      "usd": 0.002325
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 311,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 69,
+      "prompt_chars": 420,
+      "provider": "openai",
+      "reply_chars": 226,
+      "usd": 0.001968
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 330,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 62,
+      "prompt_chars": 477,
+      "provider": "openai",
+      "reply_chars": 198,
+      "usd": 0.00192
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 341,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 40,
+      "prompt_chars": 519,
+      "provider": "openai",
+      "reply_chars": 173,
+      "usd": 0.001623
+    }
+  ],
+  "llm_usd": 0.007836,
+  "new_labels": 160000,
+  "scenario": "recovery",
+  "seed": 0,
+  "selector": "llm"
+}

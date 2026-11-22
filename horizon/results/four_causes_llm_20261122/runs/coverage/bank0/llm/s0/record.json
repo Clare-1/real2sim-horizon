@@ -1,0 +1,100 @@
+{
+  "bank_index": 0,
+  "calibrations": 0,
+  "cause": "coverage_deficit",
+  "cost": {
+    "accepted_labels": 40000,
+    "available_labels": 40102,
+    "episodes": 160,
+    "eval_episodes": 80,
+    "sim_steps": 1846800,
+    "worker_seconds": 201.18733426346444
+  },
+  "decisions": [
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.9565217391304348,
+        "failure_types": {
+          "grasp": 3,
+          "placement": 1,
+          "stall": 2,
+          "transition": 17
+        },
+        "per_subgoal": {
+          "subgoal0": 22,
+          "subgoal3": 1
+        },
+        "perturbation_events": 6,
+        "perturbation_failure_rate": 0.8,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": null,
+        "sr": 0.04166666666666663
+      },
+      "reason": "Subgoal0 accounts for 22 of 23 observed failures, making it the strongest target for focused training data.",
+      "round": 1,
+      "sr_after": 0.85,
+      "sr_before": 0.1,
+      "target": "subgoal0"
+    },
+    {
+      "action": "stop",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "drop": 2
+        },
+        "per_subgoal": {
+          "subgoal0": 1,
+          "subgoal3": 1
+        },
+        "perturbation_events": 21,
+        "perturbation_failure_rate": 0.09090909090909091,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0016879644573378136,
+        "sr": 0.9166666666666666
+      },
+      "reason": "Success reached 91.7%. The two failures occurred at different subgoals, with no recovery triggers or perturbation failures to suggest a specific next intervention.",
+      "round": 2,
+      "sr_after": 0.85,
+      "sr_before": 0.85,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 48,
+  "final_sr": 0.85,
+  "first_action": "regenerate_targeted",
+  "first_step_correct": true,
+  "llm_calls": 2,
+  "llm_usage": [
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 266,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 44,
+      "prompt_chars": 326,
+      "provider": "openai",
+      "reply_chars": 171,
+      "usd": 0.001458
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 296,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 110,
+      "prompt_chars": 399,
+      "provider": "openai",
+      "reply_chars": 206,
+      "usd": 0.002538
+    }
+  ],
+  "llm_usd": 0.003996,
+  "new_labels": 40000,
+  "scenario": "coverage",
+  "seed": 0,
+  "selector": "llm"
+}

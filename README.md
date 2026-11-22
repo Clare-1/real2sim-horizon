@@ -221,7 +221,7 @@ PYTHONPATH=src .venv-linux/bin/python scripts/run_minimal_validation.py \
 
 | 块 | 现状 | 缺什么 |
 |---|---|---|
-| LLM agent / LLM+经验 | **已跑通真实调用**（20 次，$0.039，`openai/gpt-6.2-astra` via `minara.cloud`） | 论文级网格（LLM 选择器进主表） |
+| LLM agent / LLM+经验 | **已跑通真实调用并进主表**（8 格，23 次，$0.044，平均 SR 0.931） | 论文级网格（3 seeds × 3 banks ≈ 24 格 / $0.14）；LLM+经验变体 |
 | 真机 | 0 | 机器人、相机、AprilTag/位姿链路 |
 | LIBERO / 外部 benchmark | 0 | checkout、Diffusion Policy 管线、磁盘 |
 
@@ -277,7 +277,7 @@ PYTHONPATH=src .venv-linux/bin/python scripts/run_minimal_validation.py \
 
 | 线 | 已就绪 | 只差 |
 |---|---|---|
-| **LLM** | `LLMPlannerSelector`（token/成本记账、无 key 硬失败、`client=` 注入、retry/backoff、`max_calls/max_usd`、`memory`）、`scripts/llm_pilot.py`（`--mock` / `--probe` / `--per-cause`）、`scripts/report_llm_pilot.py`、7 tests；**真实端点已验证**：`openai/gpt-6.2-astra` @ `https://minara.cloud/v1`，20 次调用 $0.039，首步 12/20（几何 5/5、覆盖 4/5、健康 3/5、恢复 0/5） | 论文级网格（LLM 行进主表） |
+| **LLM** | `LLMPlannerSelector`（token/成本记账、无 key 硬失败、`client=` 注入、retry/backoff、`max_calls/max_usd`、`memory`）、`scripts/llm_pilot.py`（`--mock` / `--probe` / `--per-cause`）、`scripts/report_llm_pilot.py`、`scripts/report_llm_grid.py`、7 tests；**真实端点已验证**：`openai/gpt-6.2-astra` @ `https://minara.cloud/v1`；**LLM 已进主表**（`results/four_causes_llm_20261122`，8 格，23 次调用 / $0.044，平均 SR **0.931**，恢复列 **1.000**） | 论文级网格（3 seeds × 3 banks ≈ 24 格 / $0.14） |
 | **真机** | `horizon/real/` 接口/mock/JSONL/日志/校准；**task payload → TaskInstance → HierarchicalController → TaskFeaturizer → NumpyMLP 端到端**（dim=55，7 steps）；**Verifier 成功判定 + EpisodeLog 构建**；示例 payload + 状态权重 | 机器人驱动、AprilTag/位姿源 + 外参、夹爪映射、安全限位；EpisodeLog phase/valid 标注 |
 | **LIBERO** | `horizon/libero/` HDF5 读取、布局先验、`MockLiberoEnv`、**`LiberoEnvAdapter`**、**`DPAdapter`**、`ImageBC`、`train_libero.py`/`eval_libero.py --bddl`、6 tests | **libero 包/数据 + DP 权重 + 新布局演示生成** |
 
@@ -292,6 +292,10 @@ PYTHONPATH=src python scripts/llm_pilot.py --provider openai --env-file ~/.confi
 PYTHONPATH=src python scripts/llm_pilot.py --provider openai --env-file ~/.config/horizon/llm.env \
   --results results/four_causes_paper8_20261120 --per-cause 3 --max-usd 0.5
 PYTHONPATH=src python scripts/report_llm_pilot.py     # LLM vs 脚本选择器同表
+# LLM 进主表（4 原因 × 2 banks = 8 格，约 23 次调用 / $0.044）
+PYTHONPATH=src python scripts/run_minimal_validation.py \
+  --config configs/experiment_llm_grid.yaml --out results/four_causes_llm_20261122
+PYTHONPATH=src python scripts/report_llm_grid.py       # → results/llm_in_main_table.md
 # 真机（先 mock 自测）
 PYTHONPATH=src python scripts/run_real_deploy.py --robot mock --out /tmp/deploy.jsonl
 # LIBERO

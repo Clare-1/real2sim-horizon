@@ -1,0 +1,166 @@
+{
+  "bank_index": 0,
+  "calibrations": 1,
+  "cause": "healthy",
+  "cost": {
+    "accepted_labels": 80000,
+    "available_labels": 81153,
+    "episodes": 320,
+    "eval_episodes": 160,
+    "sim_steps": 3204950,
+    "worker_seconds": 346.5533948261291
+  },
+  "decisions": [
+    {
+      "action": "calibrate_geometry",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "placement": 1,
+          "verifier": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 1,
+          "subgoal3": 1
+        },
+        "perturbation_events": 17,
+        "perturbation_failure_rate": 0.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0015249082722125322,
+        "sr": 0.9166666666666666
+      },
+      "reason": "The 1.52 mm residual warrants a calibration pass; two scattered failures, no recovery triggers, and no perturbation failures offer little support for targeted retraining.",
+      "round": 1,
+      "sr_after": 0.85,
+      "sr_before": 0.85,
+      "target": null
+    },
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 1.0,
+        "failure_types": {
+          "grasp": 2
+        },
+        "per_subgoal": {
+          "subgoal2": 2
+        },
+        "perturbation_events": 20,
+        "perturbation_failure_rate": 0.09090909090909091,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.001423054016015838,
+        "sr": 0.9166666666666666
+      },
+      "reason": "Both observed failures occurred at subgoal2. Geometry calibration showed no measured gain, and no recovery triggers or perturbation failures were observed.",
+      "round": 2,
+      "sr_after": 0.95,
+      "sr_before": 0.85,
+      "target": "subgoal2"
+    },
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 1.0,
+        "failure_types": {
+          "stall": 1,
+          "transition": 1
+        },
+        "per_subgoal": {
+          "subgoal2": 2
+        },
+        "perturbation_events": 17,
+        "perturbation_failure_rate": 0.13333333333333333,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0010485895768980562,
+        "sr": 0.9166666666666666
+      },
+      "reason": "Both observed failures occurred at subgoal2, and targeted regeneration previously improved success from 85% to 95%.",
+      "round": 3,
+      "sr_after": 0.95,
+      "sr_before": 0.95,
+      "target": "subgoal2"
+    },
+    {
+      "action": "stop",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 1.0,
+        "failure_types": {
+          "placement": 1
+        },
+        "per_subgoal": {
+          "subgoal3": 1
+        },
+        "perturbation_events": 22,
+        "perturbation_failure_rate": 0.0625,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0014558090678245643,
+        "sr": 0.9583333333333334
+      },
+      "reason": "Only one of 24 episodes failed. The last targeted round showed no gain, and neither perturbation failures nor recovery triggers suggest another intervention.",
+      "round": 4,
+      "sr_after": 0.95,
+      "sr_before": 0.95,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 96,
+  "final_sr": 0.95,
+  "first_action": "calibrate_geometry",
+  "first_step_correct": false,
+  "llm_calls": 4,
+  "llm_usage": [
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 269,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 75,
+      "prompt_chars": 325,
+      "provider": "openai",
+      "reply_chars": 227,
+      "usd": 0.001932
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 286,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 57,
+      "prompt_chars": 380,
+      "provider": "openai",
+      "reply_chars": 219,
+      "usd": 0.001713
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 314,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 45,
+      "prompt_chars": 456,
+      "provider": "openai",
+      "reply_chars": 179,
+      "usd": 0.001617
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 341,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 124,
+      "prompt_chars": 528,
+      "provider": "openai",
+      "reply_chars": 200,
+      "usd": 0.002883
+    }
+  ],
+  "llm_usd": 0.008145,
+  "new_labels": 80000,
+  "scenario": "healthy",
+  "seed": 0,
+  "selector": "llm"
+}

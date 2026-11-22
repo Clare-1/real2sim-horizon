@@ -56,8 +56,13 @@ def make_selector(name: str, cause: str, cfg: dict | None = None):
         return OracleSelector(true_cause=cause)
     if name in ("llm", "llm_memory"):
         from ..rsi.llm_planner import LLMPlannerSelector
-        memory = tuple((cfg or {}).get("llm_memory", ()) or ())
-        return LLMPlannerSelector(memory=memory)
+        conf = dict((cfg or {}).get("llm", {}) or {})
+        # A selector name is part of the table, so "llm_memory" must not be reported as "llm".
+        memory = tuple(conf.get("memory", ()) or (cfg or {}).get("llm_memory", ()) or ())
+        kwargs = {k: conf[k] for k in
+                  ("provider", "base_url", "model", "api_key_env", "max_calls", "max_usd",
+                   "price_in_per_mtok", "price_out_per_mtok", "max_tokens") if k in conf}
+        return LLMPlannerSelector(name=name, memory=memory, **kwargs)
     if name in WIRED:
         from ..rsi import selector as _sel
         return getattr(_sel, WIRED[name])()
@@ -392,6 +397,13 @@ def _run_one(out, cfg, name, cause, seed, sel_name, store_train, store_deploy, r
               "first_step_correct": first_action == CAUSE_ACTION.get(cause),
               "final_sr": sr_now, "deploy_episodes": deploy, "new_labels": labels,
               "calibrations": calib, "cost": total_cost, "decisions": decisions}
+    # An LLM selector pays per call; keep the ledger in the record so cost tables do not have to
+    # guess. Non-LLM selectors have no ``usage`` attribute and stay unchanged.
+    usage = getattr(selector, "usage", None)
+    if usage:
+        record["llm_calls"] = len(usage)
+        record["llm_usd"] = round(float(sum(float(u.get("usd", 0.0)) for u in usage)), 6)
+        record["llm_usage"] = usage
     write_json(d / "record.json", record)
     return record
 

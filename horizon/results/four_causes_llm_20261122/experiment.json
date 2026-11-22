@@ -1,0 +1,107 @@
+{
+  "config": {
+    "H_values": [
+      4
+    ],
+    "banks": {
+      "curve": 83000000,
+      "feedback": 82000000,
+      "final": 84000000,
+      "training": 81000000
+    },
+    "collection_pert": 0.1,
+    "curve_n_per": 20,
+    "deploy_budget": 100000,
+    "families": [
+      "pack"
+    ],
+    "feedback_episodes": 24,
+    "feedback_pert": 0.1,
+    "final_n_per": 20,
+    "init_budget": 80000,
+    "label_budget": 1000000,
+    "llm": {
+      "api_key_env": "HORIZON_LLM_KEY",
+      "base_url": "https://minara.cloud/v1",
+      "max_calls": 6,
+      "max_tokens": 512,
+      "max_usd": 0.05,
+      "model": "openai/gpt-6.2-astra",
+      "price_in_per_mtok": 3.0,
+      "price_out_per_mtok": 15.0,
+      "provider": "openai"
+    },
+    "name": "experiment_llm_grid",
+    "round_budget": 40000,
+    "rounds": 4,
+    "scenario_banks": 2,
+    "scenarios": [
+      {
+        "cause": "geometry_bias",
+        "conditions": {
+          "recon": {
+            "bias": {
+              "plate": 0.46,
+              "tray": 0.46
+            }
+          }
+        },
+        "name": "geometry",
+        "train_randomization": {
+          "layout_prior": "full"
+        }
+      },
+      {
+        "cause": "coverage_deficit",
+        "conditions": {
+          "recon": {}
+        },
+        "name": "coverage",
+        "train_randomization": {
+          "layout_prior": "left_half"
+        }
+      },
+      {
+        "cause": "recovery_deficit",
+        "conditions": {
+          "recon": {}
+        },
+        "feedback_pert": 0.5,
+        "name": "recovery",
+        "train_randomization": {
+          "layout_prior": "full"
+        }
+      },
+      {
+        "cause": "healthy",
+        "conditions": {
+          "recon": {}
+        },
+        "name": "healthy",
+        "train_randomization": {
+          "layout_prior": "full"
+        }
+      }
+    ],
+    "seeds": [
+      0
+    ],
+    "selectors": [
+      "llm"
+    ],
+    "torch_threads": 4,
+    "train": {
+      "batch": 2048,
+      "device": "cuda",
+      "hidden": 512,
+      "layers": 3,
+      "lr": 0.001,
+      "steps": 8000
+    },
+    "world": {
+      "plate_half": 0.01,
+      "tray_height": 0.02
+    }
+  },
+  "fingerprint": "43878115c03e07e9326ae2b122b905f1e7a951b9a080a7de8163adc667913cd2"
+}

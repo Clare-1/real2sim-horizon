@@ -291,3 +291,22 @@ def test_every_action_is_reachable_and_valid():
     assert set(CAUSE_ACTION.values()) <= set(ACTIONS)
     with pytest.raises(ValueError, match="unknown action"):
         Decision("make_coffee", None, "", 0)
+
+
+def test_make_selector_passes_the_llm_block_to_the_selector():
+    """The LLM grid config must reach the selector; otherwise it silently falls back to Anthropic."""
+    from horizon.harness.selector_experiment import make_selector
+
+    cfg = {"llm": {"provider": "openai", "base_url": "https://example.test/v1",
+                   "model": "test-model", "api_key_env": "TEST_KEY",
+                   "max_calls": 3, "max_usd": 0.02, "price_in_per_mtok": 1.0,
+                   "price_out_per_mtok": 2.0}}
+    sel = make_selector("llm", "geometry_bias", cfg)
+    assert sel.provider == "openai"
+    assert sel.base_url == "https://example.test/v1"
+    assert sel.model == "test-model"
+    assert sel.api_key_env == "TEST_KEY"
+    assert sel.max_calls == 3 and sel.max_usd == pytest.approx(0.02)
+    assert sel.price_in_per_mtok == 1.0 and sel.price_out_per_mtok == 2.0
+    # llm_memory keeps its own row name so the table cannot confuse the two.
+    assert make_selector("llm_memory", "geometry_bias", cfg).name == "llm_memory"
