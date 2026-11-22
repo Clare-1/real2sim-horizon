@@ -322,7 +322,8 @@ def test_previous_evaluation_reuse_checks_complete_identity_and_copies():
             previous_curve_evaluation([previous], cfg, {"fingerprint": fingerprint}, policy, belief)
 
 
-@pytest.mark.parametrize("factory_name", ["nominal_factory", "nominal_recovery_factory", "dagger_factory"])
+@pytest.mark.parametrize("factory_name", ["nominal_factory", "nominal_recovery_factory", "dagger_factory",
+                                         "deploy_dagger_factory", "mixed_training_factory"])
 def test_all_training_factories_respect_observation_mode(tmp_path, factory_name):
     import horizon.harness.experiment as ex
     cfg = config()
@@ -332,3 +333,19 @@ def test_all_training_factories_respect_observation_mode(tmp_path, factory_name)
     args = (store, cfg, ReconModel(), 0)
     job = factory(*args, *(() if factory_name == "nominal_factory" else (1,)))()
     assert job.observation_mode == "observed"
+
+
+def test_experiment1_deploy_and_mixed_factories_use_the_deployment_scene(tmp_path):
+    """Method 4 labels in deployment; method 5 mixes deployment and twin 50/50."""
+    import horizon.harness.experiment as ex
+    cfg = config()
+    store = TaskStore(tmp_path / "tasks", cfg, tmp_path)
+    recon = ReconModel()
+    deploy = [ex.deploy_dagger_factory(store, cfg, recon, 0, 1)() for _ in range(3)]
+    assert all(job.real for job in deploy)            # never generated inside the twin
+    assert all("deploy_dagger" in job.provenance for job in deploy)
+    mixed_factory = ex.mixed_training_factory(store, cfg, recon, 0, 1)
+    mixed = [mixed_factory() for _ in range(20)]   # one factory per round, many episodes
+    flags = {job.real for job in mixed}
+    assert flags == {True, False}                     # both sources actually appear
+    assert {job.provenance.rsplit("_", 1)[-1] for job in mixed} == {"real", "twin"}

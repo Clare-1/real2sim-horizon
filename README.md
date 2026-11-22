@@ -309,6 +309,7 @@ PYTHONPATH=src python -m pytest -q tests/test_llm_planner.py tests/test_real_int
 
 - 完整矩阵：[`PAPER_COVERAGE_AUDIT.md`](PAPER_COVERAGE_AUDIT.md)。
 - **当前协议已出**：paper8 主表（4 causes × 8 selectors + CI）、**表 3**（AUC / oracle-90% 部署 / regret / 健康花费）、**图 1**（SR–成本，`results/fig1_sr_cost_20261122/`）、**图 3**（原因 × 首步）、图 4、R1、R2。
+- **实验一 8 条 pipeline 已实现**：`open_loop` / `always_dagger` / `domain_randomize` / `deploy_dagger` / `mixed_train` / `fixed` / `calibrate_alternate` / `true_params`，配置 `configs/experiment1_table1_pilot.yaml`（3 条件 × 2 banks × 8 方法），输出 `results/experiment1_table1_20261122`。
 - **旧协议 / 部分**：表 2 的 mixed 列、表 8/9/11、图 2/图 7。
 - **未做（可跑）**：实验一 8 条 pipeline × 3 条件、dev/test 30/60、H 外推新编码、图 2/7 的当前版本。
 - **外部**：LLM 行、LIBERO（表 4/图 5）、真机（表 5/6/7/图 6）。

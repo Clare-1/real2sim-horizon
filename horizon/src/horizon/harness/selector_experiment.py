@@ -25,19 +25,28 @@ from ..monitor.verifier import VerifierConfig
 from ..policy.dataset import Dataset
 from ..real2sim.recon_error import ReconModel
 from ..rsi.selector import (CAUSE_ACTION, AlternatingCalibrationSelector, AlwaysDaggerSelector,
-                            Budget, FailureProfile, FixedRecipeSelector, HistoryEntry,
-                            LearnedValueSelector, MultiLabelSelector, Observation, OracleSelector,
-                            RulePlannerSelector, profile_vector)
+                            AlwaysStopSelector, Budget, DeployDaggerSelector,
+                            DomainRandomizeSelector, FailureProfile, FixedRecipeSelector,
+                            HistoryEntry, LearnedValueSelector, MixedTrainingSelector,
+                            MultiLabelSelector, Observation, OracleSelector, RulePlannerSelector,
+                            profile_vector)
 from ..rsi.simreal import geometry_repair
 from ..tasks.families import RandomizationConfig
 from .artifacts import canonical_hash, load_blocks, save_blocks, save_policy, write_json
-from .experiment import (TaskStore, check_results, collect_recorded, dagger_factory, evaluate,
-                         job_for, nominal_factory, nominal_recovery_factory, observed_feedback,
+from .experiment import (TaskStore, check_results, collect_recorded, dagger_factory,
+                         deploy_dagger_factory, evaluate, job_for, mixed_training_factory,
+                         nominal_factory, nominal_recovery_factory, observed_feedback,
                          rollout_cost, train_version)
 
 SELECTORS = {"fixed": FixedRecipeSelector, "rule": RulePlannerSelector,
              "always_dagger": AlwaysDaggerSelector,
-             "calibrate_alternate": AlternatingCalibrationSelector}
+             "calibrate_alternate": AlternatingCalibrationSelector,
+             "open_loop": AlwaysStopSelector,
+             "domain_randomize": DomainRandomizeSelector,
+             "deploy_dagger": DeployDaggerSelector,
+             "mixed_train": MixedTrainingSelector,
+             # method 8: the true twin, so only the learning operation is left to choose
+             "true_params": AlwaysDaggerSelector}
 WIRED = {"random": "RandomSelector", "round_robin": "RoundRobinSelector",
          "bandit": "UCBBanditSelector", "linucb": "LinUCBSelector"}
 
@@ -168,32 +177,6 @@ def randomized_physics_factory(store, cfg, recon, seed, round_id, lo, hi):
 
 
 
-def randomized_physics_factory(store, cfg, recon, seed, round_id, lo, hi):
-    """Domain randomisation over friction: every demo is generated under a different physical world.
-
-    This is the advisor's alternative for a dynamics gap (“calibrate dynamics or randomise”):
-    there is no friction estimator, so the operation that can help is to widen the physical
-    distribution the policy is trained on.
-    """
-    from ..datagen.generator import OpenLoopConfig, TaskDistribution, open_loop_job
-    from ..monitor.verifier import VerifierConfig
-    dist = TaskDistribution(tuple(cfg["families"]), tuple(cfg["H_values"]),
-                            seed_base=cfg["banks"]["training"])
-    oc = OpenLoopConfig(**cfg.get("open_loop", {}))
-    rng = np.random.default_rng(np.random.SeedSequence([seed, round_id, 733]))
-    def make():
-        j = open_loop_job(dist, oc, rng)
-        j.world, j.recon = cfg["world"], recon.to_dict()
-        j.observation_mode = cfg.get("training_observation_mode", "legacy")
-        j.verifier_cfg = VerifierConfig(tol_scale=1.0)
-        payload, ref = store.get(j.family, j.H, j.task_seed)
-        payload = copy.deepcopy(payload)
-        f = float(rng.uniform(lo, hi))
-        payload["scene"]["physics"] = {**payload["scene"].get("physics", {}), "friction_scale": f}
-        j.task_payload = payload
-        j.tag = {"task_artifact": ref, "twin_sha256": canonical_hash(recon.to_dict())}
-        return j
-    return make
 
 def _act(action, target, cfg, store_train, store_deploy, recon, seed, round_id, workers, params):
     """Execute one learning operation. Returns (recon, new_blocks, unit_cost, note)."""
@@ -215,14 +198,18 @@ def _act(action, target, cfg, store_train, store_deploy, recon, seed, round_id, 
         lo, hi = cfg.get("friction_range", (0.4, 1.0))
         factory = randomized_physics_factory(store_train, cfg, recon, seed, round_id, lo, hi)
         note = "randomize"
-    elif action == "randomize_physics":
-        lo, hi = cfg.get("friction_range", (0.4, 1.0))
-        factory = randomized_physics_factory(store_train, cfg, recon, seed, round_id, lo, hi)
-        note = "randomize"
     elif action == "add_recovery_data":
         local = copy.deepcopy(cfg)
         local.setdefault("open_loop", {})["recovery_frac"] = 1.0
         factory, note = nominal_recovery_factory(store_deploy, local, recon, seed, round_id), "recovery"
+    elif action == "deploy_dagger":
+        # advisor method 4: expert labels land in the deployment distribution, the twin only
+        # supplies a belief, so a wrong twin cannot leak into the labels
+        factory, note = deploy_dagger_factory(store_deploy, cfg, recon, seed, round_id), "deploy_dagger"
+    elif action == "mixed_train":
+        # advisor method 5: each episode is twin-generated or deployment-labelled, 50/50
+        factory, note = mixed_training_factory(store_deploy, cfg, recon, seed, round_id,
+                                               float(cfg.get("mixed_real_prob", 0.5))), "mixed_train"
     else:  # defensive: never silently pick an operation
         raise ValueError(f"unhandled action: {action}")
     with Runner(workers, policy={"params": params}) as runner:
@@ -238,6 +225,35 @@ def _empty_cost() -> dict:
     """Costs are charged for every completed job, including over-budget and failed batches."""
     return {"episodes": 0, "sim_steps": 0, "worker_seconds": 0.0,
             "accepted_labels": 0, "available_labels": 0, "eval_episodes": 0}
+
+
+def _initial(out, cfg_scn, name, seed, store_train, recon0, workers, budget, suffix=""):
+    """Shared D0 + pi0 for one (scenario, seed) and one initial budget.
+
+    ``suffix`` keeps a different initial budget in its own cache directory, so the advisor's
+    open-loop method (one 200k batch) cannot silently reuse the 80k DAgger start.
+    """
+    shared = out / "shared" / name / f"s{seed}{suffix}"
+    shared.mkdir(parents=True, exist_ok=True)
+    data_path = shared / "data.npz"
+    manifest_path = shared / "data.manifest.json"
+    if manifest_path.exists():
+        blocks = load_blocks(json.loads(manifest_path.read_text(encoding="utf-8")))
+        print(f"INIT {name}/s{seed}{suffix}: reused {sum(b.n for b in blocks)} labels", flush=True)
+    else:
+        if data_path.exists():
+            print(f"INIT {name}/s{seed}{suffix}: data.npz without manifest, re-collecting", flush=True)
+        with Runner(workers) as runner:
+            blocks, ledger, _ = collect_recorded(
+                runner, nominal_factory(store_train, cfg_scn, recon0, seed), budget, recon0,
+                require_success=True)
+        # Save the manifest too: loading needs path + hashes + block counts, and an
+        # empty/garbage sha256 would otherwise fail verification on every reuse.
+        write_json(manifest_path, save_blocks(data_path, blocks))
+        write_json(shared / "collection.json", {"ledger": ledger, "init_budget": budget})
+        print(f"INIT {name}/s{seed}{suffix}: {sum(b.n for b in blocks)} labels", flush=True)
+    pi0, _, _ = train_version(list(blocks), cfg_scn, seed, shared / "policy_0.npz")
+    return list(blocks), pi0
 
 
 def run_selector_experiment(cfg, out, project_root, workers=4):
@@ -275,32 +291,22 @@ def run_selector_experiment(cfg, out, project_root, workers=4):
             store_train = _store(out / "tasks_train" / name, cfg_scn, project_root, prior)
             store_deploy = _store(out / "tasks_deploy" / name, cfg_scn, project_root, "full")
             recon0 = ReconModel.from_dict(scenario.get("conditions", {}).get("recon", {}))
-            data_path = shared / "data.npz"
-            manifest_path = shared / "data.manifest.json"
-            if manifest_path.exists():
-                blocks = load_blocks(json.loads(manifest_path.read_text(encoding="utf-8")))
-                print(f"INIT {name}/s{seed}: reused {sum(b.n for b in blocks)} labels", flush=True)
-            else:
-                if data_path.exists():
-                    print(f"INIT {name}/s{seed}: data.npz without manifest, re-collecting", flush=True)
-                with Runner(workers) as runner:
-                    blocks, ledger, _ = collect_recorded(
-                        runner, nominal_factory(store_train, cfg_scn, recon0, seed),
-                        cfg_scn["init_budget"], recon0, require_success=True)
-                # Save the manifest too: loading needs path + hashes + block counts, and an
-                # empty/garbage sha256 would otherwise fail verification on every reuse.
-                write_json(manifest_path, save_blocks(data_path, blocks))
-                write_json(shared / "collection.json", {"ledger": ledger})
-                print(f"INIT {name}/s{seed}: {sum(b.n for b in blocks)} labels", flush=True)
-            base_blocks = list(blocks)
-            pi0, _, _ = train_version(base_blocks, cfg_scn, seed, shared / "policy_0.npz")
-            print(f"INIT {name}/s{seed}: {sum(b.n for b in base_blocks)} labels", flush=True)
+            base_blocks, pi0 = _initial(out, cfg_scn, name, seed, store_train, recon0, workers,
+                                        cfg_scn["init_budget"])
+            # Methods that spend their whole budget once (open loop) get their own D0 instead of
+            # silently sharing the 80k DAgger start.
+            alt_init = dict(cfg_scn.get("selector_init_budget", {}) or {})
             for bank_index in range(int(cfg_scn.get("scenario_banks", 1))):
                 curve_bank = cfg_scn["banks"]["curve"] + bank_index * 1_000_000
                 feedback_bank = cfg_scn["banks"]["feedback"] + bank_index * 1_000_000
                 for sel_name in cfg_scn["selectors"]:
+                    base_sel, pi0_sel = base_blocks, pi0
+                    if sel_name in alt_init:
+                        base_sel, pi0_sel = _initial(out, cfg_scn, name, seed, store_train, recon0,
+                                                     workers, int(alt_init[sel_name]),
+                                                     suffix=f"_{sel_name}")
                     records.append(_run_one(out, cfg_scn, name, cause, seed, sel_name, store_train,
-                                            store_deploy, recon0, base_blocks, pi0, workers,
+                                            store_deploy, recon0, base_sel, pi0_sel, workers,
                                             bank_index, curve_bank, feedback_bank))
     write_json(out / "summary.json", {"fingerprint": fingerprint, "records": records})
     write_json(out / "completion.json", {
@@ -322,6 +328,10 @@ def _run_one(out, cfg, name, cause, seed, sel_name, store_train, store_deploy, r
         return json.loads((d / "record.json").read_text(encoding="utf-8"))
     selector = make_selector(sel_name, cause, cfg)
     recon = ReconModel.from_dict(recon0.to_dict())
+    if sel_name == "true_params":
+        # Advisor method 8 (upper bound): the twin *is* the true scene, so calibration has
+        # nothing left to fix and only the learning operation can help.
+        recon = ReconModel.from_dict(cfg.get("true_params_recon", {}) or {})
     data, params = Dataset(list(base)), pi0
     history, decisions = [], []
     first_action, deploy, labels, calib = None, 0, 0, 0

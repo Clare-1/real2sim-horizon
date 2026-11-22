@@ -7,7 +7,7 @@
 
 | 项 | 状态 | 现有 | 缺 |
 |---|---|---|---|
-| 表 1（8 方法 × 高度/位置/摩擦 × pack/sort/stack × H2–10） | 🔴 | 只有 4 个 selector 在 **pack/H4**（`always_dagger`、`fixed`、`calibrate_alternate`、`oracle`） | open-loop、领域随机化、部署环境 DAgger、sim+deploy 混合、true-params；sort/stack；H2–10；位置/摩擦列 |
+| 表 1（8 方法 × 高度/位置/摩擦 × pack/sort/stack × H2–10） | 🟡 | **8 条 pipeline 已全部实现**：`open_loop`(200k)、`always_dagger`、`domain_randomize`、`deploy_dagger`、`mixed_train`、`fixed`、`calibrate_alternate`、`true_params`；`configs/experiment1_table1_pilot.yaml` 已启动（3 条件 × 2 banks × 8 方法 = 48 格） | sort/stack；H2–10；位置/摩擦列（无估计器 / 平台不可表达） |
 | 图 1（SR vs 累计部署） | ✅ | `results/fig1_sr_cost_20261122/`（8 selectors × 4 causes，离线） | 无 |
 | 图 2（SR vs H） | 🔴 | `h_extrapolation_20261116` 是旧编码，H6/8/10 = 0 | 新编码 + H6/8/10 |
 | 表 A1/A2 | 🔴 | — | 扰动模式 / 按任务族拆分 |
@@ -63,7 +63,7 @@
 
 ## 论文前必须补的（按优先级）
 
-1. **表 1 的其余 4 条 pipeline + 位置/摩擦列**：先补代码（open-loop、DR、deploy DAgger、mixed、true-params），再跑 pack/H4 的 3 条件矩阵。
+1. **实验一扩表**：8 条 pipeline 已实现，pilot（`experiment1_table1_20261122`）在跑；之后补 sort/stack、H2–10。
 2. **dev/test 30/60 划分**：规则阈值只在 dev 上调，test 只报数。
 3. **表 11 新编码 H 外推**：`check_h_extrapolation.py` 已能跑，补 H=6/8/10。
 4. **图 2（SR vs H）与图 7（8/24/48）**：需要新跑；先确认队列。

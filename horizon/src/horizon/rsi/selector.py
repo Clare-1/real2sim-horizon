@@ -16,7 +16,7 @@ from typing import Protocol
 
 ACTIONS = ("calibrate_geometry", "recalibrate_verifier", "regenerate_uniform",
            "regenerate_targeted", "add_recovery_data", "randomize_physics", "dagger_round",
-           "stop")
+           "deploy_dagger", "mixed_train", "stop")
 
 # Keys that must never reach a selector. Kept explicit so the guard is self-documenting.
 FORBIDDEN_KEYS = frozenset({
@@ -293,6 +293,57 @@ class AlternatingCalibrationSelector:
         if len(obs.history) % 2 == 0:
             return Decision("calibrate_geometry", None, "repeated calibration: calibrate", 1)
         return Decision("dagger_round", None, "repeated calibration: DAgger", 4)
+
+
+@dataclass
+class AlwaysStopSelector:
+    """Advisor experiment-1 method 1: open-loop. Spend the budget once, never consume feedback."""
+
+    name: str = "open_loop"
+
+    def decide(self, obs: Observation) -> Decision:
+        return Decision("stop", None, "open loop: budget spent before deployment", 0)
+
+
+@dataclass
+class DomainRandomizeSelector:
+    """Advisor experiment-1 method 3: widen the training distribution, never calibrate the twin."""
+
+    name: str = "domain_randomize"
+
+    def decide(self, obs: Observation) -> Decision:
+        stop = _guard(obs)
+        if stop:
+            return stop
+        if len(obs.history) % 2 == 0:
+            return Decision("randomize_physics", None, "domain randomisation: widen the world", 4)
+        return Decision("dagger_round", None, "domain randomisation: DAgger", 4)
+
+
+@dataclass
+class DeployDaggerSelector:
+    """Advisor experiment-1 method 4: no twin. Expert labels inside the deployment environment."""
+
+    name: str = "deploy_dagger"
+
+    def decide(self, obs: Observation) -> Decision:
+        stop = _guard(obs)
+        if stop:
+            return stop
+        return Decision("deploy_dagger", None, "no twin: expert labels in deployment", 4)
+
+
+@dataclass
+class MixedTrainingSelector:
+    """Advisor experiment-1 method 5: half the labels from the twin, half from deployment."""
+
+    name: str = "mixed_train"
+
+    def decide(self, obs: Observation) -> Decision:
+        stop = _guard(obs)
+        if stop:
+            return stop
+        return Decision("mixed_train", None, "sim + deployment mixing", 4)
 
 
 @dataclass

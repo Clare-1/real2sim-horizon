@@ -7,6 +7,7 @@ from horizon.rsi.selector import (
     ACTIONS, CAUSE_ACTION, Budget, Decision, FailureProfile, FixedRecipeSelector, HistoryEntry,
     LearnedValueSelector, LinUCBSelector, MultiLabelSelector, Observation, OracleSelector,
     RulePlannerSelector, AlternatingCalibrationSelector, AlwaysDaggerSelector,
+    AlwaysStopSelector, DeployDaggerSelector, DomainRandomizeSelector, MixedTrainingSelector,
     diagnosis_features, first_step_correct, profile_vector,
 )
 
@@ -248,6 +249,42 @@ def test_alternating_calibration_calibrates_then_daggers():
     assert sel.decide(obs(history=h1)).action == "dagger_round"
     h2 = h1 + (HistoryEntry("dagger_round", 0.5, 0.6),)
     assert sel.decide(obs(history=h2)).action == "calibrate_geometry"
+
+
+def test_experiment1_pipelines_pick_their_own_action():
+    """Advisor experiment-1 methods 1/3/4/5 must be distinguishable from fixed-twin DAgger."""
+    from horizon.rsi.selector import (AlwaysStopSelector, DeployDaggerSelector,
+                                       DomainRandomizeSelector, MixedTrainingSelector)
+    o = obs(residual=11.0, sr=0.35)
+    assert AlwaysStopSelector().decide(o).action == "stop"
+    assert DomainRandomizeSelector().decide(o).action == "randomize_physics"
+    assert DeployDaggerSelector().decide(o).action == "deploy_dagger"
+    assert MixedTrainingSelector().decide(o).action == "mixed_train"
+    for sel in (AlwaysStopSelector(), DomainRandomizeSelector(), DeployDaggerSelector(),
+                MixedTrainingSelector()):
+        assert sel.decide(o).action in ACTIONS
+
+
+def test_domain_randomize_alternates_then_daggers():
+    sel = DomainRandomizeSelector()
+    assert sel.decide(obs()).action == "randomize_physics"
+    h1 = (HistoryEntry("randomize_physics", 0.3, 0.4),)
+    assert sel.decide(obs(history=h1)).action == "dagger_round"
+
+
+def test_open_loop_ignores_feedback():
+    """Open loop spends the budget once: the decision cannot depend on the round or the profile."""
+    sel = AlwaysStopSelector()
+    early = obs(residual=12.0, sr=0.2, rounds=0)
+    late = obs(residual=0.5, sr=0.9, rounds=2)
+    assert sel.decide(early).action == "stop"
+    assert sel.decide(late).action == "stop"
+
+
+def test_new_actions_are_accepted_by_decision():
+    for act in ("deploy_dagger", "mixed_train"):
+        assert Decision(act, None, "", 4).action == act
+        assert act in ACTIONS
 
 
 def test_every_action_is_reachable_and_valid():

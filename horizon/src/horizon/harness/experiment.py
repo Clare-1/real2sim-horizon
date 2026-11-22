@@ -374,6 +374,40 @@ def dagger_factory(store, cfg, recon, seed, round_id):
     return make
 
 
+def deploy_dagger_factory(store, cfg, recon, seed, round_id):
+    """DAgger with the expert inside the deployment environment (no twin generation).
+
+    ``real=True`` keeps the deployment scene as ground truth and only feeds ``recon`` to the
+    planner as a belief, which is exactly what the advisor's method 4 asks for: the labels come
+    from the real distribution, the twin never generates them.
+    """
+    dist = TaskDistribution(tuple(cfg["families"]), tuple(cfg["H_values"]), seed_base=cfg["banks"]["training"])
+    rng = np.random.default_rng(np.random.SeedSequence([seed, round_id, 253]))
+    def make():
+        fam, H, ts = dist.sample(rng)
+        return job_for(store, fam, H, ts, int(rng.integers(1 << 30)), cfg, recon, real=True,
+                       controller="mixed", learner="hier", beta=0.5 ** round_id,
+                       pert=PerturbationConfig.suite(cfg.get("collection_pert", 0.1)),
+                       label_expert=True, max_samples=300, only_success=False,
+                       provenance=f"deploy_dagger_r{round_id}")
+    return make
+
+
+def mixed_training_factory(store, cfg, recon, seed, round_id, real_prob: float = 0.5):
+    """Method 5: each labelled episode is drawn from the twin or from deployment with equal chance."""
+    dist = TaskDistribution(tuple(cfg["families"]), tuple(cfg["H_values"]), seed_base=cfg["banks"]["training"])
+    rng = np.random.default_rng(np.random.SeedSequence([seed, round_id, 254]))
+    def make():
+        fam, H, ts = dist.sample(rng)
+        real = bool(rng.random() < real_prob)
+        return job_for(store, fam, H, ts, int(rng.integers(1 << 30)), cfg, recon, real=real,
+                       controller="mixed", learner="hier", beta=0.5 ** round_id,
+                       pert=PerturbationConfig.suite(cfg.get("collection_pert", 0.1)),
+                       label_expert=True, max_samples=300, only_success=False,
+                       provenance=f"mixed_r{round_id}_{'real' if real else 'twin'}")
+    return make
+
+
 def train_version(blocks, cfg, seed, path):
     tcfg = TrainConfig(**{**cfg["train"], "seed": cfg["train"].get("seed", 0) + seed})
     import torch
