@@ -213,6 +213,50 @@ PYTHONPATH=src .venv-linux/bin/python scripts/run_minimal_validation.py \
 
 本仓库是研究原型，尚未附论文。第三方基线代码（如 LiLo-VLA、openpi、mimicgen）未复制进本仓库，只保留引用与笔记。
 
+## 8. 与导师完整方案的完成度（2026-11-21）
+
+**结论：外部阻塞只有 3 块；但方案还有约 10 项内部缺口，不能说“只差真机/LIBERO/LLM”。**
+
+### 8.1 外部阻塞（这台机器做不了的 3 块）
+
+| 块 | 现状 | 缺什么 |
+|---|---|---|
+| LLM agent / LLM+经验 | `llm_planner.py` 已实现，**0 runs** | `ANTHROPIC_API_KEY` + API 预算 |
+| 真机 | 0 | 机器人、相机、AprilTag/位姿链路 |
+| LIBERO / 外部 benchmark | 0 | checkout、Diffusion Policy 管线、磁盘 |
+
+### 8.2 内部未完成（能在这台机器上做，不能算外部阻塞）
+
+| # | 缺口 | 现状 | 补法 | 机时 |
+|---|---|---|---|---|
+| 1 | 最小验证规模 | 3 banks × 3 seeds | 10 banks × 3 seeds × 4 selectors = 240 runs | ~15 h |
+| 2 | dev/test 划分 | 规则阈值在评估 banks 上调 | 30 dev / 60 test，重调 rule/bandit | 0 + 重跑 |
+| 3 | 实验一完整矩阵 | pack/H4 × 8 selectors | 3 families × H2–10 × 8 pipelines × 3 seeds | 数十 h |
+| 4 | 8 条固定流程 baseline | 只有 selector，不是 8 条固定 pipeline | 接线/实现：fixed twin DAgger、DR+DAgger、deploy DAgger、sim+deploy mixed、first-round freeze、repeated calibration+DAgger、true params | 1–2 天代码 |
+| 5 | 图 R2 + 命题 | 未跑/未写 | 5 α × 4 selectors × 3 seeds = 60 runs；命题用 ε/Δ/D/κ | ~4 h |
+| 6 | 混合原因并入主表 | 独立 mixed grid（48 runs） | 把 mixed 作为第 5 列并入 8 选择器表 | 复用现有 |
+| 7 | 实验五消融 | 部分 | 校准器修复版、H 外推、agent 消融、部署预算 8/24/48 | 数 h |
+| 8 | 判定器偏差原因 | `recalibrate_verifier` 未实现 | 实现重校准动作 | 1 天 |
+| 9 | 位置偏差 | `lateral_offset` 可注入，但 `geometry_repair` 只估高度 | 实现位置估计器，否则只能当“未知原因” | 1–2 天 |
+| 10 | 动力学原因 | 摩擦/质量/延迟扫描证明不可表达 | 写 limitation（已有 4 组扫描） | 0 |
+| 11 | 主张口径 | learned agent SR 0.867 < rule 0.914 | 把“选择效应”与“learned 诊断”分开写 | 写作 |
+
+**实验一的三类偏差在本平台上并不等价**：
+- 高度偏差：可注入、可修复（`geometry_repair`），是唯一能完整构成“修 twin”实验的原因；
+- 位置偏差：`lateral_offset` 可注入，但没有位置估计器 → 所有“校准 twin”的方法都修不了，只能当负结果/未知原因；
+- 摩擦偏差：可注入，但 1.0→0.01 扫描 SR 不变（力闭合夹持），不是可分级原因。
+
+所以导师表 1 的三列里，真正能支撑“要不要更新 twin”的只有高度列；位置/摩擦要么补估计器，要么写成 limitation。
+
+### 8.3 已完成、可以作为论文主结果的
+
+- **288-run 8 选择器主表 + 95% CI**（§5.7、`论文批次结果_2026-11-21.md`）；
+- **图 R1 配方 × 原因**：没有固定配方通吃（`results/fig_R1_recipe_cause_20261121/`）；
+- **多标签诊断**：184 profiles，exact 82%，mixed 任一 100% / 全中 72%；
+- **混合网格 48 runs**：bandit gap +100/+17/+94/+100 vs rule +27/−33/+88/0；
+- **负结果**：动力学不可表达、恢复信号死、value model R²=0.138、oracle 是诊断上界不是 SR 上界；
+- rule 的 SR 下限、recovery 探针、held-out 无泄漏修正。
+
 ## 9. 外部三条线 handoff（LLM / 真机 / LIBERO）
 
 **状态：代码侧已闭环；外部只剩 key（LLM）、硬件驱动/位姿源（真机）、LIBERO 包/数据/DP 权重。逐项证据见 [`DEPLOYMENT_AUDIT.md`](DEPLOYMENT_AUDIT.md)。**
@@ -261,46 +305,11 @@ PYTHONPATH=src python -m pytest -q tests/test_llm_planner.py tests/test_real_int
 
 完整说明见 [`HANDOFF_external.md`](HANDOFF_external.md)，权重清单见 [`weights/README.md`](weights/README.md)。
 
-## 8. 与导师完整方案的完成度（2026-11-21）
+## 10. 论文图表覆盖（2026-11-22）
 
-**结论：外部阻塞只有 3 块；但方案还有约 10 项内部缺口，不能说“只差真机/LIBERO/LLM”。**
-
-### 8.1 外部阻塞（这台机器做不了的 3 块）
-
-| 块 | 现状 | 缺什么 |
-|---|---|---|
-| LLM agent / LLM+经验 | `llm_planner.py` 已实现，**0 runs** | `ANTHROPIC_API_KEY` + API 预算 |
-| 真机 | 0 | 机器人、相机、AprilTag/位姿链路 |
-| LIBERO / 外部 benchmark | 0 | checkout、Diffusion Policy 管线、磁盘 |
-
-### 8.2 内部未完成（能在这台机器上做，不能算外部阻塞）
-
-| # | 缺口 | 现状 | 补法 | 机时 |
-|---|---|---|---|---|
-| 1 | 最小验证规模 | 3 banks × 3 seeds | 10 banks × 3 seeds × 4 selectors = 240 runs | ~15 h |
-| 2 | dev/test 划分 | 规则阈值在评估 banks 上调 | 30 dev / 60 test，重调 rule/bandit | 0 + 重跑 |
-| 3 | 实验一完整矩阵 | pack/H4 × 8 selectors | 3 families × H2–10 × 8 pipelines × 3 seeds | 数十 h |
-| 4 | 8 条固定流程 baseline | 只有 selector，不是 8 条固定 pipeline | 接线/实现：fixed twin DAgger、DR+DAgger、deploy DAgger、sim+deploy mixed、first-round freeze、repeated calibration+DAgger、true params | 1–2 天代码 |
-| 5 | 图 R2 + 命题 | 未跑/未写 | 5 α × 4 selectors × 3 seeds = 60 runs；命题用 ε/Δ/D/κ | ~4 h |
-| 6 | 混合原因并入主表 | 独立 mixed grid（48 runs） | 把 mixed 作为第 5 列并入 8 选择器表 | 复用现有 |
-| 7 | 实验五消融 | 部分 | 校准器修复版、H 外推、agent 消融、部署预算 8/24/48 | 数 h |
-| 8 | 判定器偏差原因 | `recalibrate_verifier` 未实现 | 实现重校准动作 | 1 天 |
-| 9 | 位置偏差 | `lateral_offset` 可注入，但 `geometry_repair` 只估高度 | 实现位置估计器，否则只能当“未知原因” | 1–2 天 |
-| 10 | 动力学原因 | 摩擦/质量/延迟扫描证明不可表达 | 写 limitation（已有 4 组扫描） | 0 |
-| 11 | 主张口径 | learned agent SR 0.867 < rule 0.914 | 把“选择效应”与“learned 诊断”分开写 | 写作 |
-
-**实验一的三类偏差在本平台上并不等价**：
-- 高度偏差：可注入、可修复（`geometry_repair`），是唯一能完整构成“修 twin”实验的原因；
-- 位置偏差：`lateral_offset` 可注入，但没有位置估计器 → 所有“校准 twin”的方法都修不了，只能当负结果/未知原因；
-- 摩擦偏差：可注入，但 1.0→0.01 扫描 SR 不变（力闭合夹持），不是可分级原因。
-
-所以导师表 1 的三列里，真正能支撑“要不要更新 twin”的只有高度列；位置/摩擦要么补估计器，要么写成 limitation。
-
-### 8.3 已完成、可以作为论文主结果的
-
-- **288-run 8 选择器主表 + 95% CI**（§5.7、`论文批次结果_2026-11-21.md`）；
-- **图 R1 配方 × 原因**：没有固定配方通吃（`results/fig_R1_recipe_cause_20261121/`）；
-- **多标签诊断**：184 profiles，exact 82%，mixed 任一 100% / 全中 72%；
-- **混合网格 48 runs**：bandit gap +100/+17/+94/+100 vs rule +27/−33/+88/0；
-- **负结果**：动力学不可表达、恢复信号死、value model R²=0.138、oracle 是诊断上界不是 SR 上界；
-- rule 的 SR 下限、recovery 探针、held-out 无泄漏修正。
+- 完整矩阵：[`PAPER_COVERAGE_AUDIT.md`](PAPER_COVERAGE_AUDIT.md)。
+- **当前协议已出**：paper8 主表（4 causes × 8 selectors + CI）、**表 3**（AUC / oracle-90% 部署 / regret / 健康花费）、**图 1**（SR–成本，`results/fig1_sr_cost_20261122/`）、**图 3**（原因 × 首步）、图 4、R1、R2。
+- **旧协议 / 部分**：表 2 的 mixed 列、表 8/9/11、图 2/图 7。
+- **未做（可跑）**：实验一 8 条 pipeline × 3 条件、dev/test 30/60、H 外推新编码、图 2/7 的当前版本。
+- **外部**：LLM 行、LIBERO（表 4/图 5）、真机（表 5/6/7/图 6）。
+- **可不跑**：最小验证（导师明确不进论文；stage-1 已 PASS）、动力学原因（平台不可表达）、RoboDojo/RoboCasa。
