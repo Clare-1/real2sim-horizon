@@ -17,7 +17,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
-from horizon.real import make_mock_robot, load_jsonl_robot, run_episodes  # noqa: E402
+from horizon.real import (load_jsonl_robot, make_mock_robot, make_mock_robot_for_task,
+                          run_episodes)  # noqa: E402
 
 
 def main() -> int:
@@ -27,7 +28,8 @@ def main() -> int:
     ap.add_argument("--episodes", type=int, default=1)
     ap.add_argument("--max-steps", type=int, default=50)
     ap.add_argument("--out", default="results/real_deploy_20261122.jsonl")
-    ap.add_argument("--policy", default="", help="optional weights path; only the input dim is read")
+    ap.add_argument("--task", default="", help="task payload JSON (enables the learned controller)")
+    ap.add_argument("--policy", default="", help="policy weights .npz")
     args = ap.parse_args()
 
     if args.robot == "csv":
@@ -37,16 +39,38 @@ def main() -> int:
     else:
         robot = make_mock_robot()
 
-    if args.policy:
-        from horizon.policy.model import NumpyMLP
+    if args.task:
+        if not args.policy:
+            ap.error("--task needs --policy")
+        from horizon.monitor.verifier import VerifierConfig
+        from horizon.policy.controllers import HierarchicalController
         from horizon.rsi.loop import load_params
-        params = load_params(args.policy)
-        print(f"policy input dim = {params['x_mu'].shape[0]} (TaskFeaturizer.hier output)")
-        NumpyMLP(params)  # validates the checkpoint shape
+        from horizon.tasks.serialization import task_from_payload
 
-    # Placeholder policy: zero action. Replace with mlp.act(feat.hier(sample.to_world_state(), k)).
-    def policy_fn(sample):
-        return [0.0, 0.0, 0.0, 0.0, 1.0]
+        task = task_from_payload(json.loads(Path(args.task).read_text(encoding="utf-8"))).controller_view()
+        params = load_params(args.policy)
+        controller = HierarchicalController(params, VerifierConfig(tol_scale=1.0))
+        controller.reset(task)
+        if args.robot == "mock":
+            robot = make_mock_robot_for_task(task, frames=args.max_steps)
+
+        def policy_fn(sample):
+            action, _ = controller.act(sample.to_world_state(), sample.to_world_state())
+            return action
+
+        print(f"task={task.key}  objects={len(task.scene.objects)}  "
+              f"policy_dim={params['x_mu'].shape[0]}")
+    else:
+        if args.policy:
+            from horizon.policy.model import NumpyMLP
+            from horizon.rsi.loop import load_params
+            params = load_params(args.policy)
+            print(f"policy input dim = {params['x_mu'].shape[0]} (TaskFeaturizer.hier output)")
+            NumpyMLP(params)  # validates the checkpoint shape
+
+        # Placeholder policy when no task payload is given.
+        def policy_fn(sample):
+            return [0.0, 0.0, 0.0, 0.0, 1.0]
 
     rows = run_episodes(robot, policy_fn, args.episodes, args.max_steps, args.out)
     by_ep: dict[int, bool] = {}

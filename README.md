@@ -215,7 +215,7 @@ PYTHONPATH=src .venv-linux/bin/python scripts/run_minimal_validation.py \
 
 ## 9. 外部三条线 handoff（LLM / 真机 / LIBERO）
 
-**状态：LLM 只差 API key；真机只差驱动/位姿源；LIBERO 只差数据/环境，权重需在 LIBERO 数据上训练。代码路径、mock、测试和 MuJoCo 权重均已就绪。**
+**状态：三条线都有可运行代码与权重，但只有真机的 sim/mock 路径端到端验证；LLM 待 key，LIBERO 仍是骨架。逐项证据与缺口见 [`DEPLOYMENT_AUDIT.md`](DEPLOYMENT_AUDIT.md)。**
 
 ### 9.1 权重（`weights/`，16 MB）
 
@@ -233,9 +233,9 @@ PYTHONPATH=src .venv-linux/bin/python scripts/run_minimal_validation.py \
 
 | 线 | 已就绪 | 只差 |
 |---|---|---|
-| **LLM** | `LLMPlannerSelector`（token 记账、无 key 硬失败、`client=` 注入）、`scripts/llm_pilot.py`（`--mock` 无 key 可跑）、`configs/minimal_validation_llm.yaml`、测试 | `ANTHROPIC_API_KEY` |
-| **真机** | `horizon/real/`：`PoseSource`/`Robot` 协议、`ScriptedRobot`/JSONL 回放、`run_episodes` 日志、`median_support`/`update_recon_bias`、`scripts/run_real_deploy.py`、测试 | 机器人驱动 + AprilTag/位姿源 |
-| **LIBERO** | `horizon/libero/`：HDF5 读取、布局先验、`MockLiberoEnv`、`ImageBC`（可换 DP/ACT）、`train_libero.py`/`eval_libero.py`、测试 | 官方数据/环境；权重需训练 |
+| **LLM** | `LLMPlannerSelector`（token 记账、无 key 硬失败、`client=` 注入）、`scripts/llm_pilot.py`（`--mock` 无 key 可跑，4 决策已验证）、`configs/minimal_validation_llm.yaml`、测试 | **API key + 真实调用验证**、retry/成本上限、**LLM + 经验**变体 |
+| **真机** | `horizon/real/` 接口/mock/JSONL/日志/校准；**task payload → TaskInstance → HierarchicalController → TaskFeaturizer → NumpyMLP 端到端**（policy_dim=55，7 steps，success 1/1）；示例 payload + 状态权重 | 机器人驱动、AprilTag/位姿源 + 外参、夹爪映射、安全限位、真实成功判定、完整 EpisodeLog |
+| **LIBERO** | `horizon/libero/` HDF5 读取、布局先验、`MockLiberoEnv`、`ImageBC`、`train_libero.py`/`eval_libero.py`、测试 | **官方环境适配（目前 `--env libero` 显式抛错）、DP/ACT、训练权重、新布局演示生成** |
 
 ### 9.3 最短路径
 

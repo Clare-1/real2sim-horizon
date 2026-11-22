@@ -1,5 +1,7 @@
 # 外部三条线 handoff（LLM / 真机 / LIBERO）
 
+> **完整性核验**：逐项证据与缺口见 [`DEPLOYMENT_AUDIT.md`](DEPLOYMENT_AUDIT.md)。真机的 sim/mock 路径已端到端验证；LLM 待 key；LIBERO 仍是骨架。
+
 **一句话**：代码路径、接口、mock、测试和 MuJoCo 权重都已就绪；LLM 只差 API key，真机只差驱动/位姿源，LIBERO 只差数据/环境。
 
 ## 1. 目录与权重

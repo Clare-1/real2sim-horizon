@@ -1,0 +1,274 @@
+{
+  "H": 4,
+  "attempts": 1,
+  "belief": null,
+  "belief_graph": null,
+  "family": "pack",
+  "graph": {
+    "family": "pack",
+    "instruction": "Pack the tray in order: place obj0 in slot0, then place obj1 in slot1, then place obj2 in slot2, then place obj3 in slot3.",
+    "repair_log": [],
+    "subgoals": [
+      {
+        "deps": [],
+        "effect": "at_slot(obj0, slot0)",
+        "obj": "obj0",
+        "place_yaw": 1.5707963267948966,
+        "pre": [
+          "clear(obj0)"
+        ],
+        "sid": "g0",
+        "skill": "pick_place",
+        "target": "slot0"
+      },
+      {
+        "deps": [
+          "g0"
+        ],
+        "effect": "at_slot(obj1, slot1)",
+        "obj": "obj1",
+        "place_yaw": 1.5707963267948966,
+        "pre": [
+          "clear(obj1)"
+        ],
+        "sid": "g1",
+        "skill": "pick_place",
+        "target": "slot1"
+      },
+      {
+        "deps": [
+          "g1"
+        ],
+        "effect": "at_slot(obj2, slot2)",
+        "obj": "obj2",
+        "place_yaw": 1.5707963267948966,
+        "pre": [
+          "clear(obj2)"
+        ],
+        "sid": "g2",
+        "skill": "pick_place",
+        "target": "slot2"
+      },
+      {
+        "deps": [
+          "g2"
+        ],
+        "effect": "at_slot(obj3, slot3)",
+        "obj": "obj3",
+        "place_yaw": 1.5707963267948966,
+        "pre": [
+          "clear(obj3)"
+        ],
+        "sid": "g3",
+        "skill": "pick_place",
+        "target": "slot3"
+      }
+    ],
+    "task_id": "pack_H4_s81002127",
+    "version": 0
+  },
+  "instruction": "Pack the tray in order: place obj0 in slot0, then place obj1 in slot1, then place obj2 in slot2, then place obj3 in slot3.",
+  "log": [],
+  "scene": {
+    "fixtures": [
+      {
+        "color": "",
+        "kind": "slot",
+        "name": "slot0",
+        "pos": [
+          -0.05094426363999674,
+          -0.18260139646718634,
+          0.0
+        ],
+        "rgba": [
+          0.3,
+          0.6,
+          0.3,
+          0.35
+        ],
+        "size": [
+          0.032,
+          0.032
+        ],
+        "yaw": 0.0
+      },
+      {
+        "color": "",
+        "kind": "slot",
+        "name": "slot1",
+        "pos": [
+          -0.05094426363999674,
+          -0.09760139646718634,
+          0.0
+        ],
+        "rgba": [
+          0.3,
+          0.6,
+          0.3,
+          0.35
+        ],
+        "size": [
+          0.032,
+          0.032
+        ],
+        "yaw": 0.0
+      },
+      {
+        "color": "",
+        "kind": "slot",
+        "name": "slot2",
+        "pos": [
+          -0.05094426363999674,
+          -0.012601396467186336,
+          0.0
+        ],
+        "rgba": [
+          0.3,
+          0.6,
+          0.3,
+          0.35
+        ],
+        "size": [
+          0.032,
+          0.032
+        ],
+        "yaw": 0.0
+      },
+      {
+        "color": "",
+        "kind": "slot",
+        "name": "slot3",
+        "pos": [
+          -0.05094426363999674,
+          0.07239860353281367,
+          0.0
+        ],
+        "rgba": [
+          0.3,
+          0.6,
+          0.3,
+          0.35
+        ],
+        "size": [
+          0.032,
+          0.032
+        ],
+        "yaw": 0.0
+      }
+    ],
+    "gripper_home": [
+      0.0,
+      0.0,
+      0.25,
+      0.0
+    ],
+    "objects": [
+      {
+        "category": "cube",
+        "color": "red",
+        "friction": 0.9681631559444374,
+        "mass": 0.09002601608185551,
+        "name": "obj0",
+        "pos": [
+          0.06635613516782268,
+          -0.36991012903533393,
+          0.020751987392514104
+        ],
+        "rgba": [
+          0.85,
+          0.2,
+          0.2,
+          1.0
+        ],
+        "shape": "box",
+        "size": [
+          0.020751987392514104,
+          0.020751987392514104,
+          0.020751987392514104
+        ],
+        "yaw": -0.5394057432027748
+      },
+      {
+        "category": "can",
+        "color": "green",
+        "friction": 0.9938985617618137,
+        "mass": 0.06318040312501173,
+        "name": "obj1",
+        "pos": [
+          -0.2544944096768797,
+          0.27852191438110985,
+          0.025628815058770384
+        ],
+        "rgba": [
+          0.2,
+          0.7,
+          0.3,
+          1.0
+        ],
+        "shape": "cylinder",
+        "size": [
+          0.020555853802731106,
+          0.025628815058770384
+        ],
+        "yaw": -1.5042827555096572
+      },
+      {
+        "category": "can",
+        "color": "blue",
+        "friction": 1.094466686548258,
+        "mass": 0.06942966494314085,
+        "name": "obj2",
+        "pos": [
+          0.023477043861290237,
+          0.39579441894440104,
+          0.021820412141299893
+        ],
+        "rgba": [
+          0.2,
+          0.35,
+          0.85,
+          1.0
+        ],
+        "shape": "cylinder",
+        "size": [
+          0.022716645797861746,
+          0.021820412141299893
+        ],
+        "yaw": -1.9024127928413543
+      },
+      {
+        "category": "can",
+        "color": "yellow",
+        "friction": 0.8666264845354186,
+        "mass": 0.07449236545469731,
+        "name": "obj3",
+        "pos": [
+          0.1712230265642939,
+          -0.37191490653617276,
+          0.026005280057065996
+        ],
+        "rgba": [
+          0.9,
+          0.8,
+          0.2,
+          1.0
+        ],
+        "shape": "cylinder",
+        "size": [
+          0.021384892374141002,
+          0.026005280057065996
+        ],
+        "yaw": 0.9654160711342641
+      }
+    ],
+    "physics": {},
+    "provenance": "harness:procedural-export",
+    "scene_id": "pack_H4_s81002127",
+    "table_half": [
+      0.45,
+      0.6
+    ]
+  },
+  "seed": 81002127,
+  "version": 1
+}

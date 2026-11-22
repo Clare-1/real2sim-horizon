@@ -2,11 +2,13 @@
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 
 import numpy as np
 
 from .interfaces import PoseSample
+from ..sim.state import yaw_quat
 
 
 def sample_from_dict(row: dict) -> PoseSample:
@@ -61,6 +63,28 @@ class ScriptedRobot:
 
     def close(self) -> None:
         return None
+
+
+def make_mock_robot_for_task(task, frames: int = 40) -> "ScriptedRobot":
+    """Frames whose object layout matches a task payload, so the real featurizer can run.
+
+    The gripper hovers over the first object and moves down/up; the last frame marks success. This
+    exercises the task payload -> TaskInstance -> TaskFeaturizer -> NumpyMLP path end to end.
+    """
+    scene = task.scene
+    pos = np.asarray([o.pos for o in scene.objects], dtype=float)
+    quat = np.asarray([yaw_quat(o.yaw) for o in scene.objects], dtype=float)
+    x0, y0 = float(pos[0, 0]), float(pos[0, 1])
+    out = []
+    for t in range(int(frames)):
+        u = t / max(frames - 1, 1)
+        z = 0.20 - 0.15 * math.sin(math.pi * u)
+        out.append(PoseSample(
+            t=t, obj_pos=pos.copy(), obj_quat=quat.copy(),
+            grip_pos=np.array([x0, y0, z]), grip_yaw=0.0, grip_open=0.08,
+            held=-1, success=(t == frames - 1),
+        ))
+    return ScriptedRobot(out)
 
 
 def load_jsonl_robot(path: str | Path) -> ScriptedRobot:
