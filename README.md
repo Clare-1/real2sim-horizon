@@ -202,6 +202,7 @@ PYTHONPATH=src .venv-linux/bin/python scripts/run_minimal_validation.py \
 - 这是 **10 banks × 1 seed** 的 stage-1 预注册；论文主表仍是 paper8 的 **3 seeds × 3 banks**（§5.7）。通过后再补 seeds 1–2 即完全对齐导师规格。
 - 与 3-bank 表的差异：10 banks 的 fixed 几何更高（0.835 vs 0.772），所以 rule 的几何优势从 +12.8 缩到 +5.0；覆盖优势稳定（+32.8 → +20.5）。
 - 仍需说明：无 LLM key（bandit 作为 learned/exploring 代理）；规则阈值未做 dev/test 划分；oracle 是诊断正确性上界，不是 SR 上界。
+- **图 R2**（用 10-bank 每类均值算期望遗憾，不新跑）：fixed 13.0/26.5 pp、rule 8.0/6.0 pp、bandit 0.5/3.0 pp（几何/覆盖）；fixed−rule gap 从覆盖 20.5 pp 降到几何 5.0 pp。链接：[`results/fig_R2_regret_20261122/fig_R2_regret.png`](horizon/results/fig_R2_regret_20261122/fig_R2_regret.png)。
 
 ## 6. 数据与可复现性
 
