@@ -60,14 +60,20 @@ def main() -> int:
     rows += sorted({r["selector"] for r in recs} - set(rows))
     base = "always_dagger"
 
+    # Pair by (cause, seed, bank): the matched design is what makes a paired test meaningful.
+    # The previous version paired *sorted* SR lists, which matched different task instances.
+    def val(sel, cond):
+        return {(int(r["seed"]), int(r["bank_index"])): float(r["final_sr"])
+                for r in recs if r["selector"] == sel and r["cause"] == cond}
+
     def cell(sel, cond):
         return [r["final_sr"] for r in recs if r["selector"] == sel and r["cause"] == cond]
 
     out = [f"# 表 1（实验一）：8 条固定流程 × 失败原因", "",
            f"- 数据源：`{path.relative_to(ROOT)}`，**{len(recs)}** 格", ""]
     out += ["| 组别 | 方法 | 用反馈 | 用 twin | 校准 twin | " +
-            " | ".join(COND_LABEL[c] for c in conds) + " | 平均 | 标签/格 | 部署/格 | 相对方法 2 (pp) |",
-            "|---|---|---|---|---|" + "---:|" * len(conds) + "---:|---:|---:|---:|"]
+            " | ".join(COND_LABEL[c] for c in conds) + " | 平均 | 标签/格 | 部署/格 |",
+            "|---|---|---|---|---|" + "---:|" * len(conds) + "---:|---:|---:|"]
     for sel in rows:
         label, fb, twin, cal = META.get(sel, (sel, "?", "?", "?"))
         cells, allv = [], []
@@ -77,18 +83,40 @@ def main() -> int:
             allv += v
         lab = [r["new_labels"] for r in recs if r["selector"] == sel]
         dep = [r["deploy_episodes"] for r in recs if r["selector"] == sel]
-        diffs = []
-        for c in conds:
-            a, b = cell(sel, c), cell(base, c)
-            if len(a) == len(b) and a:
-                diffs += [x - y for x, y in zip(sorted(a), sorted(b))]
-        lo, hi = boot(diffs)
-        d = f"{100*np.mean(diffs):+.1f} [{100*lo:+.1f},{100*hi:+.1f}]" if diffs else "-"
         out.append(f"| | {label} | {fb} | {twin} | {cal} | " + " | ".join(cells) +
                    f" | {'**' + format(np.mean(allv), '.3f') + '**' if allv else '-'} | "
-                   f"{np.mean(lab) if lab else 0:.0f} | {np.mean(dep) if dep else 0:.0f} | {d} |")
-    out += ["", "方法 2（固定 twin + DAgger）是相对基准；最后一列是按条件配对的 bootstrap 95% CI。",
-            "方法 8（真实参数当 twin）是上界参考，不是可部署方法。", ""]
+                   f"{np.mean(lab) if lab else 0:.0f} | {np.mean(dep) if dep else 0:.0f} |")
+
+    out += ["", "## 与方法 2（固定 twin + DAgger）的配对差", "",
+            "按 (seed, bank) 匹配同一批任务实例；每格为该原因下的 ΔSR（pp）与 95% 区间，"
+            "最后一列把各原因的配对差合并（跨原因汇总，需与分原因一起读）。", "",
+            "| 方法 | " + " | ".join(COND_LABEL[c] for c in conds) + " | 汇总 |",
+            "|---|" + "---|" * (len(conds) + 1)]
+    for sel in rows:
+        if sel == base:
+            continue
+        label = META.get(sel, (sel,))[0]
+        row, pooled = [], []
+        for c in conds:
+            a, b = val(sel, c), val(base, c)
+            keys = sorted(set(a) & set(b))
+            diffs = [a[k] - b[k] for k in keys]
+            pooled += diffs
+            if not diffs:
+                row.append("—")
+                continue
+            lo, hi = boot(diffs)
+            star = "*" if (lo > 0 or hi < 0) else ""
+            row.append(f"{100*np.mean(diffs):+.1f} [{100*lo:+.1f},{100*hi:+.1f}]{star} (n={len(diffs)})")
+        if pooled:
+            lo, hi = boot(pooled)
+            star = "*" if (lo > 0 or hi < 0) else ""
+            row.append(f"**{100*np.mean(pooled):+.1f}** [{100*lo:+.1f},{100*hi:+.1f}]{star} (n={len(pooled)})")
+        else:
+            row.append("—")
+        out.append(f"| {label} | " + " | ".join(row) + " |")
+
+    out += ["", "方法 8（真实参数当 twin）是上界参考，不是可部署方法；`*` 表示区间不含 0。", ""]
     text = "\n".join(out) + "\n"
     dest = path / "table1_report.md"
     dest.write_text(text, encoding="utf-8")
