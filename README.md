@@ -303,30 +303,34 @@ PYTHONPATH=src .venv-linux/bin/python scripts/run_minimal_validation.py \
 
 `twin_cost = A2 − A`、`knowledge_gap = A − C`、`selfcheck_bias = D − C`。
 
-| 原因 | twin_cost | knowledge_gap (nominal) | knowledge_gap (perturbed) | selfcheck_bias |
-|---|---:|---:|---:|---:|
-| geometry | **+1.00** | −0.20 | +0.00 | **+0.60** |
-| coverage | +0.00 | **+0.80** | +0.67 | +0.00 |
-| recovery | +0.00 | +0.00 | **+1.00** | +0.00 |
-| healthy | +0.00 | +0.20 | +0.33 | +0.00 |
+| 原因 | A2 | A | B | C | D | twin_cost | knowledge_gap | selfcheck_bias |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| geometry | 1.00 | **0.00** | 1.00 | 0.30 | **0.80** | **+1.00** | −0.30 | **+0.50** |
+| coverage | 1.00 | 1.00 | 1.00 | 0.10 | 0.10 | +0.00 | **+0.90** | +0.00 |
+| recovery | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | +0.00 | +0.00 | +0.00 |
+| healthy | 1.00 | 1.00 | 1.00 | 0.70 | 0.70 | +0.00 | +0.30 | +0.00 |
+
+（**3 banks × 10 episodes**，nominal；Wilson 95% 区间示例：geometry 的 A = 0.00 [0.00,0.28]、D = 0.80 [0.49,0.94]；coverage 的 C = 0.10 [0.02,0.40]。三个 bank 上数值逐位相同，见 `results/policy_free_signals_paper_20261123/signals.md`。）
+
+扰动下标：`perturbation_drop = policy_SR(nominal) − policy_SR(perturbed)`：**recovery 场景 1.00**（1.00 → 0.00）、healthy 0.30（0.70 → 0.40）、coverage −0.10、geometry 0.30。
 
 四条读数：
 
 1. **twin 错被干净识别**：几何上 A2=1.00、A=0.00——**最优执行者在错的 twin 上一件事也做不成**；其余三类 twin_cost=0。
-2. **自检偏差只在 twin 错时出现**：几何 D=0.80 vs C=0.20（+0.60），其余三类 0.00。这就是"twin 内成功率是反的"的直接测量。
-3. **恢复类只能靠扰动探针**：nominal 下 C=1.00，perturbed 下 0.00，而专家恒 1.00。
-4. **几何的 knowledge_gap 是负的**：策略比"用错 twin 的专家"更抗偏差 → 用策略自身成功率做诊断，会把 twin 错误掩盖成"策略还行"。
+2. **自检偏差只在 twin 错时出现**：几何 D=0.80 vs C=0.30（**+0.50**），其余三类 **0.00**。这就是"twin 内成功率是反的"的直接测量。
+3. **恢复类只能靠扰动**：nominal 下 C=1.00，perturbed 下 0.00，而专家恒 1.00 → drop 1.00（healthy 只有 0.30）。
+4. **几何的 knowledge_gap 是负的（−0.30）**：策略比"用错 twin 的专家"更抗偏差 → 用策略自身成功率做诊断，会把 twin 错误掩盖成"策略还行"。
 
-**直接得到的判定规则**（没有拟合任何阈值）：
+**判定规则**（阈值取在实测分离的中点，bank 0 定、banks 1–2 校验；三个 bank 数值相同，规则稳定）：
 
 ```
-if twin_cost > 0.3:                                            calibrate_geometry
-elif knowledge_gap(perturbed) − knowledge_gap(nominal) > 0.3:   add_recovery_data
-elif knowledge_gap(nominal) > 0.5:                             regenerate_targeted
-elif knowledge_gap(nominal) <= 0.35:                           stop
+if twin_cost > 0.3:              calibrate_geometry      # 实测 1.00 vs 0.00
+elif perturbation_drop > 0.5:    add_recovery_data       # 实测 1.00 vs 0.30
+elif knowledge_gap > 0.5:        regenerate_targeted     # 实测 0.90
+elif knowledge_gap <= 0.35:      stop                    # 实测 0.30
 ```
 
-4 类 × 2 banks 上四个分支各命中一类，**全程没有使用 twin 内的策略成功率**。口径：5/3 episodes、2 banks、1 seed，粗网格；下一步实现 `PolicyFreeSelector` 与 rule/multilabel 对照（见审计 §27.5）。
+实现：`rsi/policy_free.py`（`diagnose` + `PolicyFreeSelector`，无探针则硬失败）；每轮重算探针 → 混合原因自动"先修主因再诊断"（`harness/policy_free_probe.py`）。4 个单测把上表直接编码成断言。
 
 ## 6. 数据与可复现性
 

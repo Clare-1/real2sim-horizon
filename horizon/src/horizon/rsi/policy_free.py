@@ -26,16 +26,21 @@ class ProbeSignals:
     knowledge_gap: float | None = None
     perturbed_gap: float | None = None
     selfcheck_bias: float | None = None
+    # policy_SR(nominal) - policy_SR(perturbed): how much *the policy* loses under perturbation.
+    # Measured 0.00 for recovery (already 1.00 nominal), 1.00 for the recovery-deficit scenario,
+    # 0.30 for healthy -- a wider margin than `perturbed_gap`, which lands on the threshold.
+    perturbation_drop: float | None = None
 
     def as_dict(self) -> dict:
         return {"twin_cost": self.twin_cost, "knowledge_gap": self.knowledge_gap,
-                "perturbed_gap": self.perturbed_gap, "selfcheck_bias": self.selfcheck_bias}
+                "perturbed_gap": self.perturbed_gap, "selfcheck_bias": self.selfcheck_bias,
+                "perturbation_drop": self.perturbation_drop}
 
 
 @dataclass(frozen=True)
 class ProbeThresholds:
     twin: float = 0.3
-    recovery: float = 0.3
+    recovery: float = 0.5
     knowledge: float = 0.5
     healthy: float = 0.35
 
@@ -47,8 +52,9 @@ def diagnose(signals: ProbeSignals, tau: ProbeThresholds | None = None) -> tuple
         raise RuntimeError("no probe signals: refusing to fall back to a hand-written rule")
     if signals.twin_cost is not None and signals.twin_cost > tau.twin:
         return "calibrate_geometry", f"twin_cost={signals.twin_cost:+.2f}: the twin itself is wrong"
-    if signals.perturbed_gap is not None and signals.perturbed_gap > tau.recovery:
-        return "add_recovery_data", f"perturbed_gap={signals.perturbed_gap:+.2f}: fails only under perturbation"
+    if signals.perturbation_drop is not None and signals.perturbation_drop > tau.recovery:
+        return "add_recovery_data", (f"perturbation_drop={signals.perturbation_drop:+.2f}: "
+                                     "the policy only fails under perturbation")
     if signals.knowledge_gap is not None and signals.knowledge_gap > tau.knowledge:
         return "regenerate_targeted", f"knowledge_gap={signals.knowledge_gap:+.2f}: twin fine, data missing"
     if signals.knowledge_gap is not None and signals.knowledge_gap <= tau.healthy:

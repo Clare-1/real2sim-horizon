@@ -11,11 +11,15 @@ def obs():
 
 
 def test_measured_signals_map_to_the_expected_actions():
-    """The four causes as measured on 2026-11-23 (README 5.12)."""
-    geometry = ProbeSignals(twin_cost=1.00, knowledge_gap=-0.20, perturbed_gap=0.20, selfcheck_bias=0.60)
-    coverage = ProbeSignals(twin_cost=0.00, knowledge_gap=0.80, perturbed_gap=-0.13, selfcheck_bias=0.00)
-    recovery = ProbeSignals(twin_cost=0.00, knowledge_gap=0.00, perturbed_gap=1.00, selfcheck_bias=0.00)
-    healthy = ProbeSignals(twin_cost=0.00, knowledge_gap=0.20, perturbed_gap=0.13, selfcheck_bias=0.00)
+    """The four causes as measured on 2026-11-23 at 3 banks x 10 episodes (README 5.12)."""
+    geometry = ProbeSignals(twin_cost=1.00, knowledge_gap=-0.30, perturbation_drop=0.30,
+                            selfcheck_bias=0.50)
+    coverage = ProbeSignals(twin_cost=0.00, knowledge_gap=0.90, perturbation_drop=-0.10,
+                            selfcheck_bias=0.00)
+    recovery = ProbeSignals(twin_cost=0.00, knowledge_gap=0.00, perturbation_drop=1.00,
+                            selfcheck_bias=0.00)
+    healthy = ProbeSignals(twin_cost=0.00, knowledge_gap=0.30, perturbation_drop=0.30,
+                           selfcheck_bias=0.00)
     assert diagnose(geometry)[0] == "calibrate_geometry"
     assert diagnose(coverage)[0] == "regenerate_targeted"
     assert diagnose(recovery)[0] == "add_recovery_data"
@@ -43,8 +47,8 @@ def test_selector_calls_the_probe_each_round_so_a_mixed_cause_is_re_diagnosed():
         seen["round"] += 1
         # round 1: the twin is wrong; after calibration the twin is fine but data is missing
         return ProbeSignals(twin_cost=1.0 if seen["round"] == 1 else 0.0,
-                            knowledge_gap=0.0 if seen["round"] == 1 else 0.8,
-                            perturbed_gap=0.0)
+                            knowledge_gap=0.0 if seen["round"] == 1 else 0.9,
+                            perturbation_drop=0.0)
 
     sel = PolicyFreeSelector(probe=probe)
     assert sel.decide(obs()).action == "calibrate_geometry"

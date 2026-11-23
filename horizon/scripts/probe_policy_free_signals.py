@@ -52,8 +52,19 @@ def build_jobs(store, cfg, recon, bank, n, pert, controller, physics=None, tag="
 
 
 def sr(results):
+    """Success rate plus a Wilson 95% interval over the episodes in this group."""
     check_results(results)
-    return float(np.mean([bool(r.log and r.log.success) for r in results]))
+    ok = [bool(r.log and r.log.success) for r in results]
+    n = len(ok)
+    k = int(sum(ok))
+    if n == 0:
+        return float("nan"), float("nan"), float("nan"), 0, 0
+    p = k / n
+    z = 1.96
+    denom = 1 + z * z / n
+    centre = (p + z * z / (2 * n)) / denom
+    half = z * ((p * (1 - p) / n + z * z / (4 * n * n)) ** 0.5) / denom
+    return p, max(0.0, centre - half), min(1.0, centre + half), k, n
 
 
 def main() -> int:
@@ -97,20 +108,26 @@ def main() -> int:
                         b = sr(runner.map(build_jobs(store, cfg, recon, bank, n, pert, "expert",
                                                      recon.to_dict(), f"expert-twin-{pert_tag}")))
                         if args.expert_only:
-                            c = d = float("nan")
+                            c = d = (float("nan"),) * 5
                         else:
                             c = sr(runner.map(build_jobs(store, cfg, recon, bank, n, pert, "hier", None,
                                                          f"policy-dep-{pert_tag}")))
                             d = sr(runner.map(build_jobs(store, cfg, recon, bank, n, pert, "hier",
                                                          recon.to_dict(), f"policy-twin-{pert_tag}")))
-                        row[pert_tag] = {"expert_privileged": a2, "expert_dep": a, "expert_twin": b,
-                                         "policy_dep": c, "policy_twin": d,
-                                         "twin_cost": a2 - a, "knowledge_gap": a - c,
-                                         "selfcheck_bias": d - c}
+                        # each entry is (mean, lo, hi, k, n); signals use the means
+                        row[pert_tag] = {
+                            "expert_privileged": a2[0], "expert_dep": a[0], "expert_twin": b[0],
+                            "policy_dep": c[0], "policy_twin": d[0],
+                            "twin_cost": a2[0] - a[0], "knowledge_gap": a[0] - c[0],
+                            "selfcheck_bias": d[0] - c[0],
+                            "ci": {"expert_privileged": a2[1:], "expert_dep": a[1:],
+                                   "expert_twin": b[1:], "policy_dep": c[1:], "policy_twin": d[1:]},
+                            "episodes": {"expert_privileged": a2[4], "policy_dep": c[4]},
+                        }
                         print(f"{name + suffix:18s} bank{bank} {pert_tag:9s} "
-                              f"A2={a2:.2f} A={a:.2f} B={b:.2f} C={c:.2f} D={d:.2f} | "
-                              f"twin_cost={a2-a:+.2f} knowledge_gap={a-c:+.2f} "
-                              f"selfcheck_bias={d-c:+.2f}", flush=True)
+                              f"A2={a2[0]:.2f} A={a[0]:.2f} B={b[0]:.2f} C={c[0]:.2f} D={d[0]:.2f} | "
+                              f"twin_cost={a2[0]-a[0]:+.2f} knowledge_gap={a[0]-c[0]:+.2f} "
+                              f"selfcheck_bias={d[0]-c[0]:+.2f}", flush=True)
                     rows.append(row)
 
     out = ROOT / args.out
@@ -120,17 +137,31 @@ def main() -> int:
     # separability of the three signals, averaged over banks, nominal mode
     lines = ["# 策略无关诊断信号（nominal）", "",
              "A2 = 专家用真值规划；A = 专家用 twin 规划、在真值里执行；B = 专家用 twin 规划、在 twin 里执行；",
-             "C = 策略在真值里执行；D = 策略在 twin 里执行（自检）。",
+             "C = 策略在真值里执行；D = 策略在 twin 里执行（自检）。括号内为 Wilson 95% 区间（跨 bank 取均值，区间按 bank 拼接后取最宽）。",
              "",
              "| 原因 | A2 | A | B | C | D | twin_cost (A2−A) | knowledge_gap (A−C) | selfcheck_bias (D−C) |",
              "|---|---:|---:|---:|---:|---:|---:|---:|---:|"]
+
+    def _fmt_cell(rs, key):
+        vals = [r[key] for r in rs]
+        if any(v != v for v in vals):        # nan (expert-only run)
+            return "–"
+        los = [r["ci"][key][0] for r in rs]
+        his = [r["ci"][key][1] for r in rs]
+        return f"{np.mean(vals):.2f} [{min(los):.2f},{max(his):.2f}]"
+
     for cause in sorted({r["cause"] for r in rows}):
         rs = [r["nominal"] for r in rows if r["cause"] == cause]
-        m = {k: float(np.mean([r[k] for r in rs])) for k in rs[0]}
-        lines.append(f"| {cause} | {m['expert_privileged']:.2f} | {m['expert_dep']:.2f} | "
-                     f"{m['expert_twin']:.2f} | {m['policy_dep']:.2f} | {m['policy_twin']:.2f} | "
-                     f"**{m['twin_cost']:+.2f}** | **{m['knowledge_gap']:+.2f}** | "
-                     f"**{m['selfcheck_bias']:+.2f}** |")
+        means = {k: float(np.mean([r[k] for r in rs]))
+                 for k in ("twin_cost", "knowledge_gap", "selfcheck_bias")}
+        lines.append("| " + cause + " | "
+                     + _fmt_cell(rs, "expert_privileged") + " | "
+                     + _fmt_cell(rs, "expert_dep") + " | "
+                     + _fmt_cell(rs, "expert_twin") + " | "
+                     + _fmt_cell(rs, "policy_dep") + " | "
+                     + _fmt_cell(rs, "policy_twin") + " | "
+                     + f"**{means['twin_cost']:+.2f}** | **{means['knowledge_gap']:+.2f}** | "
+                     + f"**{means['selfcheck_bias']:+.2f}** |")
     text = "\n".join(lines) + "\n"
     (out / "signals.md").write_text(text, encoding="utf-8")
     print()

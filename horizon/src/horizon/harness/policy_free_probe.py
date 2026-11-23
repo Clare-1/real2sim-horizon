@@ -42,6 +42,7 @@ def build_probe(store, cfg, recon, bank, params, workers, n_episodes: int = 3, p
         c_p = _sr("hier", None, True, pert)
         gap = a - c
         return ProbeSignals(twin_cost=a2 - a, knowledge_gap=gap,
-                            perturbed_gap=(a_p - c_p) - gap, selfcheck_bias=d - c)
+                            perturbed_gap=(a_p - c_p) - gap, selfcheck_bias=d - c,
+                            perturbation_drop=c - c_p)
 
     return probe

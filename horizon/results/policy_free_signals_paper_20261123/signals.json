@@ -1,0 +1,1187 @@
+[
+  {
+    "scenario": "geometry",
+    "cause": "geometry_bias",
+    "bank": 0,
+    "bias": {
+      "plate": 0.46,
+      "tray": 0.46
+    },
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 0.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.3,
+      "policy_twin": 0.8,
+      "twin_cost": 1.0,
+      "knowledge_gap": -0.3,
+      "selfcheck_bias": 0.5,
+      "ci": {
+        "expert_privileged": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "expert_dep": [
+          0.0,
+          0.2775401687666166,
+          0,
+          10
+        ],
+        "expert_twin": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "policy_dep": [
+          0.10778928748621183,
+          0.6032267800204347,
+          3,
+          10
+        ],
+        "policy_twin": [
+          0.49015684672072335,
+          0.9433190520193067,
+          8,
+          10
+        ]
+      },
+      "episodes": {
+        "expert_privileged": 10,
+        "policy_dep": 10
+      }
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 0.2,
+      "expert_twin": 1.0,
+      "policy_dep": 0.0,
+      "policy_twin": 0.6,
+      "twin_cost": 0.8,
+      "knowledge_gap": 0.2,
+      "selfcheck_bias": 0.6,
+      "ci": {
+        "expert_privileged": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "expert_dep": [
+          0.03622316096978745,
+          0.6244717358814613,
+          1,
+          5
+        ],
+        "expert_twin": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "policy_dep": [
+          0.0,
+          0.43449149475208104,
+          0,
+          5
+        ],
+        "policy_twin": [
+          0.23071993220883708,
+          0.8823817688407467,
+          3,
+          5
+        ]
+      },
+      "episodes": {
+        "expert_privileged": 5,
+        "policy_dep": 5
+      }
+    }
+  },
+  {
+    "scenario": "geometry",
+    "cause": "geometry_bias",
+    "bank": 1,
+    "bias": {
+      "plate": 0.46,
+      "tray": 0.46
+    },
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 0.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.3,
+      "policy_twin": 0.8,
+      "twin_cost": 1.0,
+      "knowledge_gap": -0.3,
+      "selfcheck_bias": 0.5,
+      "ci": {
+        "expert_privileged": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "expert_dep": [
+          0.0,
+          0.2775401687666166,
+          0,
+          10
+        ],
+        "expert_twin": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "policy_dep": [
+          0.10778928748621183,
+          0.6032267800204347,
+          3,
+          10
+        ],
+        "policy_twin": [
+          0.49015684672072335,
+          0.9433190520193067,
+          8,
+          10
+        ]
+      },
+      "episodes": {
+        "expert_privileged": 10,
+        "policy_dep": 10
+      }
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 0.2,
+      "expert_twin": 1.0,
+      "policy_dep": 0.0,
+      "policy_twin": 0.6,
+      "twin_cost": 0.8,
+      "knowledge_gap": 0.2,
+      "selfcheck_bias": 0.6,
+      "ci": {
+        "expert_privileged": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "expert_dep": [
+          0.03622316096978745,
+          0.6244717358814613,
+          1,
+          5
+        ],
+        "expert_twin": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "policy_dep": [
+          0.0,
+          0.43449149475208104,
+          0,
+          5
+        ],
+        "policy_twin": [
+          0.23071993220883708,
+          0.8823817688407467,
+          3,
+          5
+        ]
+      },
+      "episodes": {
+        "expert_privileged": 5,
+        "policy_dep": 5
+      }
+    }
+  },
+  {
+    "scenario": "geometry",
+    "cause": "geometry_bias",
+    "bank": 2,
+    "bias": {
+      "plate": 0.46,
+      "tray": 0.46
+    },
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 0.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.3,
+      "policy_twin": 0.8,
+      "twin_cost": 1.0,
+      "knowledge_gap": -0.3,
+      "selfcheck_bias": 0.5,
+      "ci": {
+        "expert_privileged": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "expert_dep": [
+          0.0,
+          0.2775401687666166,
+          0,
+          10
+        ],
+        "expert_twin": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "policy_dep": [
+          0.10778928748621183,
+          0.6032267800204347,
+          3,
+          10
+        ],
+        "policy_twin": [
+          0.49015684672072335,
+          0.9433190520193067,
+          8,
+          10
+        ]
+      },
+      "episodes": {
+        "expert_privileged": 10,
+        "policy_dep": 10
+      }
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 0.2,
+      "expert_twin": 1.0,
+      "policy_dep": 0.0,
+      "policy_twin": 0.6,
+      "twin_cost": 0.8,
+      "knowledge_gap": 0.2,
+      "selfcheck_bias": 0.6,
+      "ci": {
+        "expert_privileged": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "expert_dep": [
+          0.03622316096978745,
+          0.6244717358814613,
+          1,
+          5
+        ],
+        "expert_twin": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "policy_dep": [
+          0.0,
+          0.43449149475208104,
+          0,
+          5
+        ],
+        "policy_twin": [
+          0.23071993220883708,
+          0.8823817688407467,
+          3,
+          5
+        ]
+      },
+      "episodes": {
+        "expert_privileged": 5,
+        "policy_dep": 5
+      }
+    }
+  },
+  {
+    "scenario": "coverage",
+    "cause": "coverage_deficit",
+    "bank": 0,
+    "bias": {},
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.1,
+      "policy_twin": 0.1,
+      "twin_cost": 0.0,
+      "knowledge_gap": 0.9,
+      "selfcheck_bias": 0.0,
+      "ci": {
+        "expert_privileged": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "expert_dep": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "expert_twin": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "policy_dep": [
+          0.01787574951572113,
+          0.4041563854975721,
+          1,
+          10
+        ],
+        "policy_twin": [
+          0.01787574951572113,
+          0.4041563854975721,
+          1,
+          10
+        ]
+      },
+      "episodes": {
+        "expert_privileged": 10,
+        "policy_dep": 10
+      }
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.2,
+      "policy_twin": 0.2,
+      "twin_cost": 0.0,
+      "knowledge_gap": 0.8,
+      "selfcheck_bias": 0.0,
+      "ci": {
+        "expert_privileged": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "expert_dep": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "expert_twin": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "policy_dep": [
+          0.03622316096978745,
+          0.6244717358814613,
+          1,
+          5
+        ],
+        "policy_twin": [
+          0.03622316096978745,
+          0.6244717358814613,
+          1,
+          5
+        ]
+      },
+      "episodes": {
+        "expert_privileged": 5,
+        "policy_dep": 5
+      }
+    }
+  },
+  {
+    "scenario": "coverage",
+    "cause": "coverage_deficit",
+    "bank": 1,
+    "bias": {},
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.1,
+      "policy_twin": 0.1,
+      "twin_cost": 0.0,
+      "knowledge_gap": 0.9,
+      "selfcheck_bias": 0.0,
+      "ci": {
+        "expert_privileged": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "expert_dep": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "expert_twin": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "policy_dep": [
+          0.01787574951572113,
+          0.4041563854975721,
+          1,
+          10
+        ],
+        "policy_twin": [
+          0.01787574951572113,
+          0.4041563854975721,
+          1,
+          10
+        ]
+      },
+      "episodes": {
+        "expert_privileged": 10,
+        "policy_dep": 10
+      }
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.2,
+      "policy_twin": 0.2,
+      "twin_cost": 0.0,
+      "knowledge_gap": 0.8,
+      "selfcheck_bias": 0.0,
+      "ci": {
+        "expert_privileged": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "expert_dep": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "expert_twin": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "policy_dep": [
+          0.03622316096978745,
+          0.6244717358814613,
+          1,
+          5
+        ],
+        "policy_twin": [
+          0.03622316096978745,
+          0.6244717358814613,
+          1,
+          5
+        ]
+      },
+      "episodes": {
+        "expert_privileged": 5,
+        "policy_dep": 5
+      }
+    }
+  },
+  {
+    "scenario": "coverage",
+    "cause": "coverage_deficit",
+    "bank": 2,
+    "bias": {},
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.1,
+      "policy_twin": 0.1,
+      "twin_cost": 0.0,
+      "knowledge_gap": 0.9,
+      "selfcheck_bias": 0.0,
+      "ci": {
+        "expert_privileged": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "expert_dep": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "expert_twin": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "policy_dep": [
+          0.01787574951572113,
+          0.4041563854975721,
+          1,
+          10
+        ],
+        "policy_twin": [
+          0.01787574951572113,
+          0.4041563854975721,
+          1,
+          10
+        ]
+      },
+      "episodes": {
+        "expert_privileged": 10,
+        "policy_dep": 10
+      }
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.2,
+      "policy_twin": 0.2,
+      "twin_cost": 0.0,
+      "knowledge_gap": 0.8,
+      "selfcheck_bias": 0.0,
+      "ci": {
+        "expert_privileged": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "expert_dep": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "expert_twin": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "policy_dep": [
+          0.03622316096978745,
+          0.6244717358814613,
+          1,
+          5
+        ],
+        "policy_twin": [
+          0.03622316096978745,
+          0.6244717358814613,
+          1,
+          5
+        ]
+      },
+      "episodes": {
+        "expert_privileged": 5,
+        "policy_dep": 5
+      }
+    }
+  },
+  {
+    "scenario": "recovery",
+    "cause": "recovery_deficit",
+    "bank": 0,
+    "bias": {},
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 1.0,
+      "policy_twin": 1.0,
+      "twin_cost": 0.0,
+      "knowledge_gap": 0.0,
+      "selfcheck_bias": 0.0,
+      "ci": {
+        "expert_privileged": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "expert_dep": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "expert_twin": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "policy_dep": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "policy_twin": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ]
+      },
+      "episodes": {
+        "expert_privileged": 10,
+        "policy_dep": 10
+      }
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.0,
+      "policy_twin": 0.0,
+      "twin_cost": 0.0,
+      "knowledge_gap": 1.0,
+      "selfcheck_bias": 0.0,
+      "ci": {
+        "expert_privileged": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "expert_dep": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "expert_twin": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "policy_dep": [
+          0.0,
+          0.43449149475208104,
+          0,
+          5
+        ],
+        "policy_twin": [
+          0.0,
+          0.43449149475208104,
+          0,
+          5
+        ]
+      },
+      "episodes": {
+        "expert_privileged": 5,
+        "policy_dep": 5
+      }
+    }
+  },
+  {
+    "scenario": "recovery",
+    "cause": "recovery_deficit",
+    "bank": 1,
+    "bias": {},
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 1.0,
+      "policy_twin": 1.0,
+      "twin_cost": 0.0,
+      "knowledge_gap": 0.0,
+      "selfcheck_bias": 0.0,
+      "ci": {
+        "expert_privileged": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "expert_dep": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "expert_twin": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "policy_dep": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "policy_twin": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ]
+      },
+      "episodes": {
+        "expert_privileged": 10,
+        "policy_dep": 10
+      }
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.0,
+      "policy_twin": 0.0,
+      "twin_cost": 0.0,
+      "knowledge_gap": 1.0,
+      "selfcheck_bias": 0.0,
+      "ci": {
+        "expert_privileged": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "expert_dep": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "expert_twin": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "policy_dep": [
+          0.0,
+          0.43449149475208104,
+          0,
+          5
+        ],
+        "policy_twin": [
+          0.0,
+          0.43449149475208104,
+          0,
+          5
+        ]
+      },
+      "episodes": {
+        "expert_privileged": 5,
+        "policy_dep": 5
+      }
+    }
+  },
+  {
+    "scenario": "recovery",
+    "cause": "recovery_deficit",
+    "bank": 2,
+    "bias": {},
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 1.0,
+      "policy_twin": 1.0,
+      "twin_cost": 0.0,
+      "knowledge_gap": 0.0,
+      "selfcheck_bias": 0.0,
+      "ci": {
+        "expert_privileged": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "expert_dep": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "expert_twin": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "policy_dep": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "policy_twin": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ]
+      },
+      "episodes": {
+        "expert_privileged": 10,
+        "policy_dep": 10
+      }
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.0,
+      "policy_twin": 0.0,
+      "twin_cost": 0.0,
+      "knowledge_gap": 1.0,
+      "selfcheck_bias": 0.0,
+      "ci": {
+        "expert_privileged": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "expert_dep": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "expert_twin": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "policy_dep": [
+          0.0,
+          0.43449149475208104,
+          0,
+          5
+        ],
+        "policy_twin": [
+          0.0,
+          0.43449149475208104,
+          0,
+          5
+        ]
+      },
+      "episodes": {
+        "expert_privileged": 5,
+        "policy_dep": 5
+      }
+    }
+  },
+  {
+    "scenario": "healthy",
+    "cause": "healthy",
+    "bank": 0,
+    "bias": {},
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.7,
+      "policy_twin": 0.7,
+      "twin_cost": 0.0,
+      "knowledge_gap": 0.30000000000000004,
+      "selfcheck_bias": 0.0,
+      "ci": {
+        "expert_privileged": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "expert_dep": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "expert_twin": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "policy_dep": [
+          0.39677321997956516,
+          0.892210712513788,
+          7,
+          10
+        ],
+        "policy_twin": [
+          0.39677321997956516,
+          0.892210712513788,
+          7,
+          10
+        ]
+      },
+      "episodes": {
+        "expert_privileged": 10,
+        "policy_dep": 10
+      }
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.4,
+      "policy_twin": 0.4,
+      "twin_cost": 0.0,
+      "knowledge_gap": 0.6,
+      "selfcheck_bias": 0.0,
+      "ci": {
+        "expert_privileged": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "expert_dep": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "expert_twin": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "policy_dep": [
+          0.1176182311592533,
+          0.769280067791163,
+          2,
+          5
+        ],
+        "policy_twin": [
+          0.1176182311592533,
+          0.769280067791163,
+          2,
+          5
+        ]
+      },
+      "episodes": {
+        "expert_privileged": 5,
+        "policy_dep": 5
+      }
+    }
+  },
+  {
+    "scenario": "healthy",
+    "cause": "healthy",
+    "bank": 1,
+    "bias": {},
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.7,
+      "policy_twin": 0.7,
+      "twin_cost": 0.0,
+      "knowledge_gap": 0.30000000000000004,
+      "selfcheck_bias": 0.0,
+      "ci": {
+        "expert_privileged": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "expert_dep": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "expert_twin": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "policy_dep": [
+          0.39677321997956516,
+          0.892210712513788,
+          7,
+          10
+        ],
+        "policy_twin": [
+          0.39677321997956516,
+          0.892210712513788,
+          7,
+          10
+        ]
+      },
+      "episodes": {
+        "expert_privileged": 10,
+        "policy_dep": 10
+      }
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.4,
+      "policy_twin": 0.4,
+      "twin_cost": 0.0,
+      "knowledge_gap": 0.6,
+      "selfcheck_bias": 0.0,
+      "ci": {
+        "expert_privileged": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "expert_dep": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "expert_twin": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "policy_dep": [
+          0.1176182311592533,
+          0.769280067791163,
+          2,
+          5
+        ],
+        "policy_twin": [
+          0.1176182311592533,
+          0.769280067791163,
+          2,
+          5
+        ]
+      },
+      "episodes": {
+        "expert_privileged": 5,
+        "policy_dep": 5
+      }
+    }
+  },
+  {
+    "scenario": "healthy",
+    "cause": "healthy",
+    "bank": 2,
+    "bias": {},
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.7,
+      "policy_twin": 0.7,
+      "twin_cost": 0.0,
+      "knowledge_gap": 0.30000000000000004,
+      "selfcheck_bias": 0.0,
+      "ci": {
+        "expert_privileged": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "expert_dep": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "expert_twin": [
+          0.7224598312333834,
+          1.0,
+          10,
+          10
+        ],
+        "policy_dep": [
+          0.39677321997956516,
+          0.892210712513788,
+          7,
+          10
+        ],
+        "policy_twin": [
+          0.39677321997956516,
+          0.892210712513788,
+          7,
+          10
+        ]
+      },
+      "episodes": {
+        "expert_privileged": 10,
+        "policy_dep": 10
+      }
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.4,
+      "policy_twin": 0.4,
+      "twin_cost": 0.0,
+      "knowledge_gap": 0.6,
+      "selfcheck_bias": 0.0,
+      "ci": {
+        "expert_privileged": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "expert_dep": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "expert_twin": [
+          0.5655085052479191,
+          1.0,
+          5,
+          5
+        ],
+        "policy_dep": [
+          0.1176182311592533,
+          0.769280067791163,
+          2,
+          5
+        ],
+        "policy_twin": [
+          0.1176182311592533,
+          0.769280067791163,
+          2,
+          5
+        ]
+      },
+      "episodes": {
+        "expert_privileged": 5,
+        "policy_dep": 5
+      }
+    }
+  }
+]
