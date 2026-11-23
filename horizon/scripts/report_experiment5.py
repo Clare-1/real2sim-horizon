@@ -91,6 +91,22 @@ def table9(recs, out_lines):
     out_lines += ["", "偏差越大，越依赖“校准 twin”类动作；oracle 是诊断上界。", ""]
 
 
+def _fmt_cost(x: float) -> str:
+    return "—" if x != x else f"{x:.4f}"  # NaN means the run predates provider_cost recording
+
+
+def _mean_billed(billed: list) -> float:
+    vals = [b for b in billed if b is not None]
+    return float(sum(vals) / len(vals)) if vals else float("nan")
+
+
+def provider_cost(rec: dict) -> float | None:
+    """Server-reported cost for one run, summed over its calls (None when the provider omits it)."""
+    usage = rec.get("llm_usage") or []
+    vals = [float(u.get("provider_cost")) for u in usage if isinstance(u, dict) and u.get("provider_cost") is not None]
+    return sum(vals) if vals else None
+
+
 def table10(recs, out_lines):
     if not recs:
         out_lines += ["## 表 10：LLM agent 消融", "", "_未跑_", ""]
@@ -100,10 +116,10 @@ def table10(recs, out_lines):
     arms += sorted({r["selector"] for r in recs} - set(arms))
     out_lines += ["## 表 10：LLM agent 消融", "",
                   "| 臂 | " + " | ".join(COLS[c] for c in causes) +
-                  " | 平均 | 首步对 | 调用/格 | 花费/格 (USD) | 动作数/格 |",
+                  " | 平均 | 首步对 | 调用/格 | 估算/格 (USD) | 实计/格 (USD) | 动作数/格 |",
                   "|---|" + "---:|" * len(causes) + "---:|---:|---:|---:|---:|"]
     for a in arms:
-        cells, allv, firsts, calls, usd, acts = [], [], [], [], [], []
+        cells, allv, firsts, calls, usd, billed, acts = [], [], [], [], [], [], []
         for c in causes:
             rs = [r for r in recs if r["selector"] == a and r["cause"] == c]
             v = [r["final_sr"] for r in rs]
@@ -112,15 +128,19 @@ def table10(recs, out_lines):
             firsts += [bool(r.get("first_step_correct")) for r in rs]
             calls += [int(r.get("llm_calls", 0)) for r in rs]
             usd += [float(r.get("llm_usd", 0.0)) for r in rs]
+            billed += [provider_cost(r) for r in rs]
             acts += [len(r.get("decisions") or []) for r in rs]
         lo, hi = boot(allv)
         mean = f"**{np.mean(allv):.3f}**" if allv else "-"
         out_lines.append(
             f"| {ARM_LABEL.get(a, a)} | " + " | ".join(cells) + f" | {mean} | "
             f"{sum(firsts)}/{len(firsts)} | {np.mean(calls) if calls else 0:.1f} | "
-            f"{np.mean(usd) if usd else 0:.4f} | {np.mean(acts) if acts else 0:.1f} |")
-    out_lines += ["", "花费取自各 run 记录的 `llm_usd`（按配置中的单价估算）；",
-                  "`llm_cheap` 在该代理上由服务端计费为 $0，估算列仍按单价折算，两者需同时报告。", ""]
+            f"{np.mean(usd) if usd else 0:.4f} | "
+            f"{_fmt_cost(_mean_billed(billed))} | "
+            f"{np.mean(acts) if acts else 0:.1f} |")
+    out_lines += ["", "估算列取自 `llm_usd`（按配置单价）；实计列取自服务端返回的 `provider_cost`。",
+                  "两者可能相差 2–3 倍（该代理的计价与配置单价不同），**论文只能用实计列**；",
+                  "`llm_cheap` 在该代理上实计为 $0，但估算列仍按单价折算。", ""]
 
 
 def main() -> int:
