@@ -16,14 +16,22 @@ from typing import Callable
 
 from .selector import ACTIONS, Decision, Observation, _guard
 
-SYSTEM_PROMPT = (
+SYSTEM_PROMPT_TEMPLATE = (
     "You are choosing the next learning operation for a robot policy improvement loop. "
     "You see only deployment feedback: per-subgoal failure counts, the calibration residual, "
     "recovery triggers, the perturbation failure rate, the current success rate, the budget, "
     "and your own past decisions. You do NOT see the true cause of failure.\n"
-    "Pick exactly one action from: " + ", ".join(ACTIONS) + ".\n"
-    "Reply with JSON only: {\"action\": str, \"target\": str|null, \"reason\": str (<=25 words)}."
+    "Pick exactly one action from: {actions}.\n"
+    "Reply with JSON only: {{\"action\": str, \"target\": str|null, \"reason\": str (<=25 words)}}."
 )
+SYSTEM_PROMPT = SYSTEM_PROMPT_TEMPLATE.format(actions=", ".join(ACTIONS))
+
+
+def system_prompt(allowed_actions=None) -> str:
+    """Prompt with a restricted action list (agent ablation: 'no specialist tools')."""
+    if allowed_actions is None:
+        return SYSTEM_PROMPT
+    return SYSTEM_PROMPT_TEMPLATE.format(actions=", ".join(allowed_actions))
 
 
 def build_user_prompt(obs: Observation, memory: tuple = ()) -> str:
@@ -47,7 +55,7 @@ def build_user_prompt(obs: Observation, memory: tuple = ()) -> str:
     return json.dumps(payload, ensure_ascii=False, sort_keys=True)
 
 
-def parse_decision(text: str) -> Decision:
+def parse_decision(text: str, allowed=None) -> Decision:
     """Parse the model's reply; reject anything that is not one of the allowed actions."""
     match = re.search(r"\{.*\}", text, re.S)
     if not match:
@@ -56,6 +64,8 @@ def parse_decision(text: str) -> Decision:
     action = str(data.get("action", "")).strip()
     if action not in ACTIONS:
         raise ValueError(f"LLM chose an action outside the action set: {action!r}")
+    if allowed is not None and action not in allowed:
+        raise ValueError(f"LLM chose an action withheld from it ({action!r}; allowed={tuple(allowed)})")
     target = data.get("target")
     return Decision(action, None if target in (None, "", "null") else str(target),
                     str(data.get("reason", ""))[:200], 4)
@@ -87,6 +97,8 @@ class LLMPlannerSelector:
     price_out_per_mtok: float = 15.0
     # Past-scenario lessons for the "LLM + experience" row; never include the true cause.
     memory: tuple = ()
+    # Agent ablation: when set, only these actions are offered and anything else is rejected.
+    allowed_actions: tuple | None = None
 
     def available(self) -> bool:
         return bool(os.environ.get(self.api_key_env))
@@ -109,7 +121,7 @@ class LLMPlannerSelector:
             raise RuntimeError(f"LLM cost cap reached (${self.max_usd:.2f}); stopping instead of overspending")
         reply, usage = self._call(build_user_prompt(obs, self.memory))
         self.usage.append(usage)
-        return parse_decision(reply)
+        return parse_decision(reply, self.allowed_actions)
 
     def _call(self, user_prompt: str) -> tuple[str, dict]:
         last: Exception | None = None
@@ -124,13 +136,13 @@ class LLMPlannerSelector:
 
     def _once(self, user_prompt: str) -> tuple[str, dict]:
         if self.client is not None:
-            return self.client(SYSTEM_PROMPT, user_prompt)
+            return self.client(system_prompt(self.allowed_actions), user_prompt)
         if self.provider == "openai":
             return self._once_openai(user_prompt)
         import urllib.request
         body = json.dumps({
             "model": self.model, "max_tokens": self.max_tokens, "temperature": 0.0,
-            "system": SYSTEM_PROMPT,
+            "system": system_prompt(self.allowed_actions),
             "messages": [{"role": "user", "content": user_prompt}],
         }).encode()
         req = urllib.request.Request(
@@ -153,7 +165,7 @@ class LLMPlannerSelector:
         base = (self.base_url or "https://api.openai.com/v1").rstrip("/")
         body = json.dumps({
             "model": self.model, "max_tokens": self.max_tokens, "temperature": 0.0,
-            "messages": [{"role": "system", "content": SYSTEM_PROMPT},
+            "messages": [{"role": "system", "content": system_prompt(self.allowed_actions)},
                          {"role": "user", "content": user_prompt}],
         }).encode()
         req = urllib.request.Request(

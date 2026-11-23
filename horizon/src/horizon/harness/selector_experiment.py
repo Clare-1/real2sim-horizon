@@ -54,14 +54,18 @@ WIRED = {"random": "RandomSelector", "round_robin": "RoundRobinSelector",
 def make_selector(name: str, cause: str, cfg: dict | None = None):
     if name == "oracle":
         return OracleSelector(true_cause=cause)
-    if name in ("llm", "llm_memory"):
+    if name in ("llm", "llm_memory", "llm_minimal", "llm_cheap"):
         from ..rsi.llm_planner import LLMPlannerSelector
         conf = dict((cfg or {}).get("llm", {}) or {})
+        # Per-arm overrides (Table 10 agent ablation: memory / withheld tools / cheap model).
+        conf.update(dict(((cfg or {}).get("llm_overrides", {}) or {}).get(name, {}) or {}))
         # A selector name is part of the table, so "llm_memory" must not be reported as "llm".
         memory = tuple(conf.get("memory", ()) or (cfg or {}).get("llm_memory", ()) or ())
         kwargs = {k: conf[k] for k in
                   ("provider", "base_url", "model", "api_key_env", "max_calls", "max_usd",
                    "price_in_per_mtok", "price_out_per_mtok", "max_tokens") if k in conf}
+        if conf.get("allowed_actions"):
+            kwargs["allowed_actions"] = tuple(conf["allowed_actions"])
         return LLMPlannerSelector(name=name, memory=memory, **kwargs)
     if name in WIRED:
         from ..rsi import selector as _sel

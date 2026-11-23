@@ -89,3 +89,52 @@ def test_memory_is_visible_to_the_llm_row():
     text = build_user_prompt(obs(), memory=("past coverage scenario: targeted helped",))
     assert "memory" in text and "targeted helped" in text
     assert "true_cause" not in text
+
+
+def test_withheld_actions_are_not_offered_and_not_accepted():
+    """Agent ablation ("no specialist tools"): the prompt hides them and the parser refuses them."""
+    allowed = ("calibrate_geometry", "dagger_round", "stop")
+    seen = {}
+
+    def fake(system: str, user: str):
+        seen["system"] = system
+        return '{"action": "regenerate_targeted", "target": null, "reason": "x"}', {
+            "input_tokens": 1, "output_tokens": 1}
+
+    sel = LLMPlannerSelector(client=fake, allowed_actions=allowed)
+    with pytest.raises(ValueError, match="withheld"):
+        sel.decide(obs())
+    assert "regenerate_targeted" not in seen["system"]
+    assert "calibrate_geometry" in seen["system"]
+
+
+def test_full_action_set_is_offered_by_default():
+    seen = {}
+
+    def fake(system: str, user: str):
+        seen["system"] = system
+        return '{"action": "stop", "target": null, "reason": "x"}', {"input_tokens": 1, "output_tokens": 1}
+
+    LLMPlannerSelector(client=fake).decide(obs())
+    for action in ACTIONS:
+        assert action in seen["system"]
+
+
+def test_per_arm_overrides_reach_make_selector():
+    """Table 10 ablation: llm_minimal hides tools, llm_cheap changes the model, llm_memory adds lessons."""
+    from horizon.harness.selector_experiment import make_selector
+
+    cfg = {
+        "llm": {"provider": "openai", "base_url": "https://x/v1", "model": "big",
+                "api_key_env": "HORIZON_LLM_KEY"},
+        "llm_overrides": {
+            "llm_minimal": {"allowed_actions": ["calibrate_geometry", "dagger_round", "stop"]},
+            "llm_cheap": {"model": "small"},
+            "llm_memory": {"memory": ["past: targeted helped"]},
+        },
+    }
+    assert make_selector("llm", "healthy", cfg).model == "big"
+    assert make_selector("llm_cheap", "healthy", cfg).model == "small"
+    assert make_selector("llm_minimal", "healthy", cfg).allowed_actions == (
+        "calibrate_geometry", "dagger_round", "stop")
+    assert make_selector("llm_memory", "healthy", cfg).memory == ("past: targeted helped",)

@@ -283,7 +283,7 @@ PYTHONPATH=src .venv-linux/bin/python scripts/run_minimal_validation.py \
 | 4 | 8 条固定流程 baseline | **✅ 已实现并跑完**（`open_loop`/`always_dagger`/`domain_randomize`/`deploy_dagger`/`mixed_train`/`fixed`/`calibrate_alternate`/`true_params`，48 格） | 扩到 3–5 banks | ~3 h |
 | 5 | 图 R2 + 命题 | ✅ **图 R2 已出**；命题文字未写 | 命题用 ε/Δ/D/κ（纯写作） | 0 |
 | 6 | 混合原因并入主表 | ✅ **已并入表 2**（`results/table2_full.md`：混合列 gap recovery bandit 86% / rule 36%） | 混合网格扩到 3 banks | ~2 h |
-| 7 | 实验五消融 | 部分 | 校准器修复版、H 外推、agent 消融、部署预算 8/24/48 | 数 h |
+| 7 | 实验五消融 | 🟡 **表 11/图 2 已出**、表 8 有、表 10 在跑（32 格）；**图 7 预算扫描在跑**（fb8/fb48） | 表 9 三档偏差（当前协议） | 数 h |
 | 8 | 判定器偏差原因 | `recalibrate_verifier` 未实现 | 实现重校准动作 | 1 天 |
 | 9 | 位置偏差 | `lateral_offset` 可注入，但 `geometry_repair` 只估高度 | 实现位置估计器，否则只能当“未知原因” | 1–2 天 |
 | 10 | 动力学原因 | 摩擦/质量/延迟扫描证明不可表达 | 写 limitation（已有 4 组扫描） | 0 |

@@ -42,7 +42,7 @@
 |---|---|---|---|
 | 表 8 校准器 | ✅ | `calibrator_ablation_20261112/TABLE8.md`（legacy/robust/freeze/true/predictive_gate） | 若要当前协议可重跑，不阻塞 |
 | 表 9 偏差档 | 🟡 | `bias_response_20261116`（4 档） | 当前 4-cause 协议下的 3 档 |
-| 表 10 agent 消融 | 🔴 | — | 无 LLM key；LLM/无经验/去工具/便宜模型 |
+| 表 10 agent 消融 | 🟡 | 代码就绪：`llm` / `llm_memory` / `llm_minimal`（工具被剥夺）/ `llm_cheap`（便宜模型），`llm_overrides` 按臂覆盖；`configs/experiment5_agent_ablation.yaml` 已启动（4 臂 × 4 原因 × 2 banks = 32 格） | 结果（~2 h）、成本对比 |
 | 表 11 H 外推 | ✅ | 当前编码：训 H2/4 → H=2/4 = 0.950/0.900，H≥6 = **0.000**；全 H 训练对照 0.45–0.90；专家 H=6/8/10 各 3/3 | 多 seed |
 | 图 7 部署预算 8/24/48 | 🟡 | `fig7_budget_sweep.png` 是旧 2-cause/3-selector | 当前 4-cause/8-selector 的预算扫描（需新跑） |
 
