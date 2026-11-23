@@ -1,0 +1,149 @@
+{
+  "bank_index": 0,
+  "calibrations": 0,
+  "cause": "mixed_cr",
+  "cost": {
+    "accepted_labels": 120000,
+    "available_labels": 124852,
+    "episodes": 408,
+    "eval_episodes": 120,
+    "sim_steps": 4453250,
+    "worker_seconds": 471.233484308701
+  },
+  "decisions": [
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.8333333333333334,
+        "failure_types": {
+          "drop": 2,
+          "grasp": 3,
+          "stall": 1,
+          "transition": 18
+        },
+        "per_subgoal": {
+          "subgoal0": 20,
+          "subgoal1": 2,
+          "subgoal3": 2
+        },
+        "perturbation_events": 21,
+        "perturbation_failure_rate": 1.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": null,
+        "sr": 0.0
+      },
+      "reason": "Subgoal0 accounts for 20 of 24 failures, making it the strongest target for new demonstrations without assuming a specific cause.",
+      "round": 1,
+      "sr_after": 0.35,
+      "sr_before": 0.0,
+      "target": "subgoal0"
+    },
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.4166666666666667,
+        "failure_types": {
+          "drop": 2,
+          "grasp": 3,
+          "placement": 3,
+          "stall": 2,
+          "transition": 2
+        },
+        "per_subgoal": {
+          "subgoal0": 3,
+          "subgoal1": 4,
+          "subgoal2": 5
+        },
+        "perturbation_events": 64,
+        "perturbation_failure_rate": 0.5,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0014485520439509701,
+        "sr": 0.5
+      },
+      "reason": "Targeted regeneration previously raised success from 0% to 35%. Subgoal2 now has the most observed failures, though the counts are close.",
+      "round": 2,
+      "sr_after": 0.5,
+      "sr_before": 0.35,
+      "target": "subgoal2"
+    },
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.38461538461538464,
+        "failure_types": {
+          "drop": 6,
+          "grasp": 3,
+          "placement": 1,
+          "transition": 3
+        },
+        "per_subgoal": {
+          "subgoal0": 4,
+          "subgoal1": 2,
+          "subgoal2": 5,
+          "subgoal3": 2
+        },
+        "perturbation_events": 75,
+        "perturbation_failure_rate": 0.5416666666666666,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0014946915772539558,
+        "sr": 0.45833333333333337
+      },
+      "reason": "Targeted regeneration improved success in both prior rounds. Subgoal2 has the most observed failures, making it the strongest target for the final round.",
+      "round": 3,
+      "sr_after": 0.5,
+      "sr_before": 0.5,
+      "target": "subgoal2"
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 0.5,
+  "first_action": "regenerate_targeted",
+  "first_step_correct": true,
+  "llm_calls": 3,
+  "llm_usage": [
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 335,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 47,
+      "prompt_chars": 689,
+      "provider": "openai",
+      "provider_cost": 0.00456,
+      "reply_chars": 193,
+      "usd": 0.00171
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 365,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 91,
+      "prompt_chars": 762,
+      "provider": "openai",
+      "provider_cost": 0.00656,
+      "reply_chars": 201,
+      "usd": 0.00246
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 400,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 62,
+      "prompt_chars": 850,
+      "provider": "openai",
+      "provider_cost": 0.00568,
+      "reply_chars": 217,
+      "usd": 0.00213
+    }
+  ],
+  "llm_usd": 0.0063,
+  "new_labels": 120000,
+  "scenario": "mixed_cr",
+  "seed": 0,
+  "selector": "llm_memory"
+}

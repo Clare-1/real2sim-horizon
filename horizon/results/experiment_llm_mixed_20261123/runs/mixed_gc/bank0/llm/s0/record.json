@@ -1,0 +1,148 @@
+{
+  "bank_index": 0,
+  "calibrations": 1,
+  "cause": "mixed_gc",
+  "cost": {
+    "accepted_labels": 80000,
+    "available_labels": 85942,
+    "episodes": 312,
+    "eval_episodes": 120,
+    "sim_steps": 3682675,
+    "worker_seconds": 394.8650033918675
+  },
+  "decisions": [
+    {
+      "action": "calibrate_geometry",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.9583333333333334,
+        "failure_types": {
+          "drop": 2,
+          "grasp": 7,
+          "placement": 2,
+          "stall": 1,
+          "transition": 12
+        },
+        "per_subgoal": {
+          "subgoal0": 23,
+          "subgoal2": 1
+        },
+        "perturbation_events": 5,
+        "perturbation_failure_rate": 1.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.011270861877184887,
+        "sr": 0.0
+      },
+      "reason": "The 11.27 mm calibration residual makes geometric misalignment a plausible contributor to the 23 subgoal0 failures.",
+      "round": 1,
+      "sr_after": 0.1,
+      "sr_before": 0.0,
+      "target": null
+    },
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.8695652173913043,
+        "failure_types": {
+          "drop": 1,
+          "grasp": 1,
+          "placement": 1,
+          "stall": 1,
+          "transition": 19
+        },
+        "per_subgoal": {
+          "subgoal0": 20,
+          "subgoal1": 2,
+          "subgoal2": 1
+        },
+        "perturbation_events": 4,
+        "perturbation_failure_rate": 1.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0014154660155619204,
+        "sr": 0.04166666666666663
+      },
+      "reason": "Subgoal0 accounts for 20 of 23 failures after calibration, making it the clearest target for new training examples.",
+      "round": 2,
+      "sr_after": 1.0,
+      "sr_before": 0.1,
+      "target": "subgoal0"
+    },
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.6666666666666666,
+        "failure_types": {
+          "grasp": 3,
+          "placement": 1,
+          "stall": 1,
+          "transition": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 4,
+          "subgoal2": 1,
+          "subgoal3": 1
+        },
+        "perturbation_events": 15,
+        "perturbation_failure_rate": 0.15384615384615385,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.00034130853167915753,
+        "sr": 0.75
+      },
+      "reason": "Subgoal0 accounts for four of six failures. Targeted regeneration previously improved success, making it the best-supported choice for the final round.",
+      "round": 3,
+      "sr_after": 0.95,
+      "sr_before": 1.0,
+      "target": "subgoal0"
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 0.95,
+  "first_action": "calibrate_geometry",
+  "first_step_correct": true,
+  "llm_calls": 3,
+  "llm_usage": [
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 269,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 42,
+      "prompt_chars": 325,
+      "provider": "openai",
+      "provider_cost": 0.003832,
+      "reply_chars": 172,
+      "usd": 0.001437
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 302,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 68,
+      "prompt_chars": 409,
+      "provider": "openai",
+      "provider_cost": 0.005136,
+      "reply_chars": 179,
+      "usd": 0.001926
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 330,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 49,
+      "prompt_chars": 481,
+      "provider": "openai",
+      "provider_cost": 0.0046,
+      "reply_chars": 215,
+      "usd": 0.001725
+    }
+  ],
+  "llm_usd": 0.005088,
+  "new_labels": 80000,
+  "scenario": "mixed_gc",
+  "seed": 0,
+  "selector": "llm"
+}

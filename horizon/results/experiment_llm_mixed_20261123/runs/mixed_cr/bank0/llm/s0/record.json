@@ -1,0 +1,147 @@
+{
+  "bank_index": 0,
+  "calibrations": 0,
+  "cause": "mixed_cr",
+  "cost": {
+    "accepted_labels": 120000,
+    "available_labels": 123190,
+    "episodes": 456,
+    "eval_episodes": 120,
+    "sim_steps": 4850350,
+    "worker_seconds": 600.6809607886244
+  },
+  "decisions": [
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.8333333333333334,
+        "failure_types": {
+          "drop": 2,
+          "grasp": 3,
+          "stall": 1,
+          "transition": 18
+        },
+        "per_subgoal": {
+          "subgoal0": 20,
+          "subgoal1": 2,
+          "subgoal3": 2
+        },
+        "perturbation_events": 21,
+        "perturbation_failure_rate": 1.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": null,
+        "sr": 0.0
+      },
+      "reason": "Subgoal0 accounts for 20 of 24 failures, making it the clearest target for new training data without assuming a specific failure cause.",
+      "round": 1,
+      "sr_after": 0.35,
+      "sr_before": 0.0,
+      "target": "subgoal0"
+    },
+    {
+      "action": "deploy_dagger",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.4166666666666667,
+        "failure_types": {
+          "drop": 2,
+          "grasp": 3,
+          "placement": 3,
+          "stall": 2,
+          "transition": 2
+        },
+        "per_subgoal": {
+          "subgoal0": 3,
+          "subgoal1": 4,
+          "subgoal2": 5
+        },
+        "perturbation_events": 64,
+        "perturbation_failure_rate": 0.5,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0014485520439509701,
+        "sr": 0.5
+      },
+      "reason": "Failures span all subgoals. Deployment-state corrections can address observed errors across stages, and both deployment and label budgets are ample.",
+      "round": 2,
+      "sr_after": 0.7,
+      "sr_before": 0.35,
+      "target": null
+    },
+    {
+      "action": "deploy_dagger",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.375,
+        "failure_types": {
+          "grasp": 4,
+          "placement": 4
+        },
+        "per_subgoal": {
+          "subgoal0": 3,
+          "subgoal1": 1,
+          "subgoal2": 3,
+          "subgoal3": 1
+        },
+        "perturbation_events": 82,
+        "perturbation_failure_rate": 0.30434782608695654,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0014742197900151667,
+        "sr": 0.6666666666666667
+      },
+      "reason": "Deploy DAgger improved success from 35% to 70%. Failures span all subgoals, so repeat it in the final round rather than target one subgoal.",
+      "round": 3,
+      "sr_after": 0.8,
+      "sr_before": 0.7,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 0.8,
+  "first_action": "regenerate_targeted",
+  "first_step_correct": true,
+  "llm_calls": 3,
+  "llm_usage": [
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 274,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 99,
+      "prompt_chars": 339,
+      "provider": "openai",
+      "provider_cost": 0.006152,
+      "reply_chars": 199,
+      "usd": 0.002307
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 304,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 89,
+      "prompt_chars": 412,
+      "provider": "openai",
+      "provider_cost": 0.005992,
+      "reply_chars": 200,
+      "usd": 0.002247
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 338,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 54,
+      "prompt_chars": 494,
+      "provider": "openai",
+      "provider_cost": 0.004864,
+      "reply_chars": 191,
+      "usd": 0.001824
+    }
+  ],
+  "llm_usd": 0.006378,
+  "new_labels": 120000,
+  "scenario": "mixed_cr",
+  "seed": 0,
+  "selector": "llm"
+}

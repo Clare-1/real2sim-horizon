@@ -41,6 +41,8 @@
 | `diagnosability5_20261117/` | 五类可诊断性（已作废，保留为记录） | 审计证据 |
 | `llm_pilot_20261122.json`、`llm_pilot_paper8_20261122.json` | LLM 真实端点逐条决策（20 次调用，$0.039） | 审计 §22 |
 | `llm_vs_rule_20261122.md` | LLM vs 6 个脚本选择器的首步正确率同表 | 审计 §22 |
+| `experiment_llm_mixed_20261123/` | LLM / llm_memory / rule / oracle × 3 混合条件 × 2 banks（24/24）的 `record.json`、`paper8_report.md`、`completion.json` | 表 2 的 LLM 行；README §5.13 |
+| `llm_mixed_report.md` | 上表的合并报告（含配对差与逐格决策序列；`scripts/report_llm_mixed.py` 生成） | 审计 §36 |
 
 ## 未纳入的内容与再生成
 

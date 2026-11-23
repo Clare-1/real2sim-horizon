@@ -1,0 +1,146 @@
+{
+  "bank_index": 0,
+  "calibrations": 1,
+  "cause": "mixed_gcr",
+  "cost": {
+    "accepted_labels": 80000,
+    "available_labels": 83260,
+    "episodes": 296,
+    "eval_episodes": 120,
+    "sim_steps": 3508125,
+    "worker_seconds": 378.3979820157401
+  },
+  "decisions": [
+    {
+      "action": "calibrate_geometry",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 1.0,
+        "failure_types": {
+          "drop": 2,
+          "grasp": 1,
+          "placement": 3,
+          "stall": 1,
+          "transition": 17
+        },
+        "per_subgoal": {
+          "subgoal0": 24
+        },
+        "perturbation_events": 12,
+        "perturbation_failure_rate": 1.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.009449913790541952,
+        "sr": 0.0
+      },
+      "reason": "The 9.45 mm residual and failure at subgoal0 in all 24 episodes favor checking geometry first; calibration helped in a similar case.",
+      "round": 1,
+      "sr_after": 0.0,
+      "sr_before": 0.0,
+      "target": null
+    },
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.9583333333333334,
+        "failure_types": {
+          "grasp": 1,
+          "placement": 4,
+          "stall": 1,
+          "transition": 18
+        },
+        "per_subgoal": {
+          "subgoal0": 23,
+          "subgoal1": 1
+        },
+        "perturbation_events": 11,
+        "perturbation_failure_rate": 1.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0028135777842854016,
+        "sr": 0.0
+      },
+      "reason": "Subgoal0 accounts for 23 of 24 failures, and geometry calibration did not improve success. Focus new demonstrations on that bottleneck.",
+      "round": 2,
+      "sr_after": 0.5,
+      "sr_before": 0.0,
+      "target": "subgoal0"
+    },
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.375,
+        "failure_types": {
+          "drop": 3,
+          "grasp": 4,
+          "placement": 5,
+          "transition": 4
+        },
+        "per_subgoal": {
+          "subgoal0": 6,
+          "subgoal1": 3,
+          "subgoal2": 5,
+          "subgoal3": 2
+        },
+        "perturbation_events": 65,
+        "perturbation_failure_rate": 0.6666666666666666,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0002820418990376536,
+        "sr": 0.33333333333333337
+      },
+      "reason": "Targeted regeneration improved success in the previous round. Subgoal0 now has the most failures, making it the best-supported target for the final round.",
+      "round": 3,
+      "sr_after": 0.2,
+      "sr_before": 0.5,
+      "target": "subgoal0"
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 0.2,
+  "first_action": "calibrate_geometry",
+  "first_step_correct": true,
+  "llm_calls": 3,
+  "llm_usage": [
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 322,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 48,
+      "prompt_chars": 659,
+      "provider": "openai",
+      "provider_cost": 0.004496,
+      "reply_chars": 189,
+      "usd": 0.001686
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 355,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 69,
+      "prompt_chars": 742,
+      "provider": "openai",
+      "provider_cost": 0.0056,
+      "reply_chars": 199,
+      "usd": 0.0021
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 399,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 109,
+      "prompt_chars": 847,
+      "provider": "openai",
+      "provider_cost": 0.007552,
+      "reply_chars": 218,
+      "usd": 0.002832
+    }
+  ],
+  "llm_usd": 0.006618,
+  "new_labels": 80000,
+  "scenario": "mixed_gcr",
+  "seed": 0,
+  "selector": "llm_memory"
+}
