@@ -11,8 +11,8 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
-SOURCES = ['results/four_causes_20261118', 'results/minimal_validation_mixed_20261116',
-           'results/minimal_validation_20261112/stage1']
+# Default to the paper batch; pass a results directory to plot another one.
+SOURCES = ['results/four_causes_paper8_20261120']
 
 
 def load(dirs):
@@ -31,7 +31,8 @@ def load(dirs):
 
 
 def main() -> int:
-    recs = load(SOURCES)
+    sources = [sys.argv[1]] if len(sys.argv) > 1 else SOURCES
+    recs = load(sources)
     by = defaultdict(list)
     for r in recs:
         by[(r['cause'], r['selector'])].append(r)
@@ -57,7 +58,8 @@ def main() -> int:
         ax.grid(alpha=0.25)
         ax.legend(frameon=False, fontsize=7)
     fig.suptitle('Fig. 4  SR per round with the operation chosen at each round')
-    out = ROOT / 'results/fig4_trajectory_20261118'
+    tag = Path(sources[0]).name.replace('four_causes_', '').replace('/', '_') if sources else 'fig4'
+    out = ROOT / f'results/fig4_trajectory_{tag}'
     out.mkdir(parents=True, exist_ok=True)
     fig.savefig(out / 'fig4_trajectory.png', dpi=110)
     (out / 'fig4_chains.md').write_text('\n'.join(lines) + '\n', encoding='utf-8')

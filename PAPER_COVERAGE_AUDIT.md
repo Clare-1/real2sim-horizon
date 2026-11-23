@@ -22,7 +22,7 @@
 | **LLM × 混合原因**（规则的标签门盲点） | 🟡 | `regenerate_targeted` 被累计 `labels_spent < 20k` 门住，80k 初始数据之后永久关闭 → 混合场景规则只能「校准后一直 dagger」。已排队：混合 3 条件 × 2 banks × {rule, llm, llm_memory, oracle} = 24 格 + 只改该阈值的规则对照 6 格（`scripts/run_llm_queue.sh`） | 结果（等 paper queue） |
 | 表 3（AUC / oracle-90% / regret / 首步 / 健康花费 / API） | ✅ | `paper8_report.md` 新增 AUC/oracle-90/regret/健康花费（离线算） | 仅 API 花费（无 key） |
 | 图 3（原因 × 第一步操作） | ✅ | `results/fig3_action_four_causes_paper8_20261120/` | 无 |
-| 图 4（典型场景逐轮） | 🟡 | `make_fig4_trajectory.py` 已有，sources 含 four_causes | 用 paper8 重新生成一张当前版本 |
+| 图 4（典型场景逐轮） | ✅ | `results/fig4_trajectory_paper8_20261120/`（paper8，fixed/rule/oracle 各一典型 run；`fig4_chains.md` 列出动作链）。读数：覆盖 rule `targeted → stop`（0.85）而 oracle `targeted ×3`（0.875→0.975）；恢复 rule `dagger ×3`（1.00）；几何 rule `calibrate → targeted → stop`（0.95）而 oracle `calibrate → uniform ×2` | 多 seed |
 | dev 30 / test 60 场景划分 | 🔴 | 只有 10 banks 的 held-out 分 bank 检查 | 正式 30/60 划分 + 规则阈值只在 dev 上调 |
 
 ## 实验三：LIBERO（表 4 / 图 5）
