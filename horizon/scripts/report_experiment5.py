@@ -41,8 +41,35 @@ def boot(vals, n=2000, seed=0):
     return float(np.percentile(means, 2.5)), float(np.percentile(means, 97.5))
 
 
+def table9_probe(out_lines):
+    """Table 9 as a *probe* table: no training runs, expert-only twin-cost curve.
+
+    The bias level is not a monotone proxy for twin error (0.70 was harmless while 0.46 was
+    fatal), so a per-level SR table had no interpretable quantity.  What is interpretable is
+    the pair (calibration residual, expert success under the twin).
+    """
+    src = ROOT / "results/policy_free_bias_sweep_20261123/signals.json"
+    if not src.exists():
+        return False
+    rows = json.loads(src.read_text(encoding="utf-8"))
+    out_lines += ["## 表 9：偏差档响（探针版，无训练）", "",
+                  "A2 = 专家用真值规划；A = 专家用 twin 规划、真值里执行；twin_cost = A2 − A。", "",
+                  "| 偏差档 | A2 | A | twin_cost | bank |", "|---|---:|---:|---:|---:|"]
+    bias_rows = [r for r in rows if str(r.get("cause", "")).startswith("geometry_bias")]
+    for r in sorted(bias_rows, key=lambda r: (str(r.get("scenario")), r.get("bank", 0))):
+        nom = r.get("nominal", {})
+        out_lines.append(f"| {r.get('scenario')} | {nom.get('expert_privileged', float('nan')):.2f} | "
+                         f"{nom.get('expert_dep', float('nan')):.2f} | {nom.get('twin_cost', float('nan')):+.2f} | "
+                         f"{r.get('bank')} |")
+    out_lines += ["", "偏差档与 twin_cost 非单调（0.70 档对最优执行者无害、0.46 档致命），"
+                      "所以按偏差档比 SR 不可解释；表 9 用 (residual, expert-under-twin) 代替。", ""]
+    return True
+
+
 def table9(recs, out_lines):
     if not recs:
+        if table9_probe(out_lines):
+            return
         out_lines += ["## 表 9：偏差档响应", "", "_未跑_", ""]
         return
     scen = [s for s in BIAS_LABEL if any(r.get("scenario") == s for r in recs)]
