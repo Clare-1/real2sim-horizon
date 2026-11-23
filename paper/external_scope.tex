@@ -1,0 +1,27 @@
+\clearpage
+\section{Order, Verification and Transfer}
+\textbf{When would a fixed sequence suffice?} Differences between whole recipes do not tell us whether one pair of operations works in a fixed order for both causes. We first examined recorded decisions. Under limited coverage, targeted regeneration increased SR by .822 on average immediately after calibration ($n=18$ decisions), by .175 after DAgger ($n=10$), and by .037 after targeted regeneration ($n=15$). Under height error the corresponding changes after calibration and DAgger were .254 and $-.111$. These groups differ in starting SR, remaining headroom and which selector chose the action. Subtracting their means does not identify an effect of order.
+
+The intervention needed is a paired comparison of sequences starting from the same policy and belief. For example, hold the number of calibrations and data updates fixed and estimate final SR for calibrate--then--regenerate minus regenerate--then--calibrate on the same bank. Repeating one operation twice tests whether either operation alone suffices. If one ordering works well for both causes, the evidence would favor that fixed schedule over paying for diagnosis. We report no intervention estimate here.
+
+\textbf{Does a language model help?} An API-backed selector received a structured deployment profile and returned an operation name; it did not control the arm. In a 32-run screen on single causes (four variants, four conditions, two banks, one seed), the full menu yielded mean SR .900, versus .850 with operator-supplied experience, .781 with a restricted menu and .806 with a cheaper model; withholding an operation changes what any planner can achieve. On mixed causes the comparison is not favourable to the language model: across three mixtures, two banks and one seed, the rule reached .733, the model .667 (paired difference $-6.7$ pp, $[-25.0,10.0]$ over six matched cells) and a variant carrying per-run memory .525; the cause-informed reference reached .892. Billed charges were \$0.0145 per cell for three calls. The failure is specific: in the three-cause mixture the third-round action that helps is adding recovery data (.650 $\rightarrow$ .800 with the reference), while the model repeated the targeted regeneration it had already tried (.500 $\rightarrow$ .200). With nominal evaluation, however, perturbation pressure is below the rule's .5 threshold, so neither selector can observe that a recovery deficit remains. We therefore read this as a limit of observability rather than of planning, and we do not claim that the language model addresses causes the rule omits.
+
+\textbf{Limits of the test bed.} The known defects are interventions in one task family, not a taxonomy of natural robot failures. A scripted expert with true geometry is a privileged diagnostic control unavailable on a physical system. Even the nonprivileged expert rollouts consume interactions. Before a probe-driven selector can claim budget efficiency, these interactions must be charged against its alternatives. The three-seed selector comparison is distinct from the single-seed recipe experiment, and neither is a nested evaluation across task families. Dynamics sweeps also restricted the question we could test: reducing object friction by a factor of 100 did not change measured success, while adding two steps of latency collapsed success. Neither produced a graded repairable condition here. This finding is specific to this grasp and transport task.
+
+\textbf{External tests.} For the AgileX Piper, tag-based object poses would preserve the state interface. We plan to compare calibration and further imitation on paired placements, measure tray height independently, and record successes out of 20 on held-out placements as well as robot time. On LIBERO \cite{libero}, layout perturbations from LIBERO-PRO \cite{liberopro} would instead test a visual policy such as Diffusion Policy \cite{chi2023diffusion}. The critical control is to generate equal numbers of demonstrations with the original and the observation-updated layout priors. Neither hardware nor visual transfer is a reported result.
+\begin{table}[t]
+\centering\caption{External validation reserved for the completed study. Dashes denote unmeasured outcomes, not failures.}\label{tab:pending}
+\begin{tabular}{@{}lll@{}}\toprule
+Comparison & Piper: unseen layouts & Visual: shifted SR\\\midrule
+No twin update & --- & ---\\
+Randomization & --- & ---\\
+Feedback-selected update & --- & ---\\\bottomrule
+\end{tabular}
+\end{table}
+% Replace the empty panel only with paired, equal-budget intervention results.
+\begin{figure}[t]
+\centering\fbox{\rule{0pt}{2.5em}\rule{.87\columnwidth}{0pt}}
+\caption{Reserved for the order intervention: paired difference in final SR between calibrate--regenerate and regenerate--calibrate, by bank and failure condition. No estimate is available yet.}
+\end{figure}
+\section{Conclusion}
+In four-step simulated packing, reserving a round for calibration helped when geometry was wrong and hurt when demonstrations lacked coverage. Deployment feedback made this distinction useful even to a simple rule. The verification experiment identifies a separate risk: judging a candidate twin by the incumbent policy can reject a geometric correction precisely when the policy has adapted to the old belief. Comparing predicted and observed geometry tests the repair more directly. Whether these decisions justify their measurement cost on physical robots remains open.

@@ -1,0 +1,31 @@
+% RSS Stage 1: keep the supplied conference layout. Compile from this directory.
+\documentclass[conference]{IEEEtran}
+\usepackage{times}
+\usepackage[numbers]{natbib}
+\usepackage{amsmath,booktabs}
+\usepackage[bookmarks=true]{hyperref}
+\hypersetup{pdfauthor={Anonymous},pdftitle={When Should a Robot Update Its Digital Twin?}}
+\begin{document}
+\title{When Should a Robot Update Its Digital Twin?\\Choosing Learning Operations from Deployment Feedback}
+\author{Author names omitted for anonymous review}
+\maketitle
+\begin{abstract}
+A missed placement can indicate an incorrect estimate of tray height or a layout absent from the demonstrations. The first suggests changing the simulator; the second suggests changing the data generated in it. We study this choice in a controlled MuJoCo packing task, with separate training and deployment scenes. In 72 fixed-recipe runs, replacing one round of dataset aggregation with height calibration increased success by 33.3 percentage points under height error but reduced it by 21.7 points under limited layout coverage. In a separate 288-run comparison, a rule using deployment residuals and failure counts improved mean success over a calibrate-once schedule by 13.5 points (paired bootstrap interval: 8.6 to 18.6). The evidence used to accept a repair also mattered: a check based on the current policy's success inside the twin rejected seven of nine geometric updates, whereas a held-out height-prediction check rejected none and preserved deployment performance. These results distinguish two decisions: which learning operation to try, and how to test whether it repaired the model. They concern controlled simulation, not yet physical transfer.
+\end{abstract}
+\IEEEpeerreviewmaketitle
+\section{Introduction}
+Consider a robot that repeatedly releases an object above its slot. If the simulator places the tray too low, more demonstrations generated on that tray may teach the wrong release height more accurately. If the tray is correctly modeled but training covered only the left half of the workspace, measuring its height again supplies no examples on the right. Both failures can produce the same binary outcome. They differ in what the next deployment should buy: a better model of the scene or better coverage of the policy's inputs.
+
+This distinction matters under a short improvement budget. Dataset aggregation (DAgger) labels states visited by a learner \cite{ross2011dagger}; a calibration changes the geometry used by the planner and the policy's state encoder. Spending a round on one leaves fewer opportunities for the other. Conversely, repairing the twin may change the value of demonstrations generated \emph{after} the repair. The relevant decision is therefore not just whether simulation helps, but which part of the learning pipeline to change next.
+
+We investigate three questions. Does the preferred fixed recipe change when the failure source changes but the task does not? Can deployment observations guide a choice among those recipes' constituent operations? Finally, can the policy itself verify a proposed correction to the simulator in which it was trained? Our comparisons distinguish final task success from agreement with a prescribed first action, and both from the number of labels consumed. In particular, stopping can be the intended response to a healthy twin even if another training round would increase success.
+
+Our contribution is a controlled comparison rather than a new low-level controller. We vary the relation between the training twin, the demonstration distribution and the deployment scene; compare recipes and selectors on matched task sets; and isolate a failure mode of policy-based model validation. We also specify an order intervention that could refute the need for adaptive routing: if one fixed sequence works across causes at the same cost, it is a credible alternative.
+\input{position_protocol}
+\input{repair_evidence}
+\input{selector_evidence}
+\input{external_scope}
+\clearpage
+\bibliographystyle{plainnat}
+\bibliography{references}
+\end{document}
