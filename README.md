@@ -347,19 +347,30 @@ elif knowledge_gap <= 0.35:      stop                    # 实测 0.30
 - 人工塞"经验"反而有害（覆盖 0.875 < 0.950、恢复 0.725 < 0.850）——负结果；
 - 便宜模型只在恢复上掉（0.425），几何/覆盖与 astra 打平。
 
-**规则为什么会在混合原因上输**（不是 LLM 更强，而是规则的写法有盲点）：
+**规则的真正限制：一次 run 只能做一次"产出标签"的操作**（已核对 36 条 paper8 规则记录，不是读代码推的）：
 
 ```python
 # 规则第 5 分支
-if p.concentration > 0.5 and b.labels_spent < 20_000:   # labels_spent 是累计量
+if p.concentration > 0.5 and b.labels_spent < 20_000:
 ```
 
-主协议第一轮就灌 80k 标签，所以**这个门从第一轮之后永久关闭**。纯覆盖场景第 1 轮 labels=0 还能触发，混合场景则变成"校准之后只能一直 dagger"。两个对照已排队：
+`labels_spent` **只统计选择器自己产出的标签**（初始 80k 不计入），而 `calibrate_geometry` 产出 0 标签、`regenerate_targeted`/`dagger_round` 各产出 40k。所以：
 
-| 配置 | 内容 | 格数 |
+| 场景 | 第 1 轮 | 第 2 轮 | 第 3 轮 | final SR |
+|---|---|---|---|---|
+| 混合 gc bank0 | calibrate(11.3 mm) | targeted(87% subgoal0) | dagger | 0.95 |
+| 混合 gc bank1 | calibrate(10.1 mm) | targeted(87% subgoal0) | dagger | 0.50 |
+| 混合 gcr bank0 | calibrate(9.4 mm) | targeted(96% subgoal0) | dagger | 0.65 |
+| 纯覆盖（9 条记录） | targeted | **dagger（门关）** | dagger（门关） | 0.87–0.93 |
+
+也就是说：**校不准之后还能再 targeted 一次；但只要花过一次数据操作（40k > 20k），`regenerate_targeted` 在余下轮次里就不可达**。纯覆盖场景因此"只能定向一次"，混合场景则固定收在"校准 → 定向 → 无用 dagger"。
+
+LLM 的对比因此改成问三件事（不再是"规则不会 targeted"）：
+
+| 配置 | 问题 | 格数 |
 |---|---|---:|
-| `experiment_llm_mixed.yaml` | 混合 3 条件 × 2 banks × {rule, llm, llm_memory, oracle} | 24 |
-| `experiment_llm_mixed_rulefix.yaml` | 只把 `tau_labels_low` 改成 200k 的规则 | 6 |
+| `experiment_llm_mixed.yaml` | 混合 3 条件 × 2 banks × {rule, llm, llm_memory, oracle}：第 3 轮该不该 dagger，以及要不要回到第二个原因 | 24 |
+| `experiment_llm_mixed_rulefix.yaml` | 只把 `tau_labels_low` 改成 200k（让 targeted 可二次触发）的规则，做对照 | 6 |
 
 **limitation（必须写）**：本平台**可修的原因集合恰好被规则的四个分支覆盖**——动力学不可表达、延迟不可修、位置无修复算子。所以"LLM 处理规则未写到的全新原因"在这台机器上做不出正结果；实测亚阈值漂移（residual 2–3 mm）对最优执行者无害（专家 1.00），`tau_geo = 4 mm` 是保守阈值而非盲点（见审计 §28.3）。LLM 的主张只能落在"混合原因下的顺序"上。
 
