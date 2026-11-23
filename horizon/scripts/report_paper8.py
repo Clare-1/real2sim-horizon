@@ -41,8 +41,13 @@ def main() -> int:
                     int(cfg.get("scenario_banks", 1)) * len(cfg["selectors"]))
     step = float(cfg.get("feedback_episodes", 24))
     horizon = step * int(cfg.get("rounds", 3))
-    causes = [c for c in ("geometry_bias", "coverage_deficit", "recovery_deficit", "healthy")
-              if any(r["cause"] == c for r in recs)]
+    # Preferred order first, then anything else present (mixed-cause runs use mixed_gc / mixed_cr /
+    # mixed_gcr, which the old hard-coded list dropped, producing empty columns and nan AUC).
+    preferred = ("geometry_bias", "coverage_deficit", "recovery_deficit", "healthy",
+                 "mixed_gc", "mixed_gr", "mixed_cr", "mixed_gcr")
+    present = {r["cause"] for r in recs}
+    causes = [c for c in preferred if c in present]
+    causes += sorted(present - set(causes))
     sels = [s for s in ("fixed", "rule", "random", "round_robin", "bandit",
                         "linucb", "multilabel", "learned_value", "oracle")
             if any(r["selector"] == s for r in recs)]
@@ -107,9 +112,11 @@ def main() -> int:
                 return x
         return None
 
-    out += ["## 表 3（当前 paper8）：效率与诊断", "",
-            "| 选择器 | SR-成本 AUC | oracle-90% 部署（达到/总数） | regret (pp) | 首步对 | 健康标签/格 | 健康部署/格 |",
-            "|---|---:|---:|---:|---:|---:|---:|"]
+    has_health = "healthy" in causes
+    head = ("| 选择器 | SR-成本 AUC | oracle-90% 部署（达到/总数） | regret (pp) | 首步对 |"
+            + (" 健康标签/格 | 健康部署/格 |" if has_health else ""))
+    out += ["## 表 3（当前 paper8）：效率与诊断", "", head,
+            "|---|" + "---:|" * (4 + (2 if has_health else 0))]
     for s in sels:
         aucs, reaches = [], []
         regrets = []
@@ -130,9 +137,12 @@ def main() -> int:
         h_lab = sum(r["new_labels"] for r in health) / len(health) if health else 0.0
         h_dep = sum(r["deploy_episodes"] for r in health) / len(health) if health else 0.0
         n_cause = sum(1 for r in recs if r["selector"] == s)
-        out.append(f"| {s} | {np.mean(aucs):.3f} | "
-                   f"{np.mean(reaches):.1f} ({len(reaches)}/{n_cause}) | "
-                   f"{100*np.mean(regrets):+.1f} | {n_ok}/{n_all} | {h_lab:.0f} | {h_dep:.0f} |")
+        row = (f"| {s} | {np.mean(aucs):.3f} | "
+               f"{np.mean(reaches):.1f} ({len(reaches)}/{n_cause}) | "
+               f"{100*np.mean(regrets):+.1f} | {n_ok}/{n_all} |")
+        if has_health:
+            row += f" {h_lab:.0f} | {h_dep:.0f} |"
+        out.append(row)
     out += ["", "AUC 由每轮 `sr_before/sr_after` 折线在 0–horizon 上积分；"
             "oracle-90% 是首次达到 0.9×oracle 均值时的累计部署；健康花费按标签/部署 episodes 报。", ""]
 
