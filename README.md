@@ -253,6 +253,40 @@ PYTHONPATH=src .venv-linux/bin/python scripts/run_minimal_validation.py \
 - **全 H 训练有代价**：同 80k 标签预算下 H=2 从 0.950 掉到 0.800、H=4 从 0.900 掉到 0.800（预算被 5 个 H 摊薄）。
 - 口径：1 seed、20 episodes/点。图：`results/fig2_sr_vs_h_20261123/fig2_sr_vs_h.png`；审计 §25。
 
+### 5.11 操作冲突与顺序：真正值钱的地方（2026-11-23）
+
+"规则赢固定配方"有一个廉价解释：固定配方把第一轮预算花在校准上。若"校准 + 定向再生成"每轮都做就能两类通吃，选择问题就不存在。所以必须证明**操作之间确实冲突**。从 440 个已有决策里抽出的证据（`scripts/analyze_operation_conflicts.py`）：
+
+**边际 ΔSR（百分点，括号内 n）**
+
+| 原因 | calibrate | targeted | uniform | recovery data | dagger |
+|---|---:|---:|---:|---:|---:|
+| coverage | +0.0 (48) | **+59.8 (92)** | −0.0 (9) | +10.8 (13) | +20.4 (92) |
+| geometry | **+40.4 (81)** | +13.0 (51) | +16.9 (34) | +2.5 (12) | +3.6 (92) |
+| recovery | +0.0 (44) | +4.7 (48) | +7.8 (9) | **+27.7 (52)** | +23.8 (92) |
+| healthy | +0.0 (49) | +6.1 (44) | +8.9 (9) | +3.7 (15) | +4.2 (73) |
+
+**同一操作，先校准 vs 不先校准**
+
+| 原因 | 操作 | 先校准 | 未校准 |
+|---|---|---:|---:|
+| coverage | targeted | **+81.9 (31)** | +48.5 (61) |
+| geometry | targeted | **+18.2 (42)** | **−11.1 (9)** |
+| geometry | dagger | +1.1 (58) | +7.9 (34) |
+| recovery | recovery data | **+42.5 (12)** | +23.3 (40) |
+| mixed_gc | targeted | **+68.5 (10)** | +2.5 (2) |
+
+四条结论：
+
+1. **顺序非交换**：几何上 targeted 单独做 **−11.1 pp**，先校准变 **+18.2 pp**（符号翻转）；覆盖上 +48.5 → +81.9。
+2. **校准是前置条件型操作**：非几何三类直接 ΔSR 是 **+0.0**（n=44–49）——固定配方第一轮给校准，在覆盖上纯亏。
+3. **DAgger 的价值随 twin 变准而下降**（几何 +7.9 → +1.1），所以"多打 DAgger"不能替代"先修 twin"。
+4. **uniform 与 targeted 冲突**：uniform 几何 +16.9、覆盖 −0.0，覆盖要的是 targeted。
+
+口径：以上来自混合选择器的日志，不是预注册序列（几何"未校准 targeted" n=9）。已排队预注册顺序实验：同一操作不同顺序，2 原因 × 8 序列 × 2 banks = **32 runs**（`configs/experiment_conflict_order.yaml`，`rsi/sequences.py` 的 `seq:` 选择器）。
+
+**诊断信号必须与策略无关**（第二个主张）：策略已在错的 twin 上优化，twin 内部自检天然循环——证据是 recovery 的 legacy 信号恒 0、`P(fail|armed)` 0.29 < 覆盖 0.458、反馈驱动的 linucb 在 recovery 上 −47.8 pp。因此诊断改用策略无关量：`expert_SR(twin)` vs `expert_SR(deployment)`（twin 审计）、`expert_SR − policy_SR`（知识与数据之别）、仅扰动差距（恢复类）。详见审计 §26.5。
+
 ## 6. 数据与可复现性
 
 为控制仓库体积，**只保留元数据、逐次 `record.json`、`effective_config.json`、图表和小型 `summary.json`**；策略权重 `.npz`、任务 payload（`tasks_*`）与原始大规模结果目录未纳入。它们由固定种子确定性生成，重跑同一配置即可复现。完整清单与再生成命令见 [`horizon/results/README.md`](horizon/results/README.md)。
