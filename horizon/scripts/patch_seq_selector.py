@@ -14,7 +14,23 @@ import sys
 import tempfile
 from pathlib import Path
 
-DEFAULT = Path(__file__).resolve().parent.parent / "src/horizon/harness/selector_experiment.py"
+DEFAULT_CANDIDATES = (
+    Path.cwd() / "src/horizon/harness/selector_experiment.py",
+    Path(__file__).resolve().parent.parent / "src/horizon/harness/selector_experiment.py",
+)
+
+
+def default_target() -> Path:
+    """Resolve the module path from the cwd first, then from this file's location.
+
+    The cwd candidate matters because the script is also invoked through a copy outside the repo
+    (``/tmp/patch_seq_register.py`` during the queued run); resolving from ``__file__`` there
+    yields ``/src/...`` and crashes.
+    """
+    for cand in DEFAULT_CANDIDATES:
+        if cand.exists():
+            return cand
+    raise SystemExit(f"selector_experiment.py not found; tried {[str(c) for c in DEFAULT_CANDIDATES]}")
 
 ANCHOR = 'def make_selector(name: str, cause: str, cfg: dict | None = None):\n    if name == "oracle":'
 REPLACEMENT = (
@@ -47,5 +63,5 @@ def patch(path: Path) -> str:
 
 
 if __name__ == "__main__":
-    target = Path(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT
+    target = Path(sys.argv[1]) if len(sys.argv) > 1 else default_target()
     print(f"{target}: {patch(target)}")

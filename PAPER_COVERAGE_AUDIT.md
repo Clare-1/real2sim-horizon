@@ -7,7 +7,7 @@
 
 | 项 | 状态 | 现有 | 缺 |
 |---|---|---|---|
-| 表 1（8 方法 × 高度/位置/摩擦 × pack/sort/stack × H2–10） | 🟡 | **8 条 pipeline 已全部实现**：`open_loop`(200k)、`always_dagger`、`domain_randomize`、`deploy_dagger`、`mixed_train`、`fixed`、`calibrate_alternate`、`true_params`；`configs/experiment1_table1_pilot.yaml` 已启动（3 条件 × 2 banks × 8 方法 = 48 格） | sort/stack；H2–10；位置/摩擦列（无估计器 / 平台不可表达） |
+| 表 1（8 方法 × 高度/位置/摩擦 × pack/sort/stack × H2–10） | 🟡 | **3 banks × 3 条件（几何/覆盖/健康）= 72/72 完成**：`results/experiment1_table1_3banks_20261123/table1_report.md`；配对差显示"没有一个可部署配方同时在两个原因上占优"（校准族几何 +33~+42 pp\*、覆盖 −22~−63 pp\*，汇总仅 open-loop 与 true-params 显著） | **8 条 pipeline 已全部实现**：`open_loop`(200k)、`always_dagger`、`domain_randomize`、`deploy_dagger`、`mixed_train`、`fixed`、`calibrate_alternate`、`true_params`；`configs/experiment1_table1_pilot.yaml` 已启动（3 条件 × 2 banks × 8 方法 = 48 格） | sort/stack；H2–10；位置/摩擦列（无估计器 / 平台不可表达） |
 | 图 1（SR vs 累计部署） | ✅ | `results/fig1_sr_cost_20261122/`（8 selectors × 4 causes，离线） | 无 |
 | 图 2（SR vs H） | ✅ | `results/fig2_sr_vs_h_20261123/`：{2,4} 训练在 H≥6 = **0.000**；全 H 训练对照在 0.45–0.90（证明是外推失败、不是评测坏）；专家在 H=6/8/10 各 3/3（证明任务可解） | 多 seed / CI |
 | 表 A1/A2 | 🟡 | **A1 配置就绪**：`configs/experiment_a1_perturbed_eval.yaml`（4 causes × 2 banks × {fixed, rule, oracle} = 24 格，全部 `eval_mode: perturbed`、`eval_pert 0.7`），等 GPU 空出后排；**A2 ⛔**：需要 sort/stack 家族，当前只实现了 pack（`tasks/families.py` 无 sort/stack） | A1 未跑（约 1.5 h）；A2 需先实现两个任务族 |
