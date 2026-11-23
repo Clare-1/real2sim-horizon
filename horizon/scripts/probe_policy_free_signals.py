@@ -62,42 +62,56 @@ def main() -> int:
     ap.add_argument("--episodes", type=int, default=5)
     ap.add_argument("--workers", type=int, default=8)
     ap.add_argument("--out", default="results/policy_free_signals_20261123")
+    ap.add_argument("--bias-levels", default="",
+                    help="comma list: sweep the geometry reconstruction bias (replaces Table 9's "
+                         "training runs with expert-only probes)")
+    ap.add_argument("--expert-only", action="store_true",
+                    help="skip the policy conditions (C, D); cheap twin-cost curve")
     args = ap.parse_args()
     banks = [int(b) for b in args.banks.split(",")]
+    levels = [float(x) for x in args.bias_levels.split(",")] if args.bias_levels else []
 
     cfg = json.loads((SRC / "experiment.json").read_text(encoding="utf-8"))["config"]
     cfg = {**cfg, "H_values": [4]}
     scen_cfg = {s["name"]: s for s in cfg["scenarios"]}
     rows = []
     for name, sc in scen_cfg.items():
-        bias = (sc.get("conditions", {}).get("recon", {}) or {}).get("bias", {}) or {}
-        recon = ReconModel(bias=dict(bias))
+        base_bias = (sc.get("conditions", {}).get("recon", {}) or {}).get("bias", {}) or {}
         params = load_params(str(SRC / "shared" / name / "s0" / "policy_0.npz"))
         store = TaskStore(SRC / "tasks_deploy" / name, cfg, ROOT)
-        with Runner(args.workers, policy={"params": params}) as runner:
-            for bank in banks:
-                row = {"scenario": name, "cause": sc["cause"], "bank": bank}
-                for pert_tag, pert in (("nominal", 0.0), ("perturbed", 0.7)):
-                    n = args.episodes if pert_tag == "nominal" else max(3, args.episodes // 2)
-                    a2 = sr(runner.map(build_jobs(store, cfg, recon, bank, n, pert, "expert", None,
-                                                  f"expert-priv-{pert_tag}", believe=False)))
-                    a = sr(runner.map(build_jobs(store, cfg, recon, bank, n, pert, "expert", None,
-                                                 f"expert-dep-{pert_tag}")))
-                    b = sr(runner.map(build_jobs(store, cfg, recon, bank, n, pert, "expert",
-                                                 recon.to_dict(), f"expert-twin-{pert_tag}")))
-                    c = sr(runner.map(build_jobs(store, cfg, recon, bank, n, pert, "hier", None,
-                                                 f"policy-dep-{pert_tag}")))
-                    d = sr(runner.map(build_jobs(store, cfg, recon, bank, n, pert, "hier",
-                                                 recon.to_dict(), f"policy-twin-{pert_tag}")))
-                    row[pert_tag] = {"expert_privileged": a2, "expert_dep": a, "expert_twin": b,
-                                     "policy_dep": c, "policy_twin": d,
-                                     "twin_cost": a2 - a, "knowledge_gap": a - c,
-                                     "selfcheck_bias": d - c}
-                    print(f"{name:12s} bank{bank} {pert_tag:9s} "
-                          f"A2={a2:.2f} A={a:.2f} B={b:.2f} C={c:.2f} D={d:.2f} | "
-                          f"twin_cost={a2-a:+.2f} knowledge_gap={a-c:+.2f} "
-                          f"selfcheck_bias={d-c:+.2f}", flush=True)
-                rows.append(row)
+        variants = [("", dict(base_bias))]
+        if levels and sc["cause"] == "geometry_bias":
+            variants = [(f"@b{f:.2f}", {"plate": f, "tray": f}) for f in levels]
+        for suffix, bias in variants:
+            recon = ReconModel(bias=dict(bias))
+            with Runner(args.workers, policy={"params": params}) as runner:
+                for bank in banks:
+                    row = {"scenario": name + suffix, "cause": sc["cause"], "bank": bank,
+                           "bias": dict(bias)}
+                    for pert_tag, pert in (("nominal", 0.0), ("perturbed", 0.7)):
+                        n = args.episodes if pert_tag == "nominal" else max(3, args.episodes // 2)
+                        a2 = sr(runner.map(build_jobs(store, cfg, recon, bank, n, pert, "expert", None,
+                                                      f"expert-priv-{pert_tag}", believe=False)))
+                        a = sr(runner.map(build_jobs(store, cfg, recon, bank, n, pert, "expert", None,
+                                                     f"expert-dep-{pert_tag}")))
+                        b = sr(runner.map(build_jobs(store, cfg, recon, bank, n, pert, "expert",
+                                                     recon.to_dict(), f"expert-twin-{pert_tag}")))
+                        if args.expert_only:
+                            c = d = float("nan")
+                        else:
+                            c = sr(runner.map(build_jobs(store, cfg, recon, bank, n, pert, "hier", None,
+                                                         f"policy-dep-{pert_tag}")))
+                            d = sr(runner.map(build_jobs(store, cfg, recon, bank, n, pert, "hier",
+                                                         recon.to_dict(), f"policy-twin-{pert_tag}")))
+                        row[pert_tag] = {"expert_privileged": a2, "expert_dep": a, "expert_twin": b,
+                                         "policy_dep": c, "policy_twin": d,
+                                         "twin_cost": a2 - a, "knowledge_gap": a - c,
+                                         "selfcheck_bias": d - c}
+                        print(f"{name + suffix:18s} bank{bank} {pert_tag:9s} "
+                              f"A2={a2:.2f} A={a:.2f} B={b:.2f} C={c:.2f} D={d:.2f} | "
+                              f"twin_cost={a2-a:+.2f} knowledge_gap={a-c:+.2f} "
+                              f"selfcheck_bias={d-c:+.2f}", flush=True)
+                    rows.append(row)
 
     out = ROOT / args.out
     out.mkdir(parents=True, exist_ok=True)

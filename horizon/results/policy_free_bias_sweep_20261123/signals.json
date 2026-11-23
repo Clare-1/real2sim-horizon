@@ -1,0 +1,332 @@
+[
+  {
+    "scenario": "geometry@b0.20",
+    "cause": "geometry_bias",
+    "bank": 0,
+    "bias": {
+      "plate": 0.2,
+      "tray": 0.2
+    },
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 0.0,
+      "expert_twin": 1.0,
+      "policy_dep": NaN,
+      "policy_twin": NaN,
+      "twin_cost": 1.0,
+      "knowledge_gap": NaN,
+      "selfcheck_bias": NaN
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 0.0,
+      "expert_twin": 1.0,
+      "policy_dep": NaN,
+      "policy_twin": NaN,
+      "twin_cost": 1.0,
+      "knowledge_gap": NaN,
+      "selfcheck_bias": NaN
+    }
+  },
+  {
+    "scenario": "geometry@b0.20",
+    "cause": "geometry_bias",
+    "bank": 1,
+    "bias": {
+      "plate": 0.2,
+      "tray": 0.2
+    },
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 0.0,
+      "expert_twin": 1.0,
+      "policy_dep": NaN,
+      "policy_twin": NaN,
+      "twin_cost": 1.0,
+      "knowledge_gap": NaN,
+      "selfcheck_bias": NaN
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 0.0,
+      "expert_twin": 1.0,
+      "policy_dep": NaN,
+      "policy_twin": NaN,
+      "twin_cost": 1.0,
+      "knowledge_gap": NaN,
+      "selfcheck_bias": NaN
+    }
+  },
+  {
+    "scenario": "geometry@b0.46",
+    "cause": "geometry_bias",
+    "bank": 0,
+    "bias": {
+      "plate": 0.46,
+      "tray": 0.46
+    },
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 0.0,
+      "expert_twin": 1.0,
+      "policy_dep": NaN,
+      "policy_twin": NaN,
+      "twin_cost": 1.0,
+      "knowledge_gap": NaN,
+      "selfcheck_bias": NaN
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 0.0,
+      "expert_twin": 1.0,
+      "policy_dep": NaN,
+      "policy_twin": NaN,
+      "twin_cost": 1.0,
+      "knowledge_gap": NaN,
+      "selfcheck_bias": NaN
+    }
+  },
+  {
+    "scenario": "geometry@b0.46",
+    "cause": "geometry_bias",
+    "bank": 1,
+    "bias": {
+      "plate": 0.46,
+      "tray": 0.46
+    },
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 0.0,
+      "expert_twin": 1.0,
+      "policy_dep": NaN,
+      "policy_twin": NaN,
+      "twin_cost": 1.0,
+      "knowledge_gap": NaN,
+      "selfcheck_bias": NaN
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 0.0,
+      "expert_twin": 1.0,
+      "policy_dep": NaN,
+      "policy_twin": NaN,
+      "twin_cost": 1.0,
+      "knowledge_gap": NaN,
+      "selfcheck_bias": NaN
+    }
+  },
+  {
+    "scenario": "geometry@b0.70",
+    "cause": "geometry_bias",
+    "bank": 0,
+    "bias": {
+      "plate": 0.7,
+      "tray": 0.7
+    },
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": NaN,
+      "policy_twin": NaN,
+      "twin_cost": 0.0,
+      "knowledge_gap": NaN,
+      "selfcheck_bias": NaN
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": NaN,
+      "policy_twin": NaN,
+      "twin_cost": 0.0,
+      "knowledge_gap": NaN,
+      "selfcheck_bias": NaN
+    }
+  },
+  {
+    "scenario": "geometry@b0.70",
+    "cause": "geometry_bias",
+    "bank": 1,
+    "bias": {
+      "plate": 0.7,
+      "tray": 0.7
+    },
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": NaN,
+      "policy_twin": NaN,
+      "twin_cost": 0.0,
+      "knowledge_gap": NaN,
+      "selfcheck_bias": NaN
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": NaN,
+      "policy_twin": NaN,
+      "twin_cost": 0.0,
+      "knowledge_gap": NaN,
+      "selfcheck_bias": NaN
+    }
+  },
+  {
+    "scenario": "coverage",
+    "cause": "coverage_deficit",
+    "bank": 0,
+    "bias": {},
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": NaN,
+      "policy_twin": NaN,
+      "twin_cost": 0.0,
+      "knowledge_gap": NaN,
+      "selfcheck_bias": NaN
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": NaN,
+      "policy_twin": NaN,
+      "twin_cost": 0.0,
+      "knowledge_gap": NaN,
+      "selfcheck_bias": NaN
+    }
+  },
+  {
+    "scenario": "coverage",
+    "cause": "coverage_deficit",
+    "bank": 1,
+    "bias": {},
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": NaN,
+      "policy_twin": NaN,
+      "twin_cost": 0.0,
+      "knowledge_gap": NaN,
+      "selfcheck_bias": NaN
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": NaN,
+      "policy_twin": NaN,
+      "twin_cost": 0.0,
+      "knowledge_gap": NaN,
+      "selfcheck_bias": NaN
+    }
+  },
+  {
+    "scenario": "recovery",
+    "cause": "recovery_deficit",
+    "bank": 0,
+    "bias": {},
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": NaN,
+      "policy_twin": NaN,
+      "twin_cost": 0.0,
+      "knowledge_gap": NaN,
+      "selfcheck_bias": NaN
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": NaN,
+      "policy_twin": NaN,
+      "twin_cost": 0.0,
+      "knowledge_gap": NaN,
+      "selfcheck_bias": NaN
+    }
+  },
+  {
+    "scenario": "recovery",
+    "cause": "recovery_deficit",
+    "bank": 1,
+    "bias": {},
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": NaN,
+      "policy_twin": NaN,
+      "twin_cost": 0.0,
+      "knowledge_gap": NaN,
+      "selfcheck_bias": NaN
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": NaN,
+      "policy_twin": NaN,
+      "twin_cost": 0.0,
+      "knowledge_gap": NaN,
+      "selfcheck_bias": NaN
+    }
+  },
+  {
+    "scenario": "healthy",
+    "cause": "healthy",
+    "bank": 0,
+    "bias": {},
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": NaN,
+      "policy_twin": NaN,
+      "twin_cost": 0.0,
+      "knowledge_gap": NaN,
+      "selfcheck_bias": NaN
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": NaN,
+      "policy_twin": NaN,
+      "twin_cost": 0.0,
+      "knowledge_gap": NaN,
+      "selfcheck_bias": NaN
+    }
+  },
+  {
+    "scenario": "healthy",
+    "cause": "healthy",
+    "bank": 1,
+    "bias": {},
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": NaN,
+      "policy_twin": NaN,
+      "twin_cost": 0.0,
+      "knowledge_gap": NaN,
+      "selfcheck_bias": NaN
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": NaN,
+      "policy_twin": NaN,
+      "twin_cost": 0.0,
+      "knowledge_gap": NaN,
+      "selfcheck_bias": NaN
+    }
+  }
+]
