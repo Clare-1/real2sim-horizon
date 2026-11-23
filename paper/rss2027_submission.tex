@@ -1,30 +1,184 @@
-% RSS Stage 1: keep the supplied conference layout. Compile from this directory.
+% RSS 2027 Stage 1 extended abstract. Self-contained: this file is the whole paper.
+% Compile from this directory:  pdflatex rss2027_submission && bibtex rss2027_submission
+%                               && pdflatex rss2027_submission && pdflatex rss2027_submission
+% Layout is the supplied conference template; do not modify margins or fonts.
 \documentclass[conference]{IEEEtran}
 \usepackage{times}
 \usepackage[numbers]{natbib}
-\usepackage{amsmath,booktabs}
+\usepackage{amsmath,amssymb,booktabs,graphicx}
 \usepackage[bookmarks=true]{hyperref}
 \hypersetup{pdfauthor={Anonymous},pdftitle={When Should a Robot Update Its Digital Twin?}}
 \begin{document}
 \title{When Should a Robot Update Its Digital Twin?\\Choosing Learning Operations from Deployment Feedback}
 \author{Author names omitted for anonymous review}
 \maketitle
+
 \begin{abstract}
-A missed placement can indicate an incorrect estimate of tray height or a layout absent from the demonstrations. The first suggests changing the simulator; the second suggests changing the data generated in it. We study this choice in a controlled MuJoCo packing task, with separate training and deployment scenes. In 72 fixed-recipe runs, replacing one round of dataset aggregation with height calibration increased success by 33.3 percentage points under height error but reduced it by 21.7 points under limited layout coverage. In a separate 288-run comparison, a rule using deployment residuals and failure counts improved mean success over a calibrate-once schedule by 13.5 points (paired bootstrap interval: 8.6 to 18.6). The evidence used to accept a repair also mattered: a check based on the current policy's success inside the twin rejected seven of nine geometric updates, whereas a held-out height-prediction check rejected none and preserved deployment performance. These results distinguish two decisions: which learning operation to try, and how to test whether it repaired the model. They concern controlled simulation, not yet physical transfer.
+A missed placement can indicate an incorrect estimate of tray height or a layout absent from the demonstrations. The first suggests changing the simulator; the second suggests changing the data generated in it. Existing pipelines answer this question before deployment: a real-to-sim-to-real builder always repairs the scene, a data loop always collects more labels, a failure explainer always replans. We call this the single-cause assumption and test it in a controlled MuJoCo packing task with separate training and deployment scenes. In 72 fixed-recipe runs, replacing one round of dataset aggregation with height calibration increased success by 33.3 percentage points under height error and reduced it by 21.7 points under limited layout coverage, so no fixed recipe wins for both. A rule that reads deployment residuals and failure counts gained 13.5 points over a calibrate-once schedule (paired interval $[8.6,18.6]$), yet a reference that is told the cause gained only 1.0 point over that rule: the return comes from choosing an operation, not from a better chooser. Verification is a separate decision. Accepting a repair by the current policy's success inside the twin rejected seven of nine geometric corrections; scoring the height it predicts, on episodes held out from the fit, rejected none and left deployment success at .717. An API-backed planner did not exceed the rule (.667 against .733 on mixed causes). All results are simulation; physical transfer and a visual benchmark remain unmeasured.
 \end{abstract}
 \IEEEpeerreviewmaketitle
+
 \section{Introduction}
-Consider a robot that repeatedly releases an object above its slot. If the simulator places the tray too low, more demonstrations generated on that tray may teach the wrong release height more accurately. If the tray is correctly modeled but training covered only the left half of the workspace, measuring its height again supplies no examples on the right. Both failures can produce the same binary outcome. They differ in what the next deployment should buy: a better model of the scene or better coverage of the policy's inputs.
+Consider a robot that repeatedly releases an object above its slot. If the simulator places the tray too low, more demonstrations generated on that tray teach the wrong release height more accurately. If the tray is correctly modeled but training covered only the left half of the workspace, measuring its height again supplies no examples on the right. Both failures produce the same binary outcome. They differ in what the next deployment should buy: a better model of the scene, or better coverage of the policy's inputs.
 
-This distinction matters under a short improvement budget. Dataset aggregation (DAgger) labels states visited by a learner \cite{ross2011dagger}; a calibration changes the geometry used by the planner and the policy's state encoder. Spending a round on one leaves fewer opportunities for the other. Conversely, repairing the twin may change the value of demonstrations generated \emph{after} the repair. The relevant decision is therefore not just whether simulation helps, but which part of the learning pipeline to change next.
+Under a short improvement budget this is a decision, not a preference. Dataset aggregation (DAgger) labels states visited by a learner \cite{ross2011dagger}; a calibration changes the geometry used by the planner and by the policy's state encoder. A round spent on one is unavailable to the other, and repairing the twin changes the value of demonstrations generated after the repair. The question is therefore not whether simulation helps, but which part of the learning pipeline to change next.
 
-We investigate three questions. Does the preferred fixed recipe change when the failure source changes but the task does not? Can deployment observations guide a choice among those recipes' constituent operations? Finally, can the policy itself verify a proposed correction to the simulator in which it was trained? Our comparisons distinguish final task success from agreement with a prescribed first action, and both from the number of labels consumed. In particular, stopping can be the intended response to a healthy twin even if another training round would increase success.
+We ask three questions. Does the preferred fixed recipe change when the failure source changes but the task does not? Can deployment observations select among the recipes' constituent operations? And can the policy verify a correction to the simulator in which it was trained? We separate final task success from agreement with a prescribed first action, and both from the number of labels consumed; stopping is a correct response to a healthy twin even when another round would raise success.
 
-Our contribution is a controlled comparison rather than a new low-level controller. We vary the relation between the training twin, the demonstration distribution and the deployment scene; compare recipes and selectors on matched task sets; and isolate a failure mode of policy-based model validation. We also specify an order intervention that could refute the need for adaptive routing: if one fixed sequence works across causes at the same cost, it is a credible alternative.
-\input{position_protocol}
-\input{repair_evidence}
-\input{selector_evidence}
-\input{external_scope}
+Our contribution is a controlled comparison, not a new controller. We (i) formalize failure-conditioned operation selection under a budget and state when adaptation must beat any fixed recipe; (ii) exhibit a reversal among eight fixed recipes on matched task sets, with paired intervals, and show that no recipe dominates; (iii) show that a policy-based acceptance test is anti-correlated with repair quality while a prediction-based test is not, and give the decision rule we use instead; and (iv) measure eight selectors, a learned multi-label diagnosis, an API planner and a pre-registered order intervention, reporting where adaptivity pays and where it does not.
+
+\section{Related Work}
+\textbf{What to update.} RialTo reconstructs a scene, transfers demonstrations into the twin and improves a real-world imitation policy with simulation reinforcement learning \cite{rialto}. MimicGen adapts demonstrations to new configurations \cite{mandlekar2023mimicgen}; ARSTAG turns one image and an instruction into task-specific robot data with a hierarchy of language agents \cite{arstag}; Agentic RSR uses execution feedback inside scene construction and policy development \cite{agenticrsr}. These systems do use feedback, but feedback decides how well the same operation is executed, not which operation the next round should spend its budget on.
+
+\textbf{What to label.} DAgger changes the state distribution on which an expert supplies actions; HG-DAgger lets a human decide when to intervene \cite{ross2011dagger,kelly2019hgdagger}. LoopWAM is the closest deployment loop: each round collects roughly 100 rollouts per task, annotates their quality, and retrains on expert demonstrations plus all previous rollouts, raising RoboChallenge Table30-V2 success from 23.67\% to 43.33\% in three rounds \cite{loopwam}. Its response is fixed and its report is aggregate. It does not compare collecting another batch against spending that round on the scene model. Our deployment-label arm is that comparison in simulation; it is not a reproduction of LoopWAM.
+
+\textbf{What to measure.} Domain randomization varies the training distribution \cite{tobin2017dr}; SimOpt adapts it from real experience \cite{chebotar2019asid}, and ASID selects informative interactions for system identification \cite{asid}. REFLECT summarizes executions to explain failures and guide replanning \cite{reflect}; AHA uses failure explanations to refine rewards, plans and verification \cite{aha}; CycleVLA backtracks at the subtask level \cite{cyclevla}. These outputs concern the current execution. We instead score a durable change: the return on the next round of model or policy updates.
+
+\section{Problem Formulation}
+Let $W$ be a deployment scene and $T$ its reconstruction. A policy $\pi$ acts on features computed with $T$; success is scored in $W$. A bank is a set of task instances, not a robot. The task packs four objects in sequence with a hierarchical controller and a 55-dimensional state.
+
+An episode ends with a failure profile $p=(\rho,\alpha,\nu,s,h)$: the observed support-height residual $\rho$, the distribution $\alpha$ of failed subgoals, the failure rate $\nu$ under perturbation, the recent success rate $s$, and the update history $h$. A hidden cause $c\in\mathcal{C}=\{\text{geometry},\text{coverage},\text{recovery},\text{healthy}\}$ is available to analysis and to a reference selector, never to the selectors under test. An operation $o\in\mathcal{O}$ is one of: calibrate geometry, regenerate uniformly, regenerate toward a subgoal, add recovery demonstrations, one DAgger round, label in the deployment scene, or stop. Each has a cost $\kappa(o)$ in label budget, optimization steps and feedback episodes.
+
+At round $t$ a selector $\sigma$ maps $p_t$ and the remaining budget $B_t$ to an operation $o_t=\sigma(p_t,B_t)$. The objective is
+\begin{equation}
+\max_{\sigma}\;\mathbb{E}\big[\mathrm{SR}_T(\pi_{\sigma})\big]\quad\text{s.t.}\quad \textstyle\sum_{t}\kappa(o_t)\le B ,
+\label{eq:obj}
+\end{equation}
+where $\pi_\sigma$ is the policy obtained by executing the chosen operations. We compare success at matched cost rather than per-operation price, because a cheap operation that must be repeated is not cheap.
+
+\textbf{When must adaptation win?} Let $g(o,c)$ be the expected gain of $o$ under cause $c$, $o^\star(c)=\arg\max_o g(o,c)$, $p_c$ the cause prior, and
+$\Delta=\min_{c}\big[g(o^\star(c),c)-\max_{o\ne o^\star(c)}g(o,c)\big]$
+the margin, assumed positive. A selector that ignores $p$ plays one fixed $o_f$, so
+\begin{equation}
+R_{\text{fixed}}\;\ge\;\big(1-\max_c p_c\big)\,\Delta .
+\label{eq:bound}
+\end{equation}
+A selector that errs with probability $\varepsilon$ and pays $\kappa$ for diagnosis incurs $R_{\text{sel}}\le \varepsilon D+\kappa$, with $D$ the worst-case loss of a wrong fix. Adaptive selection is therefore preferable when $\varepsilon D+\kappa<(1-\max_c p_c)\Delta$: the bound depends on cause heterogeneity, on identifiability and on the price of a mistake, not on the sophistication of the chooser. Equation~\eqref{eq:bound} also states the limit of our own setting: with one dominant cause the right-hand side tends to zero and a fixed recipe is optimal. The assumption $o^\star(c)\ne o^\star(c')$ fails for mixtures, which is why mixtures are a separate test rather than a fifth column.
+
+\section{Which Repairs Help?}
+\begin{figure}[t]
+\centering\includegraphics[width=\columnwidth]{fig1_recipe_cause.pdf}
+\caption{Deployment success of eight fixed recipes under three failure sources, from Table~\ref{tab:recipe}. Each row spends the same budget and differs only in where the first round goes. No row is best in both of the first two columns: calibration helps under height error and costs 21.7 points under limited coverage, and the reverse holds for recipes that only add data. Healthy is included because a recipe that never stops also pays there.}\label{fig:heat}
+\end{figure}
+\begin{table}[t]
+\centering\caption{Fixed recipes: final deployment SR and mean additional labels (thousands, excluding the 80k initialization). Each SR averages three layout banks at one training seed, 20 evaluation episodes per cell. The true-geometry arm is privileged.}\label{tab:recipe}
+\begin{tabular}{@{}lrrrr@{}}\toprule
+Recipe & Height & Coverage & Healthy & Labels\\\midrule
+Open loop (200k initial) & .367 & .083 & .917 & 0\\
+Fixed twin + DAgger & .417 & .933 & .950 & 102\\
+Randomization + DAgger & .450 & .383 & 1.000 & 111\\
+Deployment-side DAgger & .533 & .900 & .983 & 111\\
+Mixed-source training & .283 & .867 & .983 & 120\\
+Calibrate once + DAgger & .750 & .717 & .967 & 80\\
+Alternate calibration/DAgger & .833 & .300 & .967 & 40\\
+True geometry + DAgger & .950 & .933 & .950 & 93\\\bottomrule
+\end{tabular}
+\end{table}
+Table~\ref{tab:recipe} varies the failure source while holding the task, the controller and the budget fixed. Replacing the first DAgger round with calibration raised geometric success from .417 to .750, a paired gain of 33.3 points (pp; 95\% bootstrap interval $[25.0,45.0]$), and lowered coverage success from .933 to .717 ($-21.7$ pp, $[-30.0,-5.0]$). Alternating the two amplified the contrast: $+41.7$ pp under height error and $-63.3$ pp under limited coverage. The intervals resample three matched banks, not independent training seeds, so the claim is a reversal among these eight recipes, not a theorem about all schedules.
+
+Labelling deployment trajectories is not a substitute. Expert labels collected in the deployment scene reached .900 under limited coverage but .533 under height error, and physical randomization with aggregation reached .383 and .450. When geometry was already correct, the fixed-twin learner could acquire labels on deployment layouts; calibrating first removed a training opportunity without widening that support. These are implemented alternatives, not a benchmark against teleoperation or against every form of randomization.
+
+\begin{table}[t]
+\centering\caption{Nominal probe success, ten episodes per condition and controller. Bank labels reuse the probe task seeds, so we do not pool them as independent replications. $A_2$: scripted expert with true geometry; $A$: expert planning in the twin, scored in $W$; $C$: learned policy in $W$; $D$: learned policy in $T$.}\label{tab:probe}
+\begin{tabular}{@{}lrrrrrrr@{}}\toprule
+Condition & $A_2$ & $A$ & $C$ & $D$ & $A_2\!-\!A$ & $D\!-\!C$\\\midrule
+Geometry & 1.00 & .00 & .30 & .80 & 1.00 & .50\\
+Coverage & 1.00 & 1.00 & .10 & .10 & .00 & .00\\
+Recovery & 1.00 & 1.00 & 1.00 & 1.00 & .00 & .00\\
+Healthy & 1.00 & 1.00 & .70 & .70 & .00 & .00\\\bottomrule
+\end{tabular}
+\end{table}
+\subsection{Model error is not policy error}
+Table~\ref{tab:probe} holds a scripted expert fixed and varies only its geometric belief. Under height error the policy succeeded eight times in ten inside its twin and three times in ten in deployment; under limited coverage, .10 in-twin success coexisted with perfect expert success in deployment using the same geometry. A low policy score therefore need not indict the twin, and a high one need not vindicate it. Only $A_2-A$ is independent of the learned policy; $A-C$ measures a shortfall relative to that expert, not missing knowledge. Nominal probes also miss the recovery deficit: perturbations drove policy success from 1.00 to .00 there, against .70 to .40 in the healthy control.
+
+\subsection{Accepting a repair}
+A gate that rejected a candidate when the incumbent policy's in-twin success fell by more than five points rejected seven of nine geometric updates across three seeds; mean nominal deployment success was .450 against .717 without the gate. The policy had adapted to the wrong belief, so it was least able to judge the correction it needed.
+
+We instead score the quantity the repair predicts. An object's underside yields a height measurement when it rests on the tray, or when its commanded descent stalls with no object beneath it; each episode contributes its median. The repair is fitted on alternating feedback episodes and checked on the others. With $J$ the check episodes for a fixture and $z_j$ their measurements, define
+\begin{equation}
+E(h)=\frac{1}{|J|}\sum_{j\in J}|z_j-h| .
+\label{eq:err}
+\end{equation}
+A proposed height $h'$ is rejected if $E(h')>E(h)+2$~mm when $|J|\ge2$; fixtures with fewer check observations do not veto the update. This gate rejected none of the nine geometric candidates and one update on an already correct twin, and mean geometric success stayed at .717. The score never evaluates the policy, although the policy still determines which contacts are observed, so a bias shared by fitting and checking measurements can escape it.
+
+\section{Method}
+\textbf{C1: diagnose with policy-free quantities.} A selector cannot ask the policy whether the twin is right, because the policy was trained in that twin. We build the profile from three contrasts that do not average the policy into both sides: the twin cost $\tau=A_2-A$, the knowledge gap $\gamma=A-C$, and the self-check bias $\beta=D-C$ (Table~\ref{tab:probe}). $\tau>0$ indicts the model, $\gamma>0$ indicts the data, and $\beta\ne0$ says the policy's own score is not evidence about the model. Two of the three need expert rollouts; Sec.~\ref{sec:exp} charges them against the selector.
+
+\textbf{C2: decide under the budget.} The rule evaluates branches in order and returns the first that fires: calibrate if $\rho>4$~mm; add recovery demonstrations if $\nu>0.5$ and no recovery behaviour was observed; stop if nothing localised, failure concentration is at most .5, $\nu<0.5$ and $s\ge.85$; regenerate toward the worst subgoal if concentration exceeds .5 and fewer than 20k labels have been spent; stop after two rounds without gain; otherwise one DAgger round. Each branch is tied to a cost, so the rule spends nothing when nothing is localised.
+
+\textbf{C3: verify before committing.} A candidate repair is accepted by \eqref{eq:err}, not by re-running the policy inside the candidate twin. The check uses held-out episodes of the same observable.
+
+\textbf{Mixed causes.} When several components coexist we repair the dominant one and re-diagnose rather than classifying the mixture. The reason is measurable: in the three-cause mixture the third-round action that helps is adding recovery data (.650 to .800 with the cause-informed reference), and a nominally evaluated deployment does not reveal it. A mixture label must be right about all components at once; sequential repair only has to be right about the first.
+
+\section{Experiments}
+\label{sec:exp}
+\textbf{Protocol.} Initialization uses 80,000 labelled transitions. Each of three rounds provides 24 feedback episodes; a data operation adds up to 40,000 labels and retraining uses 8,000 optimization steps; calibration adds no labels; stopping saves the remaining rounds. The open-loop control spends its 200,000-label allowance at initialization. Feedback episodes are not 40,000 expert labels, and deployment-side expert data would carry a different acquisition cost, so we report both quantities rather than equating them. The geometric condition sets the believed support height to 0.46 of the true height (9.2 against 20~mm). Limited coverage trains on half the workspace and deploys on the full distribution. The recovery condition omits recovery demonstrations and is evaluated under perturbation; healthy adds neither a model error nor a data deficit, so it means no injected defect, not guaranteed success. Differences within a condition are cleaner than differences between conditions.
+
+\begin{table}[t]
+\centering\caption{Selectors on four conditions: mean final SR over three banks and three training seeds (288 runs), SR--cost area, regret against the cause-informed reference, and matches to its first operation (36 cells).}\label{tab:selectors}
+\setlength{\tabcolsep}{3.6pt}
+\begin{tabular}{@{}lrrrrrrrr@{}}\toprule
+Selector & Geom. & Cov. & Rec. & Heal. & Mean & 1st & AUC & Regret\\\midrule
+Cal. once & .772 & .600 & .833 & .911 & .779 & 9 & .593 & +14.4\\
+Random & .300 & .939 & .867 & .972 & .769 & 0 & .664 & +15.4\\
+Round robin & .894 & .872 & .822 & .939 & .882 & 9 & .646 & +4.2\\
+UCB & .961 & .983 & .817 & .978 & .935 & 9 & .655 & $-1.1$\\
+Rule & .900 & .928 & .900 & .928 & .914 & 21 & .770 & +1.0\\
+LinUCB & .939 & .917 & .356 & .961 & .793 & 9 & .563 & +13.1\\
+Multi-label & .828 & .928 & .828 & .883 & .867 & 28 & .761 & +5.7\\
+Cause-inf. & .939 & .972 & .939 & .844 & .924 & 36 & .795 & 0\\\bottomrule
+\end{tabular}
+\end{table}
+\textbf{Eight selectors.} Table~\ref{tab:selectors} adds random and round-robin schedules, an upper-confidence-bound bandit \cite{auer2002ucb}, a contextual linear bandit \cite{linucb}, a multi-label diagnosis, and a reference that knows the cause. These are adaptations to our operation menu, not published scores. The rule improved mean success over calibrating once by 13.5~pp with a paired interval of $[8.6,18.6]$~pp (5,000 resamples of matched cells); the largest gain was on coverage, where it could acquire the missing layouts in its first round. UCB had the highest observed mean, $+2.1$~pp over the rule $[-1.1,5.1]$, gaining on geometry, coverage and healthy tasks while losing 8.3~pp on recovery. The interval crosses zero, so we do not read it as a win. The cause-informed reference was only $+1.0$~pp over the rule $[-2.2,4.0]$.
+
+\textbf{The return is in choosing, not in the chooser.} Because that reference is nearly tied with a four-branch rule, the measured benefit of adaptivity is the gap between a matched operation and a fixed schedule, not the gap between a clever and a simple selector. It also shows the reference is not an upper bound on success: it stops when the cause is healthy and therefore scores .844 there, below UCB's .978.
+
+\begin{table}[t]
+\centering\caption{Paired difference from the rule within each condition, in percentage points, matched on seed and bank (nine cells per entry; 95\% bootstrap interval over cells). Stars mark intervals that exclude zero. The mean column of Table~\ref{tab:selectors} hides these signs.}\label{tab:paired}
+\setlength{\tabcolsep}{3.6pt}
+\begin{tabular}{@{}lrrrr@{}}\toprule
+Selector & Geom. & Cov. & Rec. & Heal.\\\midrule
+Calibrate once & $-12.8^{*}$ & $-32.8^{*}$ & $-6.7^{*}$ & $-1.7$\\
+Random & $-60.0^{*}$ & $+1.1$ & $-3.3$ & $+4.4^{*}$\\
+Round robin & $-0.6$ & $-5.6$ & $-7.8$ & $+1.1$\\
+UCB & $+6.1^{*}$ & $+5.6^{*}$ & $-8.3^{*}$ & $+5.0^{*}$\\
+LinUCB & $+3.9^{*}$ & $-1.1$ & $-54.4^{*}$ & $+3.3^{*}$\\
+Multi-label & $-7.2$ & $+0.0$ & $-7.2$ & $-4.4$\\
+Cause-informed & $+3.9^{*}$ & $+4.4$ & $+3.9$ & $-8.3^{*}$\\\bottomrule
+\end{tabular}
+\end{table}
+Table~\ref{tab:paired} is the reason we state the result per condition. UCB is the only selector that gains on three conditions, and it still loses 8.3 points on recovery, where feedback about a perturbation is the only signal that separates the condition. LinUCB conditions its value estimates on the failure profile and nevertheless collapses on recovery ($-54.4$), which is consistent with a model fitted on profiles whose recovery entries were nearly constant: a contextual bandit cannot learn from a feature that does not vary. Calibrating once loses most where the twin was already correct ($-32.8$ on coverage) and least where it was wrong ($-12.8$), the ordering \eqref{eq:bound} predicts when the cause prior is not degenerate.
+
+\textbf{Cost.} The multi-label selector matched more reference first actions than the rule (28 against 21) yet scored 4.7~pp lower $[-8.5,-1.0]$, and on healthy tasks it used 22,222 new labels against 44,444 for the rule and 80,000 for calibrate-once. Counting feedback episodes to 90\% of the condition-specific reference mean, multi-label averaged 29.3 episodes among the 27 of 36 runs that arrived, the rule 35.6 among 33. A smaller conditional mean is not evidence of reaching the target more reliably.
+
+\textbf{Diagnosis and mixtures.} Offline, a multi-label diagnosis recovered at least one true component for all 18 mixed profiles and all components for 72\%; single-label mixed-class recall was 6\%. On a separate mixed screen (four mixtures, two banks, one seed) UCB reached .863, the rule .731, calibrate-once .637 and the reference .900. In the three-cause mixture the missing action is recovery data, not another regeneration: the reference gains .650 to .800 in round three, while both the rule and an API planner choose an operation they have already tried.
+
+\begin{table}[t]
+\centering\caption{One cell of the three-cause mixture (bank~0), showing the action chosen in each round and the deployment success measured after it. The reference is told the cause; the other two see only the profile. This cell is illustrative, not an average.}\label{tab:chains}
+\setlength{\tabcolsep}{3.6pt}
+\begin{tabular}{@{}llllr@{}}\toprule
+Arm & Round 1 & Round 2 & Round 3 & Final\\\midrule
+Rule & calibrate (.00) & regenerate (.50) & DAgger (.65) & .650\\
+Planner & calibrate (.00) & regenerate (.50) & regenerate (.20) & .200\\
+Cause-inf. & calibrate (.00) & regenerate (.50) & recovery (.80) & .800\\\bottomrule
+\end{tabular}
+\end{table}
+\textbf{An API planner does not win.} In a 32-run single-cause screen the full menu reached .900, operator-supplied experience .850, a restricted menu .781 and a cheaper model .806; withholding an operation changes what any planner can achieve, which is a property of the menu. On mixed causes, across three mixtures, two banks and one seed, the rule reached .733, the model .667 (paired $-6.7$~pp, $[-25.0,10.0]$ over six cells) and a variant with per-run memory .525, at \$0.0145 and three calls per cell. Table~\ref{tab:chains} shows the mechanism in one cell: after calibrating and regenerating, the remaining deficit is a recovery behaviour, the reference adds it and gains thirty points, the rule falls back to DAgger and gains fifteen, and the planner repeats the regeneration that has already been paid for and loses thirty. With nominal evaluation the perturbation rate sits below the rule's .5 threshold, so no selector can observe that the deficit remains. We read this as a limit of observability rather than of planning, and do not claim the model addresses causes the rule omits.
+
+\textbf{Order.} Differences between whole recipes do not show that one sequence works for both causes. Recorded decisions suggested otherwise but confound starting success, headroom and the acting selector, so we pre-registered pairwise sequences at equal cost. In the first bank (geometry, one seed) calibrate-then-regenerate reached .950 and regenerate-then-calibrate .850, against .700 for calibrating twice and .550 for regenerating twice. The remaining cells of that batch are running; we report the contrast as an intervention in progress, not as an estimate.
+
+\textbf{Not measured.} Three comparisons are designed but unrun, and none of the numbers above depends on them. (i) A physical arm on an AgileX Piper: tag-based object poses preserve the state interface, so the same policy can be scored on paired placements, with tray height measured independently and successes counted out of 20 on held-out layouts. (ii) A visual arm: LIBERO with LIBERO-PRO layout perturbations \cite{libero,liberopro} would test a Diffusion Policy \cite{chi2023diffusion}, where the control that matters is generating equal numbers of demonstrations under the original and under the observation-updated layout prior. (iii) A second task family: our four-step packing task is the only family with a repair operator for every cause, and adding a family without one would confound the selector with the implementation. We list these as scope, not as results.
+
+\section{Discussion}
+Three findings constrain how such a system should be described. First, the measured gain over a fixed schedule comes from making the choice at all: a rule gains 13.5~pp over calibrating once, and a selector told the true cause adds 1.0~pp to that rule. Reporting a selector's win over the best fixed recipe would overstate what an adaptive method contributes. Second, verification and selection are separate decisions with different failure modes: a policy-based gate is anti-correlated with repair quality, because a policy adapted to a wrong belief resists the correction it needs. Third, a cause the platform cannot express cannot be routed. Reducing object friction by a factor of 100 changed success by nothing, mass scaling from $1\times$ to $8\times$ stayed inside noise, finger friction from 1.5 to 0.1 flattened after one step, and latency was binary: .750 and .850 at zero and one step, .000 from two. The grasp is force-closed and the transport vertical, so friction and weight do not bind; we therefore claim four gradable causes and record dynamics as inexpressible here rather than adding a column that would be all zeros.
+
+The threats are concrete. The defects are interventions in one task family, not a taxonomy of natural failures, and a real deployment would present mixtures whose components are not on our list. The scripted expert with true geometry is a privileged control that a physical system does not offer, and even its nonprivileged rollouts consume interactions that we charge to the selector but not to the expert. The three-seed selector comparison is a different experiment from the single-seed recipe matrix, and neither is a nested evaluation across task families. Finally, the reference bounds action agreement, not achievable success, and we have no theory that predicts the magnitude of the reversal in \eqref{eq:bound} beyond its sign.
+
+\textbf{Accounting.} Two conventions matter for reading the tables. First, labels and deployments are separate currencies: a DAgger round buys 40,000 labelled transitions inside the twin, whereas a feedback episode is one real placement and an expert label in the deployment scene would cost a teleoperation. We therefore report labels in the recipe table and episodes in the cost paragraph instead of converting one into the other at an assumed rate. Second, token prices are not bills. For the mixed batch we recorded the provider's own charge, \$0.0145 per cell for three calls, which is roughly 2.7 times the charge implied by the configured per-token prices; a table built from the estimate would have understated the planner by a factor of about three. The planner's cost is small in absolute terms, but the accounting rule should survive a change of model.
+
+\section{Conclusion}
+In four-step simulated packing, reserving a round for calibration helped when geometry was wrong and hurt when demonstrations lacked coverage, so the preferred recipe depends on a cause that the task description does not contain. Deployment feedback made that distinction usable by a four-branch rule, and a reference told the cause added almost nothing to it. The verification experiment isolates a second risk: a candidate twin judged by the incumbent policy can reject exactly the correction that policy needs, whereas scoring the predicted height on held-out episodes does not. Whether these decisions justify their measurement cost on a physical robot, and whether the same choice appears in visual manipulation, remain open; we specify the controls that would test them.
+
 \clearpage
 \bibliographystyle{plainnat}
 \bibliography{references}
