@@ -284,7 +284,7 @@ PYTHONPATH=src .venv-linux/bin/python scripts/run_minimal_validation.py \
 3. **DAgger 的价值随 twin 变准而下降**（几何 +7.9 → +1.1），所以"多打 DAgger"不能替代"先修 twin"。
 4. **uniform 与 targeted 冲突**：uniform 几何 +16.9、覆盖 −0.0，覆盖要的是 targeted。
 
-口径：以上来自混合选择器的日志，不是预注册序列（几何"未校准 targeted" n=9）。已排队预注册顺序实验：同一操作不同顺序，2 原因 × 8 序列 × 2 banks = **32 runs**（`configs/experiment_conflict_order.yaml`，`rsi/sequences.py` 的 `seq:` 选择器）。
+口径：以上来自混合选择器的日志，不是预注册序列（几何"未校准 targeted" n=9）。已排队预注册顺序实验：同一操作不同顺序，2 原因 × **9 序列** × 2 banks = **36 runs**（含 `D→T`）（`configs/experiment_conflict_order.yaml`，`rsi/sequences.py` 的 `seq:` 选择器）。
 
 **诊断信号必须与策略无关**（第二个主张）：策略已在错的 twin 上优化，twin 内部自检天然循环——证据是 recovery 的 legacy 信号恒 0、`P(fail|armed)` 0.29 < 覆盖 0.458、反馈驱动的 linucb 在 recovery 上 −47.8 pp。因此诊断改用策略无关量：`expert_SR(twin)` vs `expert_SR(deployment)`（twin 审计）、`expert_SR − policy_SR`（知识与数据之别）、仅扰动差距（恢复类）。详见审计 §26.5。
 
@@ -414,7 +414,7 @@ LLM 的对比因此改成问三件事（不再是"规则不会 targeted"）：
 - `calibrate → targeted` 比边际高 **+0.23 ~ +0.34**，`dagger → targeted` 比边际低 **−0.24 ~ −0.42**：DAgger 不是"不帮忙"，而是**降低**随后定向重采样的价值；
 - 这与 §5.14 一致：预算越大 → 越多轮 DAgger → 后面 targeted 越没用，所以规则在 48 档变差。
 
-**口径警告**：这是观测数据（动作是选择器选的），存在选择偏差。它只用来给交互项定量、为预注册的 32 格顺序实验提供动机；无偏的非交换性估计只能来自 `seq:C+T` 与 `seq:T+C` 的对照。
+**口径警告**：这是观测数据（动作是选择器选的），存在选择偏差。它只用来给交互项定量、为预注册的 36 格顺序实验提供动机；无偏的非交换性估计只能来自 `seq:C+T` 与 `seq:T+C` 的对照。
 
 ### 5.16 配对检验改写三条结论（2026-11-23）
 
@@ -497,7 +497,7 @@ LLM 的对比因此改成问三件事（不再是"规则不会 targeted"）：
 
 | 块 | 现状 | 缺什么 |
 |---|---|---|
-| LLM agent / LLM+经验 | **已跑通真实调用并进主表**（8 格，23 次，$0.044，平均 SR 0.931） | 论文级网格（3 seeds × 3 banks ≈ 24 格 / $0.14）；LLM+经验变体 |
+| LLM agent / LLM+经验 | **真实端点已跑通**：主表 8 格（23 次 / $0.044 / 平均 0.931）、消融 32 格（4 臂）、混合对比在跑 | 论文级 **72 格**（2 臂 × 36）已在队列，预算约 $0.8 |
 | 真机 | 0 | 机器人、相机、AprilTag/位姿链路 |
 | LIBERO / 外部 benchmark | 0 | checkout、Diffusion Policy 管线、磁盘 |
 
@@ -507,15 +507,35 @@ LLM 的对比因此改成问三件事（不再是"规则不会 targeted"）：
 |---|---|---|---|---|
 | 1 | 最小验证规模 | ✅ **已完成 240/240**（10 banks × 3 seeds × 4 selectors） | — | 0 |
 | 2 | dev/test 划分 | ✅ **已完成**（banks 0–2 dev / 3–9 held-out；dev 调参无改善 → 保留先验阈值） | 正式 30/60 划分（换 bank 采样） | 0 + 重跑 |
-| 3 | 实验一完整矩阵 | **pack/H4 × 8 pipelines 已跑完（48 格）**；sort/stack 与 H2–10 未跑 | 3 families × H2–10 × 8 pipelines × 3 seeds | 数十 h |
-| 4 | 8 条固定流程 baseline | **✅ 已实现并跑完**（`open_loop`/`always_dagger`/`domain_randomize`/`deploy_dagger`/`mixed_train`/`fixed`/`calibrate_alternate`/`true_params`，48 格） | 扩到 3–5 banks | ~3 h |
-| 5 | 图 R2 + 命题 | ✅ **图 R2 已出**；命题文字未写 | 命题用 ε/Δ/D/κ（纯写作） | 0 |
+| 3 | 实验一完整矩阵 | **pack / H4 / 8 pipelines / 3 banks / 3 条件 = 72 格完成**；sort/stack 与 H2–10 未跑 | 3 families × H2–10 × 8 pipelines × 3 seeds | 数十 h |
+| 4 | 8 条固定流程 baseline | **✅ 已实现并跑完 3 banks（72 格）**；配对检验显示没有任何可部署配方在两个原因上同时占优 | 扩到 5 banks | ~3 h |
+| 5 | 图 R2 + 命题 | ✅ **图 R2 已出**；**命题 1–4 已写进 `THEORY.md`**（每条附实测见证与适用边界） | 命题 2 的操作级因果版待 36 格实验 | 0 |
 | 6 | 混合原因并入主表 | ✅ **已并入表 2**（`results/table2_full.md`：混合列 gap recovery bandit 86% / rule 36%） | 混合网格扩到 3 banks | ~2 h |
-| 7 | 实验五消融 | 🟡 **表 11/图 2 已出**、表 8 有、表 10 在跑（32 格）；**图 7 预算扫描在跑**（fb8/fb48） | 表 9 三档偏差（当前协议） | 数 h |
+| 7 | 实验五消融 | ✅ 表 11/图 2、表 10（32/32）、图 7（3 × 24 完成）、表 8 齐全；**表 9 改为无需训练的探针版**（偏差档与 twin_cost 非单调，训练版已砍） | — | 0 |
 | 8 | 判定器偏差原因 | `recalibrate_verifier` 未实现 | 实现重校准动作 | 1 天 |
 | 9 | 位置偏差 | `lateral_offset` 可注入，但 `geometry_repair` 只估高度 | 实现位置估计器，否则只能当“未知原因” | 1–2 天 |
 | 10 | 动力学原因 | 摩擦/质量/延迟扫描证明不可表达 | 写 limitation（已有 4 组扫描） | 0 |
-| 11 | 主张口径 | learned agent SR 0.867 < rule 0.914 | 把“选择效应”与“learned 诊断”分开写 | 写作 |
+| 11 | 主张口径 | **已用配对 bootstrap 定量**：multilabel 比 rule 显著低 4.7 pp、oracle ≈ rule（+1.0 ns）、bandit +2.1 ns | 写作时按分原因配对差表述（README §5.16） | 写作 |
+
+### 8.4 当前在跑 / 排队：只跑会进论文的（2026-11-23）
+
+| 批次 | 格数 | 进论文哪里 | 为什么必须跑 | 状态 |
+|---|---:|---|---|---|
+| LLM × 混合原因 | 24 | 表 2 的 LLM 行；命题 2 的"LLM 版" | LLM 是论文组件，必须在混合/顺序上而非已知原因上比较 | 🟡 在跑（`/tmp/llm_queue.log`） |
+| 规则"标签门"对照 | 6 | 上一条的对照组 | 避免"LLM 赢了一个有 bug 的规则"；只需 1 个阈值改动 | 🟡 排队 |
+| paper_llm_rows | 72 | 表 2（2 臂 × 36 格） | 只有 3 seeds × 3 banks 的 LLM 行敢与 rule/bandit 并列；预算约 $0.8 | 🟡 排队 |
+| 冲突 / 顺序 | 36 | 命题 2 的**因果**版；图 3 的"第一步操作"升级为交互矩阵 | 观测版有选择偏差，非交换性只能靠预注册序列给无偏估计 | 🟡 等 LLM 队列 |
+| 表 A1（扰动评测） | 24 | appendix | 审稿人会问"排序是不是干净评测的产物" | 🟡 配置就绪，最后排 |
+
+**明确不跑的（并写进 limitation，避免"看起来漏了"）**：
+
+| 不跑 | 理由 |
+|---|---|
+| sort / stack 任务族 | 需要新任务族实现（数十 h），当前结论不依赖第二个族；论文写"单族" |
+| 表 9 训练版（偏差档 × SR） | 偏差档与 twin_cost **非单调**（0.70 档对最优执行者无害、0.46 档致命），按档比 SR 不可解释；已用探针版替代 |
+| 动力学原因 | 摩擦 1.0→0.01、质量 1×→8×、延迟 0–4 步扫描证明平台不可表达 |
+| 位置偏差列 | `lateral_offset` 可注入但 `geometry_repair` 只估高度，且平台不提供目标位姿观测 → 没有修复算子 |
+| `recalibrate_verifier` | 该动作未实现（代码里显式返回 "not implemented"）；作为 limitation 写 |
 
 **实验一的三类偏差在本平台上并不等价**：
 - 高度偏差：可注入、可修复（`geometry_repair`），是唯一能完整构成“修 twin”实验的原因；
@@ -584,8 +604,8 @@ PYTHONPATH=src python scripts/train_libero.py --dataset /path/libero_10.hdf5 --o
 
 ```bash
 cd horizon
-PYTHONPATH=src python -m pytest -q tests/test_llm_planner.py tests/test_real_interfaces.py tests/test_libero_scaffold.py
-# 12 passed, 1 skipped
+PYTHONPATH=src python -m pytest -q tests/test_llm_planner.py tests/test_real_interfaces.py     tests/test_piper_adapter.py tests/test_libero_scaffold.py
+# 30 passed, 1 skipped
 ```
 
 完整说明见 [`HANDOFF_external.md`](HANDOFF_external.md)，权重清单见 [`weights/README.md`](weights/README.md)。
@@ -594,9 +614,10 @@ PYTHONPATH=src python -m pytest -q tests/test_llm_planner.py tests/test_real_int
 
 - 完整矩阵：[`PAPER_COVERAGE_AUDIT.md`](PAPER_COVERAGE_AUDIT.md)。
 - **已出（当前协议）**：paper8 主表（4 causes × 8 selectors + CI）、**表 1**（实验一 8 条 pipeline × 3 条件，§5.9）、**表 2 完整版**（纯原因 + 混合列，`results/table2_full.md`）、**表 3**（AUC / oracle-90% 部署 / regret / 健康花费）、**表 11 / 图 2**（H 外推：训 H2/4 在 H≥6 = 0.000，全 H 对照 0.45–0.90，专家各 3/3，`results/fig2_sr_vs_h_20261123/`）、**图 1**（SR–成本）、**图 3**（原因 × 首步）、图 4、R1、R2。
-- **进行中**：**图 7**（部署预算 8/24/48）——`results/budget_sweep_20261123/fb8`、`fb48` 在跑，24/round 取 paper8 同 bank；出图 `make_fig7_budget.py --fb8 … --fb24 … --fb48 …`。
-- **LLM 行已可用**：8 格平均 SR 0.931、恢复列 1.000、$0.044（§9.2、`results/llm_in_main_table.md`）；首步 12/20 vs rule 6/8（`results/llm_vs_rule_20261122.md`）。
-- **旧协议 / 部分**：表 8/9/10。
-- **未做（可跑）**：实验一扩到 3–5 banks、sort/stack family、位置列（无目标位姿观测）、`recalibrate_verifier`。
+- **图 7 已完成**（部署预算 8/24/48，3 × 24 格，`results/fig7_budget_20261123/`）：固定配方对预算**完全平**，只有 oracle 在覆盖上随预算上升，规则在 48 档反而掉 5–7.5 pp（§5.14）。
+- **LLM 行已进主表**（8 格平均 0.931 / $0.044），消融 32/32，混合对比 24 格在跑；论文级 72 格排队（§8.4）。
+- **表 8**：旧协议结果保留；**表 9** 改为探针版（偏差档与 twin_cost 非单调）；**表 10** 完成（`results/experiment5_report.md`）。
+- **命题 1–4**：`THEORY.md`（每条附实测见证）。
+- **未做（写 limitation）**：sort/stack family、位置列（无目标位姿观测）、`recalibrate_verifier`。
 - **外部**：LIBERO（表 4/图 5）、真机（表 5/6/7/图 6）。
 - **可不跑**：最小验证（导师明确不进论文；stage-1 PASS + stage-2 240/240 仅留档）、动力学原因（平台不可表达）、RoboDojo/RoboCasa。
