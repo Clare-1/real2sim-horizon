@@ -1,6 +1,10 @@
 # Conflict / order experiment: identical operations, different orders, identical causes and
-# banks. 2 causes x 8 two-operation sequences x 2 banks = 32 runs.
-# Read-out: C->T vs T->C, C->U vs U->C, C->D vs D->C, and the same-operation-twice controls.
+# banks. 2 causes x 9 two-operation sequences x 2 banks = 36 runs.
+# Read-out: C->T vs T->C, C->U vs U->C, C->D vs D->C, D->T, and the same-operation-twice controls.
+# D->T is included because the observational screen (results/next_action_value.md, audit §31) found
+# the largest *negative* interaction there: regenerate_targeted after dagger_round is worth
+# +0.175 (coverage) / -0.111 (geometry), against a marginal +0.594 / +0.125. Without this pair the
+# experiment cannot test the "DAgger destroys the value of targeted regeneration" claim.
 # Requires the `seq:` selector (horizon/rsi/sequences.py) to be registered in make_selector.
 name: experiment_conflict_order
 seeds:
@@ -14,6 +18,7 @@ selectors:
 - seq:regenerate_uniform+calibrate_geometry
 - seq:calibrate_geometry+dagger_round
 - seq:dagger_round+calibrate_geometry
+- seq:dagger_round+regenerate_targeted
 families:
 - pack
 H_values:
