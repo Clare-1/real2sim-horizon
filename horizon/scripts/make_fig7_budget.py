@@ -1,6 +1,7 @@
 """Fig. 7: final SR vs deployment budget per round (8 / 24 / 48 feedback episodes)."""
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -24,16 +25,33 @@ def load_glob(path):
 
 
 def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--fb8", default=None)
+    ap.add_argument("--fb24", default=None)
+    ap.add_argument("--fb48", default=None)
+    ap.add_argument("--out", default=None)
+    args = ap.parse_args()
+    if args.fb8 or args.fb48:
+        for name in ("fb8", "fb24", "fb48"):
+            if getattr(args, name) is None:
+                raise SystemExit(f"--{name} is required when using explicit sources")
+        sources = {8: load_glob(ROOT / args.fb8), 24: load_glob(ROOT / args.fb24),
+                   48: load_glob(ROOT / args.fb48)}
+        out = ROOT / (args.out or "results/fig7_budget_20261123")
+        return _plot(sources, out)
     sources = {
         8: load_glob(ROOT / "results/budget_sweep_20261116/fb8") if (ROOT / "results/budget_sweep_20261116/fb8").exists() else [],
         24: [r for r in load_glob(ROOT / "results/minimal_validation_20261112/stage1")
              if r.get("bank_index", 0) < BANKS],
         48: load_glob(ROOT / "results/budget_sweep_20261116/fb48") if (ROOT / "results/budget_sweep_20261116/fb48").exists() else [],
     }
+    return _plot(sources, ROOT / "results/paper_figures_20261116")
+
+
+def _plot(sources, out) -> int:
     causes = sorted({r["cause"] for v in sources.values() for r in v})
     sels = sorted({r["selector"] for v in sources.values() for r in v})
-    colors = {"fixed": "tab:gray", "rule": "tab:blue", "oracle": "tab:green"}
-    out = ROOT / "results/paper_figures_20261116"
+    colors = {"fixed": "tab:gray", "rule": "tab:blue", "bandit": "tab:orange", "oracle": "tab:green"}
     out.mkdir(parents=True, exist_ok=True)
     fig, axes = plt.subplots(1, max(len(causes), 1), figsize=(6 * max(len(causes), 1), 4.2),
                              layout="constrained", squeeze=False)

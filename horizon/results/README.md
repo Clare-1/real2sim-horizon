@@ -22,6 +22,9 @@
 | `minimal_validation_advisor_20261121/` | 10 banks × 3 seeds × 4 selectors（240 格）的 `summary.json` / `completion.json` / 报告 | 导师最小验证（不进论文，仅留档） |
 | `fig1_sr_cost_20261122/` | SR–累计部署图（8 selectors × 4 causes） | 图 1 |
 | `fig_R2_regret_20261122/` | 期望遗憾 vs 主导原因占比 | 图 R2 |
+| `h_extrapolation_20261123/`、`h_extrapolation_allH_20261123/` | `h_extrapolation.json`（H=2..10 的 nominal/perturbed SR）：训 H2/4 vs 训全 H 对照 | 表 11（README §5.10） |
+| `fig2_sr_vs_h_20261123/` | SR vs H（绿圈=训练过的 H，红方=未见 H）+ `fig2_numbers.md` | 图 2 |
+| `budget_sweep_20261123/{fb8,fb24,fb48}/` | 部署预算 8/24/48 的 `record.json`（24/round 列取自 paper8 seed 0 同 bank） | 图 7 |
 | `table2_full.md` | 表 2 完整版（纯原因 4 列 + 混合列 + 全部均值） | 表 2 |
 | `llm_in_main_table.md` | LLM 行与 6 个脚本选择器同表 + 逐 run 动作链 + 成本 | 审计 §23 |
 | `diagnosis_profiles_20261118/` | 4 类 × 20 个独立 feedback profile（只跑 feedback） | 去重后的诊断数据 |

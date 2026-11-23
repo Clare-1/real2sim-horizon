@@ -238,6 +238,21 @@ PYTHONPATH=src .venv-linux/bin/python scripts/run_minimal_validation.py \
 
 口径：只有 2 banks × 1 seed，CI 很宽（只有方法 1 显著更差、方法 8 显著更好）；进论文前需扩到 3–5 banks（约 120–200 格），见审计 §24。
 
+### 5.10 表 11 / 图 2：H 外推（训练 H=2,4 → 测 H=2..10）
+
+| 训练集 | 模式 | H=2 | H=4 | H=6 | H=8 | H=10 |
+|---|---|---:|---:|---:|---:|---:|
+| {2,4} | nominal | 0.950 | 0.900 | **0.000** | **0.000** | **0.000** |
+| {2,4} | perturbed | 0.950 | 0.900 | **0.000** | **0.000** | **0.000** |
+| {2,4,6,8,10} | nominal | 0.800 | 0.800 | 0.500 | 0.900 | 0.750 |
+| {2,4,6,8,10} | perturbed | 0.750 | 0.800 | 0.450 | 0.800 | 0.700 |
+
+- **外推失败是真的**：同一评测路径下，全 H 训练模型在 H≥6 得 0.45–0.90；只训 H2/4 的模型是精确 0.000。
+- **不是任务不可解**：脚本专家在 H=6/8/10 各 **3/3** 成功（步数 506/683/860）。
+- **旧解释是错的**：此前把 H≥6 的 0 归因于“旧观测编码”，但当前特征已是连续 `k/10`、`H/10`，**仍然全 0**——应写成“策略不能在 H 上外推”。
+- **全 H 训练有代价**：同 80k 标签预算下 H=2 从 0.950 掉到 0.800、H=4 从 0.900 掉到 0.800（预算被 5 个 H 摊薄）。
+- 口径：1 seed、20 episodes/点。图：`results/fig2_sr_vs_h_20261123/fig2_sr_vs_h.png`；审计 §25。
+
 ## 6. 数据与可复现性
 
 为控制仓库体积，**只保留元数据、逐次 `record.json`、`effective_config.json`、图表和小型 `summary.json`**；策略权重 `.npz`、任务 payload（`tasks_*`）与原始大规模结果目录未纳入。它们由固定种子确定性生成，重跑同一配置即可复现。完整清单与再生成命令见 [`horizon/results/README.md`](horizon/results/README.md)。
@@ -350,9 +365,10 @@ PYTHONPATH=src python -m pytest -q tests/test_llm_planner.py tests/test_real_int
 ## 10. 论文图表覆盖（2026-11-23）
 
 - 完整矩阵：[`PAPER_COVERAGE_AUDIT.md`](PAPER_COVERAGE_AUDIT.md)。
-- **已出（当前协议）**：paper8 主表（4 causes × 8 selectors + CI）、**表 1**（实验一 8 条 pipeline × 3 条件，§5.9）、**表 2 完整版**（纯原因 + 混合列，`results/table2_full.md`）、**表 3**（AUC / oracle-90% 部署 / regret / 健康花费）、**图 1**（SR–成本，`results/fig1_sr_cost_20261122/`）、**图 3**（原因 × 首步）、图 4、R1、R2。
+- **已出（当前协议）**：paper8 主表（4 causes × 8 selectors + CI）、**表 1**（实验一 8 条 pipeline × 3 条件，§5.9）、**表 2 完整版**（纯原因 + 混合列，`results/table2_full.md`）、**表 3**（AUC / oracle-90% 部署 / regret / 健康花费）、**表 11 / 图 2**（H 外推：训 H2/4 在 H≥6 = 0.000，全 H 对照 0.45–0.90，专家各 3/3，`results/fig2_sr_vs_h_20261123/`）、**图 1**（SR–成本）、**图 3**（原因 × 首步）、图 4、R1、R2。
+- **进行中**：**图 7**（部署预算 8/24/48）——`results/budget_sweep_20261123/fb8`、`fb48` 在跑，24/round 取 paper8 同 bank；出图 `make_fig7_budget.py --fb8 … --fb24 … --fb48 …`。
 - **LLM 行已可用**：8 格平均 SR 0.931、恢复列 1.000、$0.044（§9.2、`results/llm_in_main_table.md`）；首步 12/20 vs rule 6/8（`results/llm_vs_rule_20261122.md`）。
-- **旧协议 / 部分**：表 8/9/11、图 2/图 7。
-- **未做（可跑）**：实验一扩到 3–5 banks、H 外推新编码（表 11 / 图 2）、部署预算 8/24/48（图 7）、sort/stack family、`recalibrate_verifier`。
+- **旧协议 / 部分**：表 8/9/10。
+- **未做（可跑）**：实验一扩到 3–5 banks、sort/stack family、位置列（无目标位姿观测）、`recalibrate_verifier`。
 - **外部**：LIBERO（表 4/图 5）、真机（表 5/6/7/图 6）。
 - **可不跑**：最小验证（导师明确不进论文；stage-1 PASS + stage-2 240/240 仅留档）、动力学原因（平台不可表达）、RoboDojo/RoboCasa。

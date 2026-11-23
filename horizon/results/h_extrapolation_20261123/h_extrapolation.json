@@ -1,0 +1,32 @@
+[
+  {
+    "H": 2,
+    "in_training": true,
+    "sr_nominal": 0.95,
+    "sr_perturbed": 0.95
+  },
+  {
+    "H": 4,
+    "in_training": true,
+    "sr_nominal": 0.9,
+    "sr_perturbed": 0.9
+  },
+  {
+    "H": 6,
+    "in_training": false,
+    "sr_nominal": 0.0,
+    "sr_perturbed": 0.0
+  },
+  {
+    "H": 8,
+    "in_training": false,
+    "sr_nominal": 0.0,
+    "sr_perturbed": 0.0
+  },
+  {
+    "H": 10,
+    "in_training": false,
+    "sr_nominal": 0.0,
+    "sr_perturbed": 0.0
+  }
+]
