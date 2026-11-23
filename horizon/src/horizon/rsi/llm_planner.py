@@ -183,6 +183,9 @@ class LLMPlannerSelector:
         out = int(usage_raw.get("completion_tokens", 0))
         usage = {"model": data.get("model", self.model), "input_tokens": inp, "output_tokens": out,
                  "usd": (inp * self.price_in_per_mtok + out * self.price_out_per_mtok) / 1e6,
+                 # Some OpenAI-compatible proxies bill per call and report it directly; keep it
+                 # alongside our price-table estimate so the two can be reported separately.
+                 "provider_cost": usage_raw.get("cost"),
                  "prompt_chars": len(user_prompt), "reply_chars": len(text),
                  "provider": "openai", "base_url": base}
         return text, usage
