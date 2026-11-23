@@ -287,6 +287,47 @@ PYTHONPATH=src .venv-linux/bin/python scripts/run_minimal_validation.py \
 
 **诊断信号必须与策略无关**（第二个主张）：策略已在错的 twin 上优化，twin 内部自检天然循环——证据是 recovery 的 legacy 信号恒 0、`P(fail|armed)` 0.29 < 覆盖 0.458、反馈驱动的 linucb 在 recovery 上 −47.8 pp。因此诊断改用策略无关量：`expert_SR(twin)` vs `expert_SR(deployment)`（twin 审计）、`expert_SR − policy_SR`（知识与数据之别）、仅扰动差距（恢复类）。详见审计 §26.5。
 
+### 5.12 策略无关诊断：四类实测可分（2026-11-23）
+
+**主张**：策略是在错的 twin 上优化出来的，twin 内部的自检天然循环。所以诊断信号必须与策略无关。
+
+**探针**（`scripts/probe_policy_free_signals.py`，不训练、不调 LLM）：
+
+| 量 | 含义 |
+|---|---|
+| A2 | 专家用**真值**规划、在真值里执行（任务可解吗） |
+| A | 专家用 **twin** 规划、在**真值**里执行（这个 twin 能让最优者活下来吗） |
+| B | 专家用 twin 规划、在 twin 里执行（自洽，恒 1） |
+| C | 策略在真值里执行 |
+| D | 策略在 twin 里执行（**自检**） |
+
+`twin_cost = A2 − A`、`knowledge_gap = A − C`、`selfcheck_bias = D − C`。
+
+| 原因 | twin_cost | knowledge_gap (nominal) | knowledge_gap (perturbed) | selfcheck_bias |
+|---|---:|---:|---:|---:|
+| geometry | **+1.00** | −0.20 | +0.00 | **+0.60** |
+| coverage | +0.00 | **+0.80** | +0.67 | +0.00 |
+| recovery | +0.00 | +0.00 | **+1.00** | +0.00 |
+| healthy | +0.00 | +0.20 | +0.33 | +0.00 |
+
+四条读数：
+
+1. **twin 错被干净识别**：几何上 A2=1.00、A=0.00——**最优执行者在错的 twin 上一件事也做不成**；其余三类 twin_cost=0。
+2. **自检偏差只在 twin 错时出现**：几何 D=0.80 vs C=0.20（+0.60），其余三类 0.00。这就是"twin 内成功率是反的"的直接测量。
+3. **恢复类只能靠扰动探针**：nominal 下 C=1.00，perturbed 下 0.00，而专家恒 1.00。
+4. **几何的 knowledge_gap 是负的**：策略比"用错 twin 的专家"更抗偏差 → 用策略自身成功率做诊断，会把 twin 错误掩盖成"策略还行"。
+
+**直接得到的判定规则**（没有拟合任何阈值）：
+
+```
+if twin_cost > 0.3:                                            calibrate_geometry
+elif knowledge_gap(perturbed) − knowledge_gap(nominal) > 0.3:   add_recovery_data
+elif knowledge_gap(nominal) > 0.5:                             regenerate_targeted
+elif knowledge_gap(nominal) <= 0.35:                           stop
+```
+
+4 类 × 2 banks 上四个分支各命中一类，**全程没有使用 twin 内的策略成功率**。口径：5/3 episodes、2 banks、1 seed，粗网格；下一步实现 `PolicyFreeSelector` 与 rule/multilabel 对照（见审计 §27.5）。
+
 ## 6. 数据与可复现性
 
 为控制仓库体积，**只保留元数据、逐次 `record.json`、`effective_config.json`、图表和小型 `summary.json`**；策略权重 `.npz`、任务 payload（`tasks_*`）与原始大规模结果目录未纳入。它们由固定种子确定性生成，重跑同一配置即可复现。完整清单与再生成命令见 [`horizon/results/README.md`](horizon/results/README.md)。

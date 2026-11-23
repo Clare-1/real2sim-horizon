@@ -1,0 +1,202 @@
+[
+  {
+    "scenario": "geometry",
+    "cause": "geometry_bias",
+    "bank": 0,
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 0.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.2,
+      "policy_twin": 0.8,
+      "twin_cost": 1.0,
+      "knowledge_gap": -0.2,
+      "selfcheck_bias": 0.6000000000000001
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 0.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.0,
+      "policy_twin": 0.6666666666666666,
+      "twin_cost": 1.0,
+      "knowledge_gap": 0.0,
+      "selfcheck_bias": 0.6666666666666666
+    }
+  },
+  {
+    "scenario": "geometry",
+    "cause": "geometry_bias",
+    "bank": 1,
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 0.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.2,
+      "policy_twin": 0.8,
+      "twin_cost": 1.0,
+      "knowledge_gap": -0.2,
+      "selfcheck_bias": 0.6000000000000001
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 0.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.0,
+      "policy_twin": 0.6666666666666666,
+      "twin_cost": 1.0,
+      "knowledge_gap": 0.0,
+      "selfcheck_bias": 0.6666666666666666
+    }
+  },
+  {
+    "scenario": "coverage",
+    "cause": "coverage_deficit",
+    "bank": 0,
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.2,
+      "policy_twin": 0.2,
+      "twin_cost": 0.0,
+      "knowledge_gap": 0.8,
+      "selfcheck_bias": 0.0
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.3333333333333333,
+      "policy_twin": 0.3333333333333333,
+      "twin_cost": 0.0,
+      "knowledge_gap": 0.6666666666666667,
+      "selfcheck_bias": 0.0
+    }
+  },
+  {
+    "scenario": "coverage",
+    "cause": "coverage_deficit",
+    "bank": 1,
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.2,
+      "policy_twin": 0.2,
+      "twin_cost": 0.0,
+      "knowledge_gap": 0.8,
+      "selfcheck_bias": 0.0
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.3333333333333333,
+      "policy_twin": 0.3333333333333333,
+      "twin_cost": 0.0,
+      "knowledge_gap": 0.6666666666666667,
+      "selfcheck_bias": 0.0
+    }
+  },
+  {
+    "scenario": "recovery",
+    "cause": "recovery_deficit",
+    "bank": 0,
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 1.0,
+      "policy_twin": 1.0,
+      "twin_cost": 0.0,
+      "knowledge_gap": 0.0,
+      "selfcheck_bias": 0.0
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.0,
+      "policy_twin": 0.0,
+      "twin_cost": 0.0,
+      "knowledge_gap": 1.0,
+      "selfcheck_bias": 0.0
+    }
+  },
+  {
+    "scenario": "recovery",
+    "cause": "recovery_deficit",
+    "bank": 1,
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 1.0,
+      "policy_twin": 1.0,
+      "twin_cost": 0.0,
+      "knowledge_gap": 0.0,
+      "selfcheck_bias": 0.0
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.0,
+      "policy_twin": 0.0,
+      "twin_cost": 0.0,
+      "knowledge_gap": 1.0,
+      "selfcheck_bias": 0.0
+    }
+  },
+  {
+    "scenario": "healthy",
+    "cause": "healthy",
+    "bank": 0,
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.8,
+      "policy_twin": 0.8,
+      "twin_cost": 0.0,
+      "knowledge_gap": 0.19999999999999996,
+      "selfcheck_bias": 0.0
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.6666666666666666,
+      "policy_twin": 0.6666666666666666,
+      "twin_cost": 0.0,
+      "knowledge_gap": 0.33333333333333337,
+      "selfcheck_bias": 0.0
+    }
+  },
+  {
+    "scenario": "healthy",
+    "cause": "healthy",
+    "bank": 1,
+    "nominal": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.8,
+      "policy_twin": 0.8,
+      "twin_cost": 0.0,
+      "knowledge_gap": 0.19999999999999996,
+      "selfcheck_bias": 0.0
+    },
+    "perturbed": {
+      "expert_privileged": 1.0,
+      "expert_dep": 1.0,
+      "expert_twin": 1.0,
+      "policy_dep": 0.6666666666666666,
+      "policy_twin": 0.6666666666666666,
+      "twin_cost": 0.0,
+      "knowledge_gap": 0.33333333333333337,
+      "selfcheck_bias": 0.0
+    }
+  }
+]
