@@ -1,0 +1,96 @@
+{
+  "bank_index": 1,
+  "calibrations": 0,
+  "cause": "healthy",
+  "cost": {
+    "accepted_labels": 80000,
+    "available_labels": 81513,
+    "episodes": 344,
+    "eval_episodes": 120,
+    "sim_steps": 3168525,
+    "worker_seconds": 425.5107333397027
+  },
+  "decisions": [
+    {
+      "action": "deploy_dagger",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "drop": 1,
+          "placement": 1
+        },
+        "per_subgoal": {
+          "subgoal1": 1,
+          "subgoal2": 1
+        },
+        "perturbation_events": 22,
+        "perturbation_failure_rate": 0.0625,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0014470335690941229,
+        "sr": 0.9166666666666666
+      },
+      "reason": "no twin: expert labels in deployment",
+      "round": 1,
+      "sr_after": 0.95,
+      "sr_before": 0.9,
+      "target": null
+    },
+    {
+      "action": "deploy_dagger",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.6666666666666666,
+        "failure_types": {
+          "grasp": 1,
+          "placement": 1,
+          "stall": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 2,
+          "subgoal1": 1
+        },
+        "perturbation_events": 14,
+        "perturbation_failure_rate": 0.15384615384615385,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0010352551781661612,
+        "sr": 0.875
+      },
+      "reason": "no twin: expert labels in deployment",
+      "round": 2,
+      "sr_after": 0.95,
+      "sr_before": 0.95,
+      "target": null
+    },
+    {
+      "action": "stop",
+      "est_cost": 0,
+      "profile": {
+        "concentration": 0.0,
+        "failure_types": {},
+        "per_subgoal": {},
+        "perturbation_events": 15,
+        "perturbation_failure_rate": 0.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0013830939720345659,
+        "sr": 1.0
+      },
+      "reason": "already solved",
+      "round": 3,
+      "sr_after": 0.95,
+      "sr_before": 0.95,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 0.95,
+  "first_action": "deploy_dagger",
+  "first_step_correct": false,
+  "new_labels": 80000,
+  "scenario": "healthy",
+  "seed": 0,
+  "selector": "deploy_dagger"
+}

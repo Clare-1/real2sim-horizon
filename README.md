@@ -37,11 +37,14 @@
 
 `horizon/README.md` 中有更细的模块—论文方案对应表；本文件中的相对链接（`../*.md`）在仓库根目录可正常解析。
 
-## 3. 当前状态（2026-11-20）
+## 3. 当前状态（2026-11-23）
 
 - 筛查批次 `results/four_causes_20261118`：**48/48 完成**（4 causes × 2 banks × 6 selectors，1 seed）。
 - 论文批次 `results/four_causes_paper8_20261120`：**288/288 完成**（4 causes × 3 banks × 3 seeds × 8 selectors，2026-11-21 03:22）；最终表见 §5.7。
-- 完整完成度对照：**外部阻塞 3 块 + 内部缺口 11 项**，见 §8。
+- **实验一 8 条固定流程**：`results/experiment1_table1_20261122` **48/48 完成**（8 方法 × 3 条件 × 2 banks，2026-11-22 22:08）；表见 §5.9。
+- **导师最小验证 stage-2**：`results/minimal_validation_advisor_20261121` **240/240 完成**（2 causes × 10 banks × 3 seeds × 4 selectors）。
+- **LLM 已进主表**：`results/four_causes_llm_20261122` 8 格，真实端点（minara.cloud / `openai/gpt-6.2-astra`），23 次调用 / **$0.044**（§9.2）。
+- 完整完成度对照：**外部阻塞 3 块 + 内部缺口 11 项**，见 §8；论文图表覆盖见 §10。
 
 | 项 | 值 |
 |---|---|
@@ -204,6 +207,36 @@ PYTHONPATH=src .venv-linux/bin/python scripts/run_minimal_validation.py \
 - 仍需说明：无 LLM key（bandit 作为 learned/exploring 代理）；规则阈值未做 dev/test 划分；oracle 是诊断正确性上界，不是 SR 上界。
 - **图 R2**（用 10-bank 每类均值算期望遗憾，不新跑）：fixed 13.0/26.5 pp、rule 8.0/6.0 pp、bandit 0.5/3.0 pp（几何/覆盖）；fixed−rule gap 从覆盖 20.5 pp 降到几何 5.0 pp。链接：[`results/fig_R2_regret_20261122/fig_R2_regret.png`](horizon/results/fig_R2_regret_20261122/fig_R2_regret.png)。
 - **dev/test bank 检查**（seed 0，banks 0–2 = dev，3–9 = held-out）：fixed 0.871/0.721、rule 0.907/0.929、bandit 0.979/0.936（几何/覆盖）。排序保持；rule 的几何优势从 +8.3（dev）缩到 +3.6（test），覆盖仍 +20.8 pp。注意 rule 阈值是硬编码的，这不是完整的调参/测试分离。
+- **stage-2 完成**：`results/minimal_validation_advisor_20261121` **240/240**（2 causes × 10 banks × 3 seeds × 4 selectors），结论与 stage-1 一致（详见审计 §18/§21）。
+
+### 5.9 实验一：8 条固定流程（导师表 1 版式）
+
+数据源 `results/experiment1_table1_20261122`（48 格 = 8 方法 × 3 条件 × 2 banks）；最后一列是相对方法 2 的按条件配对 bootstrap 95% CI。
+
+| # | 方法 | 用反馈 | 用 twin | 校准 twin | 高度偏差 | 覆盖不足 | 健康 | 平均 | 标签/格 |
+|---|---|---|---|:---:|---:|---:|---:|---:|---:|
+| 1 | 开环生成 200k | ✗ | ✓ | ✗ | 0.350 | 0.050 | 0.950 | 0.450 | 0 |
+| 2 | 固定 twin + DAgger | ✓ | ✓ | ✗ | 0.425 | **0.975** | 0.925 | 0.775 | 100,000 |
+| 3 | 领域随机化 + DAgger | ✓ | ✓ | ✗ | 0.525 | 0.350 | **1.000** | 0.625 | 120,000 |
+| 4 | 部署环境 DAgger | ✓ | ✗ | — | 0.575 | 0.875 | 0.975 | 0.808 | 113,333 |
+| 5 | 仿真 + 部署混合 | ✓ | ✓ | ✗ | 0.225 | 0.850 | 0.975 | 0.683 | 120,000 |
+| 6 | 首轮校准后冻结 | ✓ | ✓ | ✓ | 0.775 | 0.675 | 0.975 | 0.808 | 80,000 |
+| 7 | 重复校准 + DAgger | ✓ | ✓ | ✓ | **0.800** | 0.225 | 0.950 | 0.658 | 40,000 |
+| 8 | 真实参数当 twin（上界） | ✓ | ✓ | 真值 | **0.950** | **0.975** | 0.925 | **0.950** | 86,667 |
+
+**没有一条固定配方通吃**（导师“配方 × 原因错配”的直接证据）：
+
+- 高度偏差：8 (0.950) > 7 (0.800) > 6 (0.775) > 4 (0.575) > 3 (0.525) > 2 (0.425) > 1 (0.350) > 5 (0.225)；
+- 覆盖不足：2 ≈ 8 (0.975) > 4 (0.875) > 5 (0.850) > 6 (0.675) > 3 (0.350) > 7 (0.225) > 1 (0.050)；
+- 健康：3 (1.000) > 4/5/6 (0.975) > 1 (0.950) > 2/8 (0.925)。
+
+三条关键读数：
+
+1. **校准类方法在几何强、在覆盖弱**：方法 6 几何 0.775 / 覆盖 0.675；方法 7 几何 0.800 / 覆盖 **0.225**——校准吃掉了覆盖需要的标签预算。
+2. **方法 2 覆盖最强、几何最弱**：固定 twin 把部署失败全归因成“数据不够”，对几何偏差无能为力（0.425）。
+3. **方法 5（混合训练）几何最差（0.225）**：twin 与部署数据混在一起，校准信号被稀释；方法 1（开环 200k）几何 0.350 / 覆盖 0.050——数据多但不用反馈，两个条件都差。
+
+口径：只有 2 banks × 1 seed，CI 很宽（只有方法 1 显著更差、方法 8 显著更好）；进论文前需扩到 3–5 banks（约 120–200 格），见审计 §24。
 
 ## 6. 数据与可复现性
 
@@ -229,12 +262,12 @@ PYTHONPATH=src .venv-linux/bin/python scripts/run_minimal_validation.py \
 
 | # | 缺口 | 现状 | 补法 | 机时 |
 |---|---|---|---|---|
-| 1 | 最小验证规模 | 3 banks × 3 seeds | 10 banks × 3 seeds × 4 selectors = 240 runs | ~15 h |
-| 2 | dev/test 划分 | 规则阈值在评估 banks 上调 | 30 dev / 60 test，重调 rule/bandit | 0 + 重跑 |
-| 3 | 实验一完整矩阵 | pack/H4 × 8 selectors | 3 families × H2–10 × 8 pipelines × 3 seeds | 数十 h |
-| 4 | 8 条固定流程 baseline | 只有 selector，不是 8 条固定 pipeline | 接线/实现：fixed twin DAgger、DR+DAgger、deploy DAgger、sim+deploy mixed、first-round freeze、repeated calibration+DAgger、true params | 1–2 天代码 |
-| 5 | 图 R2 + 命题 | 未跑/未写 | 5 α × 4 selectors × 3 seeds = 60 runs；命题用 ε/Δ/D/κ | ~4 h |
-| 6 | 混合原因并入主表 | 独立 mixed grid（48 runs） | 把 mixed 作为第 5 列并入 8 选择器表 | 复用现有 |
+| 1 | 最小验证规模 | ✅ **已完成 240/240**（10 banks × 3 seeds × 4 selectors） | — | 0 |
+| 2 | dev/test 划分 | ✅ **已完成**（banks 0–2 dev / 3–9 held-out；dev 调参无改善 → 保留先验阈值） | 正式 30/60 划分（换 bank 采样） | 0 + 重跑 |
+| 3 | 实验一完整矩阵 | **pack/H4 × 8 pipelines 已跑完（48 格）**；sort/stack 与 H2–10 未跑 | 3 families × H2–10 × 8 pipelines × 3 seeds | 数十 h |
+| 4 | 8 条固定流程 baseline | **✅ 已实现并跑完**（`open_loop`/`always_dagger`/`domain_randomize`/`deploy_dagger`/`mixed_train`/`fixed`/`calibrate_alternate`/`true_params`，48 格） | 扩到 3–5 banks | ~3 h |
+| 5 | 图 R2 + 命题 | ✅ **图 R2 已出**；命题文字未写 | 命题用 ε/Δ/D/κ（纯写作） | 0 |
+| 6 | 混合原因并入主表 | ✅ **已并入表 2**（`results/table2_full.md`：混合列 gap recovery bandit 86% / rule 36%） | 混合网格扩到 3 banks | ~2 h |
 | 7 | 实验五消融 | 部分 | 校准器修复版、H 外推、agent 消融、部署预算 8/24/48 | 数 h |
 | 8 | 判定器偏差原因 | `recalibrate_verifier` 未实现 | 实现重校准动作 | 1 天 |
 | 9 | 位置偏差 | `lateral_offset` 可注入，但 `geometry_repair` 只估高度 | 实现位置估计器，否则只能当“未知原因” | 1–2 天 |
@@ -251,6 +284,8 @@ PYTHONPATH=src .venv-linux/bin/python scripts/run_minimal_validation.py \
 ### 8.3 已完成、可以作为论文主结果的
 
 - **288-run 8 选择器主表 + 95% CI**（§5.7、`论文批次结果_2026-11-21.md`）；
+- **实验一 8 条固定流程 × 3 条件（48 格）**：没有一条配方通吃——高度偏差方法 8 (0.950) > 方法 7 (0.800) > 方法 6 (0.775) > 方法 2 (0.425)；覆盖不足方法 2 ≈ 方法 8 (0.975) > 方法 4 (0.875) > 方法 7 (0.225)；健康方法 3 (1.000) 最高。详见 `results/experiment1_table1_20261122/table1_report.md`；
+- **LLM 进主表**：8 格，平均 SR **0.931**（仅次于 bandit 0.944），恢复列 **1.000** 全场最高，23 次调用 / $0.044（`results/llm_in_main_table.md`）；
 - **图 R1 配方 × 原因**：没有固定配方通吃（`results/fig_R1_recipe_cause_20261121/`）；
 - **多标签诊断**：184 profiles，exact 82%，mixed 任一 100% / 全中 72%；
 - **混合网格 48 runs**：bandit gap +100/+17/+94/+100 vs rule +27/−33/+88/0；
@@ -312,13 +347,12 @@ PYTHONPATH=src python -m pytest -q tests/test_llm_planner.py tests/test_real_int
 
 完整说明见 [`HANDOFF_external.md`](HANDOFF_external.md)，权重清单见 [`weights/README.md`](weights/README.md)。
 
-## 10. 论文图表覆盖（2026-11-22）
+## 10. 论文图表覆盖（2026-11-23）
 
 - 完整矩阵：[`PAPER_COVERAGE_AUDIT.md`](PAPER_COVERAGE_AUDIT.md)。
-- **当前协议已出**：paper8 主表（4 causes × 8 selectors + CI）、**表 3**（AUC / oracle-90% 部署 / regret / 健康花费）、**图 1**（SR–成本，`results/fig1_sr_cost_20261122/`）、**图 3**（原因 × 首步）、图 4、R1、R2。
-- **实验一 8 条 pipeline 已实现**：`open_loop` / `always_dagger` / `domain_randomize` / `deploy_dagger` / `mixed_train` / `fixed` / `calibrate_alternate` / `true_params`，配置 `configs/experiment1_table1_pilot.yaml`（3 条件 × 2 banks × 8 方法），输出 `results/experiment1_table1_20261122`。
-- **旧协议 / 部分**：表 2 的 mixed 列、表 8/9/11、图 2/图 7。
-- **未做（可跑）**：实验一 8 条 pipeline × 3 条件、dev/test 30/60、H 外推新编码、图 2/7 的当前版本。
+- **已出（当前协议）**：paper8 主表（4 causes × 8 selectors + CI）、**表 1**（实验一 8 条 pipeline × 3 条件，§5.9）、**表 2 完整版**（纯原因 + 混合列，`results/table2_full.md`）、**表 3**（AUC / oracle-90% 部署 / regret / 健康花费）、**图 1**（SR–成本，`results/fig1_sr_cost_20261122/`）、**图 3**（原因 × 首步）、图 4、R1、R2。
+- **LLM 行已可用**：8 格平均 SR 0.931、恢复列 1.000、$0.044（§9.2、`results/llm_in_main_table.md`）；首步 12/20 vs rule 6/8（`results/llm_vs_rule_20261122.md`）。
+- **旧协议 / 部分**：表 8/9/11、图 2/图 7。
+- **未做（可跑）**：实验一扩到 3–5 banks、H 外推新编码（表 11 / 图 2）、部署预算 8/24/48（图 7）、sort/stack family、`recalibrate_verifier`。
 - **外部**：LIBERO（表 4/图 5）、真机（表 5/6/7/图 6）。
-- **LLM 行已可用**：`results/llm_vs_rule_20261122.md`（LLM 首步 12/20 vs rule 6/8，同为几何/覆盖可分、恢复不可分）。
-- **可不跑**：最小验证（导师明确不进论文；stage-1 已 PASS）、动力学原因（平台不可表达）、RoboDojo/RoboCasa。
+- **可不跑**：最小验证（导师明确不进论文；stage-1 PASS + stage-2 240/240 仅留档）、动力学原因（平台不可表达）、RoboDojo/RoboCasa。

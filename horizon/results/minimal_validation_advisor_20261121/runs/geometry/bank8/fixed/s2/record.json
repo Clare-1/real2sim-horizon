@@ -1,0 +1,112 @@
+{
+  "bank_index": 8,
+  "calibrations": 1,
+  "cause": "geometry_bias",
+  "cost": {
+    "accepted_labels": 80000,
+    "available_labels": 86295,
+    "episodes": 360,
+    "eval_episodes": 120,
+    "sim_steps": 3914750,
+    "worker_seconds": 543.1478623929434
+  },
+  "decisions": [
+    {
+      "action": "calibrate_geometry",
+      "est_cost": 1,
+      "profile": {
+        "concentration": 0.375,
+        "failure_types": {
+          "drop": 1,
+          "grasp": 4,
+          "placement": 5,
+          "stall": 5,
+          "transition": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 6,
+          "subgoal1": 4,
+          "subgoal2": 4,
+          "subgoal3": 2
+        },
+        "perturbation_events": 7,
+        "perturbation_failure_rate": 0.8571428571428571,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.010642384462275611,
+        "sr": 0.33333333333333337
+      },
+      "reason": "fixed recipe: calibrate first round",
+      "round": 1,
+      "sr_after": 0.75,
+      "sr_before": 0.35,
+      "target": null
+    },
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.6666666666666666,
+        "failure_types": {
+          "placement": 3,
+          "stall": 1,
+          "transition": 5
+        },
+        "per_subgoal": {
+          "subgoal0": 6,
+          "subgoal1": 1,
+          "subgoal2": 1,
+          "subgoal3": 1
+        },
+        "perturbation_events": 10,
+        "perturbation_failure_rate": 0.42857142857142855,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.00018600147639740577,
+        "sr": 0.625
+      },
+      "reason": "fixed recipe: always DAgger",
+      "round": 2,
+      "sr_after": 0.75,
+      "sr_before": 0.75,
+      "target": null
+    },
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.4,
+        "failure_types": {
+          "placement": 3,
+          "stall": 1,
+          "transition": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 1,
+          "subgoal1": 1,
+          "subgoal2": 2,
+          "subgoal3": 1
+        },
+        "perturbation_events": 22,
+        "perturbation_failure_rate": 0.1111111111111111,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 7.796545420750423e-05,
+        "sr": 0.7916666666666666
+      },
+      "reason": "fixed recipe: always DAgger",
+      "round": 3,
+      "sr_after": 0.8,
+      "sr_before": 0.75,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 0.8,
+  "first_action": "calibrate_geometry",
+  "first_step_correct": true,
+  "new_labels": 80000,
+  "scenario": "geometry",
+  "seed": 2,
+  "selector": "fixed"
+}

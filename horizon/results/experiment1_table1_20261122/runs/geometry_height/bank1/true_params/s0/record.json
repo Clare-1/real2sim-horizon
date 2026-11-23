@@ -1,0 +1,71 @@
+{
+  "bank_index": 1,
+  "calibrations": 0,
+  "cause": "geometry_bias",
+  "cost": {
+    "accepted_labels": 40000,
+    "available_labels": 40770,
+    "episodes": 184,
+    "eval_episodes": 80,
+    "sim_steps": 1816000,
+    "worker_seconds": 244.76923216390423
+  },
+  "decisions": [
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5454545454545454,
+        "failure_types": {
+          "placement": 1,
+          "stall": 6,
+          "transition": 4
+        },
+        "per_subgoal": {
+          "subgoal0": 6,
+          "subgoal1": 4,
+          "subgoal2": 1
+        },
+        "perturbation_events": 13,
+        "perturbation_failure_rate": 0.1111111111111111,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0012507396662597668,
+        "sr": 0.5416666666666667
+      },
+      "reason": "fixed twin: always DAgger",
+      "round": 1,
+      "sr_after": 0.9,
+      "sr_before": 0.6,
+      "target": null
+    },
+    {
+      "action": "stop",
+      "est_cost": 0,
+      "profile": {
+        "concentration": 0.0,
+        "failure_types": {},
+        "per_subgoal": {},
+        "perturbation_events": 17,
+        "perturbation_failure_rate": 0.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0014082331396084932,
+        "sr": 1.0
+      },
+      "reason": "already solved",
+      "round": 2,
+      "sr_after": 0.9,
+      "sr_before": 0.9,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 48,
+  "final_sr": 0.9,
+  "first_action": "dagger_round",
+  "first_step_correct": false,
+  "new_labels": 40000,
+  "scenario": "geometry_height",
+  "seed": 0,
+  "selector": "true_params"
+}

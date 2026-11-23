@@ -1,0 +1,50 @@
+{
+  "bank_index": 1,
+  "calibrations": 0,
+  "cause": "geometry_bias",
+  "cost": {
+    "accepted_labels": 0,
+    "available_labels": 0,
+    "episodes": 24,
+    "eval_episodes": 40,
+    "sim_steps": 388100,
+    "worker_seconds": 52.960401992313564
+  },
+  "decisions": [
+    {
+      "action": "stop",
+      "est_cost": 0,
+      "profile": {
+        "concentration": 0.36363636363636365,
+        "failure_types": {
+          "placement": 6,
+          "stall": 5
+        },
+        "per_subgoal": {
+          "subgoal0": 4,
+          "subgoal1": 4,
+          "subgoal2": 3
+        },
+        "perturbation_events": 20,
+        "perturbation_failure_rate": 0.3333333333333333,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.011280000913466544,
+        "sr": 0.5416666666666667
+      },
+      "reason": "open loop: budget spent before deployment",
+      "round": 1,
+      "sr_after": 0.3,
+      "sr_before": 0.3,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 24,
+  "final_sr": 0.3,
+  "first_action": "stop",
+  "first_step_correct": false,
+  "new_labels": 0,
+  "scenario": "geometry_height",
+  "seed": 0,
+  "selector": "open_loop"
+}

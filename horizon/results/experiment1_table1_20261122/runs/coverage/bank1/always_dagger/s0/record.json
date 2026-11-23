@@ -1,0 +1,108 @@
+{
+  "bank_index": 1,
+  "calibrations": 0,
+  "cause": "coverage_deficit",
+  "cost": {
+    "accepted_labels": 120000,
+    "available_labels": 122032,
+    "episodes": 480,
+    "eval_episodes": 120,
+    "sim_steps": 5280775,
+    "worker_seconds": 708.6282258140855
+  },
+  "decisions": [
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.9166666666666666,
+        "failure_types": {
+          "drop": 1,
+          "grasp": 4,
+          "placement": 2,
+          "stall": 2,
+          "transition": 15
+        },
+        "per_subgoal": {
+          "subgoal0": 22,
+          "subgoal1": 2
+        },
+        "perturbation_events": 4,
+        "perturbation_failure_rate": 1.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": null,
+        "sr": 0.0
+      },
+      "reason": "fixed twin: always DAgger",
+      "round": 1,
+      "sr_after": 0.65,
+      "sr_before": 0.05,
+      "target": null
+    },
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5714285714285714,
+        "failure_types": {
+          "grasp": 1,
+          "stall": 2,
+          "transition": 4
+        },
+        "per_subgoal": {
+          "subgoal0": 4,
+          "subgoal2": 2,
+          "subgoal3": 1
+        },
+        "perturbation_events": 13,
+        "perturbation_failure_rate": 0.08333333333333333,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0012032474542258628,
+        "sr": 0.7083333333333333
+      },
+      "reason": "fixed twin: always DAgger",
+      "round": 2,
+      "sr_after": 0.85,
+      "sr_before": 0.65,
+      "target": null
+    },
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.6,
+        "failure_types": {
+          "drop": 1,
+          "placement": 1,
+          "transition": 3
+        },
+        "per_subgoal": {
+          "subgoal0": 1,
+          "subgoal1": 3,
+          "subgoal2": 1
+        },
+        "perturbation_events": 14,
+        "perturbation_failure_rate": 0.08333333333333333,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0012789102095834767,
+        "sr": 0.7916666666666666
+      },
+      "reason": "fixed twin: always DAgger",
+      "round": 3,
+      "sr_after": 0.95,
+      "sr_before": 0.85,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 0.95,
+  "first_action": "dagger_round",
+  "first_step_correct": false,
+  "new_labels": 120000,
+  "scenario": "coverage",
+  "seed": 0,
+  "selector": "always_dagger"
+}

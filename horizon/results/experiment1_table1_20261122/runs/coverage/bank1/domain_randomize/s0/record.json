@@ -1,0 +1,111 @@
+{
+  "bank_index": 1,
+  "calibrations": 0,
+  "cause": "coverage_deficit",
+  "cost": {
+    "accepted_labels": 120000,
+    "available_labels": 123441,
+    "episodes": 440,
+    "eval_episodes": 120,
+    "sim_steps": 6059300,
+    "worker_seconds": 716.3903127824888
+  },
+  "decisions": [
+    {
+      "action": "randomize_physics",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.9166666666666666,
+        "failure_types": {
+          "drop": 1,
+          "grasp": 4,
+          "placement": 2,
+          "stall": 2,
+          "transition": 15
+        },
+        "per_subgoal": {
+          "subgoal0": 22,
+          "subgoal1": 2
+        },
+        "perturbation_events": 4,
+        "perturbation_failure_rate": 1.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": null,
+        "sr": 0.0
+      },
+      "reason": "domain randomisation: widen the world",
+      "round": 1,
+      "sr_after": 0.05,
+      "sr_before": 0.05,
+      "target": null
+    },
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.7727272727272727,
+        "failure_types": {
+          "grasp": 8,
+          "placement": 3,
+          "stall": 3,
+          "transition": 8
+        },
+        "per_subgoal": {
+          "subgoal0": 17,
+          "subgoal1": 4,
+          "subgoal2": 1
+        },
+        "perturbation_events": 4,
+        "perturbation_failure_rate": 1.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0013977094739576097,
+        "sr": 0.08333333333333337
+      },
+      "reason": "domain randomisation: DAgger",
+      "round": 2,
+      "sr_after": 0.35,
+      "sr_before": 0.05,
+      "target": null
+    },
+    {
+      "action": "randomize_physics",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.4666666666666667,
+        "failure_types": {
+          "grasp": 4,
+          "placement": 2,
+          "stall": 1,
+          "transition": 8
+        },
+        "per_subgoal": {
+          "subgoal0": 7,
+          "subgoal1": 3,
+          "subgoal2": 2,
+          "subgoal3": 3
+        },
+        "perturbation_events": 9,
+        "perturbation_failure_rate": 0.375,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0015455553132764852,
+        "sr": 0.375
+      },
+      "reason": "domain randomisation: widen the world",
+      "round": 3,
+      "sr_after": 0.35,
+      "sr_before": 0.35,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 0.35,
+  "first_action": "randomize_physics",
+  "first_step_correct": false,
+  "new_labels": 120000,
+  "scenario": "coverage",
+  "seed": 0,
+  "selector": "domain_randomize"
+}

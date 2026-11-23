@@ -1,0 +1,102 @@
+{
+  "bank_index": 1,
+  "calibrations": 0,
+  "cause": "healthy",
+  "cost": {
+    "accepted_labels": 120000,
+    "available_labels": 121861,
+    "episodes": 432,
+    "eval_episodes": 120,
+    "sim_steps": 4269000,
+    "worker_seconds": 481.07235764269717
+  },
+  "decisions": [
+    {
+      "action": "randomize_physics",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "drop": 1,
+          "placement": 1
+        },
+        "per_subgoal": {
+          "subgoal1": 1,
+          "subgoal2": 1
+        },
+        "perturbation_events": 22,
+        "perturbation_failure_rate": 0.0625,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0014470335690941229,
+        "sr": 0.9166666666666666
+      },
+      "reason": "domain randomisation: widen the world",
+      "round": 1,
+      "sr_after": 1.0,
+      "sr_before": 0.9,
+      "target": null
+    },
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.6,
+        "failure_types": {
+          "drop": 1,
+          "placement": 2,
+          "transition": 2
+        },
+        "per_subgoal": {
+          "subgoal0": 3,
+          "subgoal1": 2
+        },
+        "perturbation_events": 13,
+        "perturbation_failure_rate": 0.15384615384615385,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0008988057686670943,
+        "sr": 0.7916666666666666
+      },
+      "reason": "domain randomisation: DAgger",
+      "round": 2,
+      "sr_after": 1.0,
+      "sr_before": 1.0,
+      "target": null
+    },
+    {
+      "action": "randomize_physics",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.6666666666666666,
+        "failure_types": {
+          "placement": 2,
+          "transition": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 2,
+          "subgoal2": 1
+        },
+        "perturbation_events": 14,
+        "perturbation_failure_rate": 0.08333333333333333,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0017515730810183823,
+        "sr": 0.875
+      },
+      "reason": "domain randomisation: widen the world",
+      "round": 3,
+      "sr_after": 1.0,
+      "sr_before": 1.0,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 1.0,
+  "first_action": "randomize_physics",
+  "first_step_correct": false,
+  "new_labels": 120000,
+  "scenario": "healthy",
+  "seed": 0,
+  "selector": "domain_randomize"
+}

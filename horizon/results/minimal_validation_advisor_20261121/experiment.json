@@ -60,7 +60,9 @@
       }
     ],
     "seeds": [
-      0
+      0,
+      1,
+      2
     ],
     "selectors": [
       "fixed",
@@ -82,5 +84,5 @@
       "tray_height": 0.02
     }
   },
-  "fingerprint": "f98c27d8fb4417be99875d6047b3ef0cdb8db84353dc01479788521d850e600c"
+  "fingerprint": "ab06e242fcf28e64e83a8444dbdaa741217639857a41bac82271d61ba81a7541"
 }

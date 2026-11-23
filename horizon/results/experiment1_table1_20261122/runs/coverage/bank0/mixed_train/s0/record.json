@@ -1,0 +1,104 @@
+{
+  "bank_index": 0,
+  "calibrations": 0,
+  "cause": "coverage_deficit",
+  "cost": {
+    "accepted_labels": 120000,
+    "available_labels": 122113,
+    "episodes": 480,
+    "eval_episodes": 120,
+    "sim_steps": 5257350,
+    "worker_seconds": 694.7077499367297
+  },
+  "decisions": [
+    {
+      "action": "mixed_train",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.9565217391304348,
+        "failure_types": {
+          "grasp": 3,
+          "placement": 1,
+          "stall": 2,
+          "transition": 17
+        },
+        "per_subgoal": {
+          "subgoal0": 22,
+          "subgoal3": 1
+        },
+        "perturbation_events": 6,
+        "perturbation_failure_rate": 0.8,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": null,
+        "sr": 0.04166666666666663
+      },
+      "reason": "sim + deployment mixing",
+      "round": 1,
+      "sr_after": 0.75,
+      "sr_before": 0.1,
+      "target": null
+    },
+    {
+      "action": "mixed_train",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "drop": 1,
+          "grasp": 1,
+          "placement": 3,
+          "transition": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 2,
+          "subgoal1": 1,
+          "subgoal2": 3
+        },
+        "perturbation_events": 18,
+        "perturbation_failure_rate": 0.2727272727272727,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0014892402567777165,
+        "sr": 0.75
+      },
+      "reason": "sim + deployment mixing",
+      "round": 2,
+      "sr_after": 0.85,
+      "sr_before": 0.75,
+      "target": null
+    },
+    {
+      "action": "mixed_train",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 1.0,
+        "failure_types": {
+          "drop": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 1
+        },
+        "perturbation_events": 17,
+        "perturbation_failure_rate": 0.06666666666666667,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0015109335318655784,
+        "sr": 0.9583333333333334
+      },
+      "reason": "sim + deployment mixing",
+      "round": 3,
+      "sr_after": 0.75,
+      "sr_before": 0.85,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 0.75,
+  "first_action": "mixed_train",
+  "first_step_correct": false,
+  "new_labels": 120000,
+  "scenario": "coverage",
+  "seed": 0,
+  "selector": "mixed_train"
+}

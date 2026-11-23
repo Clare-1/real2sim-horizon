@@ -1,0 +1,52 @@
+{
+  "bank_index": 0,
+  "calibrations": 0,
+  "cause": "coverage_deficit",
+  "cost": {
+    "accepted_labels": 0,
+    "available_labels": 0,
+    "episodes": 24,
+    "eval_episodes": 40,
+    "sim_steps": 450225,
+    "worker_seconds": 56.18499943311326
+  },
+  "decisions": [
+    {
+      "action": "stop",
+      "est_cost": 0,
+      "profile": {
+        "concentration": 0.8181818181818182,
+        "failure_types": {
+          "grasp": 3,
+          "placement": 1,
+          "stall": 2,
+          "transition": 16
+        },
+        "per_subgoal": {
+          "subgoal0": 18,
+          "subgoal1": 3,
+          "subgoal3": 1
+        },
+        "perturbation_events": 7,
+        "perturbation_failure_rate": 0.6666666666666666,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0005680083281666796,
+        "sr": 0.08333333333333337
+      },
+      "reason": "open loop: budget spent before deployment",
+      "round": 1,
+      "sr_after": 0.05,
+      "sr_before": 0.05,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 24,
+  "final_sr": 0.05,
+  "first_action": "stop",
+  "first_step_correct": false,
+  "new_labels": 0,
+  "scenario": "coverage",
+  "seed": 0,
+  "selector": "open_loop"
+}

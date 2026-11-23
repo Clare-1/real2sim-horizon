@@ -15,6 +15,15 @@
 | `diagnosability_bank_20261118/` | 按 bank 分组留一的 5 类混淆矩阵与 recall | learned diagnoser 的可信版本 |
 | `diagnosability_multilabel_20261118/` | 3 个二分类的 recall/precision + 混合成分命中率 | 多标签接口（mixed 0% → 任一 100%） |
 | `fig_R1_recipe_cause_20261121/` | 8 配方 × 4 原因的最终 SR 热力图 | 导师 §4.4 的 R1 |
+| `four_causes_paper8_20261120/` | 论文批次 288 runs（4 causes × 3 banks × 3 seeds × 8 selectors）的 `record.json` / `summary.json` / `paper8_report.md` / `report.md` | 论文主表 §5.7 |
+| `experiment1_table1_20261122/` | 实验一 48 格（8 条固定流程 × 3 条件 × 2 banks）的 `record.json` / `effective_config.json` / `summary.json` / `table1_report.md` | 导师表 1（README §5.9） |
+| `four_causes_llm_20261122/` | LLM selector 的 8 格（真实端点 minara.cloud / `openai/gpt-6.2-astra`，23 次调用 $0.044） | LLM 进主表 |
+| `four_causes_multilabel_heldout_20261118/` | 用排除 bank 0–2 的模型重跑的 8 格 | held-out 口径修正 |
+| `minimal_validation_advisor_20261121/` | 10 banks × 3 seeds × 4 selectors（240 格）的 `summary.json` / `completion.json` / 报告 | 导师最小验证（不进论文，仅留档） |
+| `fig1_sr_cost_20261122/` | SR–累计部署图（8 selectors × 4 causes） | 图 1 |
+| `fig_R2_regret_20261122/` | 期望遗憾 vs 主导原因占比 | 图 R2 |
+| `table2_full.md` | 表 2 完整版（纯原因 4 列 + 混合列 + 全部均值） | 表 2 |
+| `llm_in_main_table.md` | LLM 行与 6 个脚本选择器同表 + 逐 run 动作链 + 成本 | 审计 §23 |
 | `diagnosis_profiles_20261118/` | 4 类 × 20 个独立 feedback profile（只跑 feedback） | 去重后的诊断数据 |
 | `fig3_action_20261118/` | 原因 × 第一步操作热图（总图 + 分选择器） | 图 3 |
 | `fig4_trajectory_20261118/` | 典型场景逐轮 SR 与操作链 | 附录图 4 |
