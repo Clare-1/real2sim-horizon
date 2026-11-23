@@ -1,0 +1,144 @@
+{
+  "bank_index": 0,
+  "calibrations": 1,
+  "cause": "recovery_deficit",
+  "cost": {
+    "accepted_labels": 80000,
+    "available_labels": 81480,
+    "episodes": 344,
+    "eval_episodes": 120,
+    "sim_steps": 3465050,
+    "worker_seconds": 474.5210769698024
+  },
+  "decisions": [
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "drop": 1,
+          "grasp": 5,
+          "placement": 4,
+          "transition": 4
+        },
+        "per_subgoal": {
+          "subgoal0": 7,
+          "subgoal1": 3,
+          "subgoal2": 3,
+          "subgoal3": 1
+        },
+        "perturbation_events": 65,
+        "perturbation_failure_rate": 0.5652173913043478,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0007207866634765456,
+        "sr": 0.41666666666666663
+      },
+      "reason": "Subgoal0 accounts for 7 of 14 failures, making it the clearest target for corrective demonstrations. The 0.72 mm residual gives little evidence for recalibration.",
+      "round": 1,
+      "sr_after": 0.6,
+      "sr_before": 0.35,
+      "target": "subgoal0"
+    },
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.4,
+        "failure_types": {
+          "drop": 1,
+          "grasp": 5,
+          "placement": 3,
+          "transition": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 3,
+          "subgoal1": 3,
+          "subgoal2": 4
+        },
+        "perturbation_events": 67,
+        "perturbation_failure_rate": 0.4166666666666667,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0010378107222561786,
+        "sr": 0.5833333333333333
+      },
+      "reason": "The previous DAgger round raised success from 35% to 60%. Subgoal2 had the most observed failures, though only by one.",
+      "round": 2,
+      "sr_after": 0.65,
+      "sr_before": 0.6,
+      "target": "subgoal2"
+    },
+    {
+      "action": "calibrate_geometry",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.4,
+        "failure_types": {
+          "grasp": 1,
+          "placement": 3,
+          "transition": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 2,
+          "subgoal1": 1,
+          "subgoal2": 2
+        },
+        "perturbation_events": 86,
+        "perturbation_failure_rate": 0.20833333333333334,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.001823231422036723,
+        "sr": 0.7916666666666666
+      },
+      "reason": "The 1.82 mm residual makes calibration worth testing. Failures span all subgoals, and neither recovery triggers nor perturbation failures suggest a DAgger target.",
+      "round": 3,
+      "sr_after": 0.65,
+      "sr_before": 0.65,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 0.65,
+  "first_action": "dagger_round",
+  "first_step_correct": false,
+  "llm_calls": 3,
+  "llm_usage": [
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 256,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 99,
+      "prompt_chars": 355,
+      "provider": "openai",
+      "reply_chars": 219,
+      "usd": 0.002253
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 274,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 95,
+      "prompt_chars": 407,
+      "provider": "openai",
+      "reply_chars": 175,
+      "usd": 0.002247
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 300,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 85,
+      "prompt_chars": 471,
+      "provider": "openai",
+      "reply_chars": 219,
+      "usd": 0.002175
+    }
+  ],
+  "llm_usd": 0.006675,
+  "new_labels": 80000,
+  "scenario": "recovery",
+  "seed": 0,
+  "selector": "llm_minimal"
+}

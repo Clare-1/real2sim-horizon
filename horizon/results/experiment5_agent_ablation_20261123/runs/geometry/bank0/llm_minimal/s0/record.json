@@ -1,0 +1,144 @@
+{
+  "bank_index": 0,
+  "calibrations": 1,
+  "cause": "geometry_bias",
+  "cost": {
+    "accepted_labels": 40000,
+    "available_labels": 40778,
+    "episodes": 208,
+    "eval_episodes": 120,
+    "sim_steps": 2311625,
+    "worker_seconds": 318.4263852110598
+  },
+  "decisions": [
+    {
+      "action": "calibrate_geometry",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5416666666666666,
+        "failure_types": {
+          "grasp": 3,
+          "placement": 13,
+          "stall": 7,
+          "transition": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 13,
+          "subgoal1": 4,
+          "subgoal2": 6,
+          "subgoal3": 1
+        },
+        "perturbation_events": 10,
+        "perturbation_failure_rate": 1.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.011229331600885087,
+        "sr": 0.0
+      },
+      "reason": "The 11.23 mm residual suggests checking geometry before collecting labels. Subgoal0 accounts for 13 of 24 failures.",
+      "round": 1,
+      "sr_after": 0.7,
+      "sr_before": 0.15,
+      "target": null
+    },
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5555555555555556,
+        "failure_types": {
+          "grasp": 1,
+          "placement": 4,
+          "stall": 2,
+          "transition": 2
+        },
+        "per_subgoal": {
+          "subgoal0": 5,
+          "subgoal1": 3,
+          "subgoal2": 1
+        },
+        "perturbation_events": 19,
+        "perturbation_failure_rate": 0.2,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.00013040548526262186,
+        "sr": 0.625
+      },
+      "reason": "Calibration residual is low, and subgoal0 has the most observed failures (5 of 9). Target its failure states for expert labels.",
+      "round": 2,
+      "sr_after": 0.9,
+      "sr_before": 0.7,
+      "target": "subgoal0"
+    },
+    {
+      "action": "stop",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.3333333333333333,
+        "failure_types": {
+          "grasp": 1,
+          "placement": 1,
+          "transition": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 1,
+          "subgoal2": 1,
+          "subgoal3": 1
+        },
+        "perturbation_events": 16,
+        "perturbation_failure_rate": 0.14285714285714285,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.00044661972159647234,
+        "sr": 0.875
+      },
+      "reason": "The calibration residual is low, failures are dispersed, and no perturbation failures or recovery triggers were observed. No clear target warrants another round.",
+      "round": 3,
+      "sr_after": 0.9,
+      "sr_before": 0.9,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 0.9,
+  "first_action": "calibrate_geometry",
+  "first_step_correct": true,
+  "llm_calls": 3,
+  "llm_usage": [
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 256,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 44,
+      "prompt_chars": 355,
+      "provider": "openai",
+      "reply_chars": 172,
+      "usd": 0.001428
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 273,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 48,
+      "prompt_chars": 409,
+      "provider": "openai",
+      "reply_chars": 184,
+      "usd": 0.001539
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 300,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 44,
+      "prompt_chars": 476,
+      "provider": "openai",
+      "reply_chars": 204,
+      "usd": 0.00156
+    }
+  ],
+  "llm_usd": 0.004527,
+  "new_labels": 40000,
+  "scenario": "geometry",
+  "seed": 0,
+  "selector": "llm_minimal"
+}

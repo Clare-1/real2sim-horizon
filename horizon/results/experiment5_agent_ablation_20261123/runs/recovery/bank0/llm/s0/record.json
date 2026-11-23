@@ -1,0 +1,142 @@
+{
+  "bank_index": 0,
+  "calibrations": 0,
+  "cause": "recovery_deficit",
+  "cost": {
+    "accepted_labels": 80000,
+    "available_labels": 82408,
+    "episodes": 320,
+    "eval_episodes": 120,
+    "sim_steps": 3398525,
+    "worker_seconds": 422.88865857897326
+  },
+  "decisions": [
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "drop": 1,
+          "grasp": 5,
+          "placement": 4,
+          "transition": 4
+        },
+        "per_subgoal": {
+          "subgoal0": 7,
+          "subgoal1": 3,
+          "subgoal2": 3,
+          "subgoal3": 1
+        },
+        "perturbation_events": 65,
+        "perturbation_failure_rate": 0.5652173913043478,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0007207866634765456,
+        "sr": 0.41666666666666663
+      },
+      "reason": "Subgoal0 accounts for 7 of 14 failures, making it the strongest target for additional training data.",
+      "round": 1,
+      "sr_after": 0.5,
+      "sr_before": 0.35,
+      "target": "subgoal0"
+    },
+    {
+      "action": "deploy_dagger",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.2777777777777778,
+        "failure_types": {
+          "drop": 2,
+          "grasp": 4,
+          "placement": 6,
+          "transition": 6
+        },
+        "per_subgoal": {
+          "subgoal0": 4,
+          "subgoal1": 4,
+          "subgoal2": 5,
+          "subgoal3": 5
+        },
+        "perturbation_events": 59,
+        "perturbation_failure_rate": 0.75,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0015182853717694948,
+        "sr": 0.25
+      },
+      "reason": "Deployment success is low and failures span all subgoals. Collect corrective labels on states the deployed policy visits rather than targeting one subgoal.",
+      "round": 2,
+      "sr_after": 0.7,
+      "sr_before": 0.5,
+      "target": null
+    },
+    {
+      "action": "stop",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "placement": 2
+        },
+        "per_subgoal": {
+          "subgoal0": 1,
+          "subgoal2": 1
+        },
+        "perturbation_events": 91,
+        "perturbation_failure_rate": 0.08333333333333333,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.001502061160025995,
+        "sr": 0.9166666666666666
+      },
+      "reason": "Success is 91.7%, with no recovery triggers or observed perturbation failures. Neither subgoal failed repeatedly enough to justify targeted training.",
+      "round": 3,
+      "sr_after": 0.7,
+      "sr_before": 0.7,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 0.7,
+  "first_action": "regenerate_targeted",
+  "first_step_correct": false,
+  "llm_calls": 3,
+  "llm_usage": [
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 285,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 43,
+      "prompt_chars": 355,
+      "provider": "openai",
+      "reply_chars": 164,
+      "usd": 0.0015
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 312,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 105,
+      "prompt_chars": 428,
+      "provider": "openai",
+      "reply_chars": 207,
+      "usd": 0.002511
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 322,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 84,
+      "prompt_chars": 462,
+      "provider": "openai",
+      "reply_chars": 192,
+      "usd": 0.002226
+    }
+  ],
+  "llm_usd": 0.006237,
+  "new_labels": 80000,
+  "scenario": "recovery",
+  "seed": 0,
+  "selector": "llm"
+}

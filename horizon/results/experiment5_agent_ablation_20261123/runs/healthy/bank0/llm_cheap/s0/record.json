@@ -1,0 +1,133 @@
+{
+  "bank_index": 0,
+  "calibrations": 0,
+  "cause": "healthy",
+  "cost": {
+    "accepted_labels": 120000,
+    "available_labels": 121255,
+    "episodes": 408,
+    "eval_episodes": 120,
+    "sim_steps": 4111650,
+    "worker_seconds": 429.58695667237043
+  },
+  "decisions": [
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "placement": 1,
+          "verifier": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 1,
+          "subgoal3": 1
+        },
+        "perturbation_events": 17,
+        "perturbation_failure_rate": 0.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0015249082722125322,
+        "sr": 0.9166666666666666
+      },
+      "reason": "Failures are sparse and localized to two subgoals; targeted regeneration addresses them without evidence of perturbation or recovery issues.",
+      "round": 1,
+      "sr_after": 0.9,
+      "sr_before": 0.85,
+      "target": "subgoal0,subgoal3"
+    },
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 1.0,
+        "failure_types": {
+          "grasp": 1
+        },
+        "per_subgoal": {
+          "subgoal2": 1
+        },
+        "perturbation_events": 20,
+        "perturbation_failure_rate": 0.09090909090909091,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0016786608857753509,
+        "sr": 0.9583333333333334
+      },
+      "reason": "The only observed failure is on subgoal2; targeted regeneration previously improved success, while calibration residual and perturbation failures are low.",
+      "round": 2,
+      "sr_after": 1.0,
+      "sr_before": 0.9,
+      "target": "subgoal2"
+    },
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "grasp": 1,
+          "transition": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 1,
+          "subgoal2": 1
+        },
+        "perturbation_events": 17,
+        "perturbation_failure_rate": 0.13333333333333333,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0014324656730337094,
+        "sr": 0.9166666666666666
+      },
+      "reason": "Remaining failures are concentrated in two subgoals; targeted regeneration improved success in both prior rounds.",
+      "round": 3,
+      "sr_after": 1.0,
+      "sr_before": 1.0,
+      "target": "subgoal0,subgoal2"
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 1.0,
+  "first_action": "regenerate_targeted",
+  "first_step_correct": false,
+  "llm_calls": 3,
+  "llm_usage": [
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 269,
+      "model": "gpt-6-luna",
+      "output_tokens": 219,
+      "prompt_chars": 325,
+      "provider": "openai",
+      "reply_chars": 213,
+      "usd": 0.004092
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 288,
+      "model": "gpt-6-luna",
+      "output_tokens": 272,
+      "prompt_chars": 384,
+      "provider": "openai",
+      "reply_chars": 218,
+      "usd": 0.004944
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 323,
+      "model": "gpt-6-luna",
+      "output_tokens": 239,
+      "prompt_chars": 469,
+      "provider": "openai",
+      "reply_chars": 186,
+      "usd": 0.004554
+    }
+  ],
+  "llm_usd": 0.01359,
+  "new_labels": 120000,
+  "scenario": "healthy",
+  "seed": 0,
+  "selector": "llm_cheap"
+}

@@ -1,0 +1,142 @@
+{
+  "bank_index": 1,
+  "calibrations": 1,
+  "cause": "geometry_bias",
+  "cost": {
+    "accepted_labels": 40000,
+    "available_labels": 40778,
+    "episodes": 208,
+    "eval_episodes": 120,
+    "sim_steps": 2353475,
+    "worker_seconds": 327.407561175758
+  },
+  "decisions": [
+    {
+      "action": "calibrate_geometry",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.4444444444444444,
+        "failure_types": {
+          "drop": 3,
+          "grasp": 1,
+          "placement": 9,
+          "stall": 5
+        },
+        "per_subgoal": {
+          "subgoal0": 4,
+          "subgoal1": 8,
+          "subgoal2": 4,
+          "subgoal3": 2
+        },
+        "perturbation_events": 14,
+        "perturbation_failure_rate": 0.5833333333333334,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.010775307531402198,
+        "sr": 0.25
+      },
+      "reason": "The 10.78 mm residual and failures across all four subgoals suggest checking geometry before collecting labels for subgoal1.",
+      "round": 1,
+      "sr_after": 0.8,
+      "sr_before": 0.15,
+      "target": null
+    },
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.6153846153846154,
+        "failure_types": {
+          "placement": 2,
+          "stall": 7,
+          "transition": 3,
+          "verifier": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 8,
+          "subgoal1": 3,
+          "subgoal2": 1,
+          "subgoal3": 1
+        },
+        "perturbation_events": 10,
+        "perturbation_failure_rate": 0.25,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.001189629062252076,
+        "sr": 0.45833333333333337
+      },
+      "reason": "Subgoal0 accounts for 8 of 13 failures after calibration, making it the strongest target for corrective demonstrations.",
+      "round": 2,
+      "sr_after": 0.7,
+      "sr_before": 0.8,
+      "target": "subgoal0"
+    },
+    {
+      "action": "stop",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 1.0,
+        "failure_types": {
+          "grasp": 3,
+          "transition": 4
+        },
+        "per_subgoal": {
+          "subgoal0": 7
+        },
+        "perturbation_events": 9,
+        "perturbation_failure_rate": 0.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0006240523615534156,
+        "sr": 0.7083333333333333
+      },
+      "reason": "Residual is only 0.62 mm, with no recovery triggers or perturbation failures. The last DAgger round showed no observed gain.",
+      "round": 3,
+      "sr_after": 0.7,
+      "sr_before": 0.7,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 0.7,
+  "first_action": "calibrate_geometry",
+  "first_step_correct": true,
+  "llm_calls": 3,
+  "llm_usage": [
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 256,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 44,
+      "prompt_chars": 355,
+      "provider": "openai",
+      "reply_chars": 181,
+      "usd": 0.001428
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 281,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 43,
+      "prompt_chars": 424,
+      "provider": "openai",
+      "reply_chars": 176,
+      "usd": 0.001488
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 284,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 130,
+      "prompt_chars": 446,
+      "provider": "openai",
+      "reply_chars": 167,
+      "usd": 0.002802
+    }
+  ],
+  "llm_usd": 0.005718,
+  "new_labels": 40000,
+  "scenario": "geometry",
+  "seed": 0,
+  "selector": "llm_minimal"
+}

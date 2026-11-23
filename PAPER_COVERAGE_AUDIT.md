@@ -18,7 +18,8 @@
 
 | 项 | 状态 | 现有 | 缺 |
 |---|---|---|---|
-| 表 2（5 causes + mixed × 8 selectors） | 🟡 | paper8：4 causes × 8 selectors × 9 cells + CI；**已合并成 `results/table2_full.md`**（混合 = 4 个混合条件均值：fixed 0.637 / rule 0.731 / bandit 0.863 / oracle 0.900） | 动力学列（不可表达）、linucb/multilabel 无混合格、LLM/LLM+经验行（无 key） |
+| 表 2（5 causes + mixed × 8 selectors） | 🟡 | paper8：4 causes × 8 selectors × 9 cells + CI；**已合并成 `results/table2_full.md`**（混合 = 4 个混合条件均值：fixed 0.637 / rule 0.731 / bandit 0.863 / oracle 0.900） | 动力学列（不可表达）、linucb/multilabel 无混合格、LLM/LLM+经验行（已排队，见下） |
+| **LLM × 混合原因**（规则的标签门盲点） | 🟡 | `regenerate_targeted` 被累计 `labels_spent < 20k` 门住，80k 初始数据之后永久关闭 → 混合场景规则只能「校准后一直 dagger」。已排队：混合 3 条件 × 2 banks × {rule, llm, llm_memory, oracle} = 24 格 + 只改该阈值的规则对照 6 格（`scripts/run_llm_queue.sh`） | 结果（等 paper queue） |
 | 表 3（AUC / oracle-90% / regret / 首步 / 健康花费 / API） | ✅ | `paper8_report.md` 新增 AUC/oracle-90/regret/健康花费（离线算） | 仅 API 花费（无 key） |
 | 图 3（原因 × 第一步操作） | ✅ | `results/fig3_action_four_causes_paper8_20261120/` | 无 |
 | 图 4（典型场景逐轮） | 🟡 | `make_fig4_trajectory.py` 已有，sources 含 four_causes | 用 paper8 重新生成一张当前版本 |
@@ -41,10 +42,10 @@
 | 项 | 状态 | 现有 | 缺 |
 |---|---|---|---|
 | 表 8 校准器 | ✅ | `calibrator_ablation_20261112/TABLE8.md`（legacy/robust/freeze/true/predictive_gate） | 若要当前协议可重跑，不阻塞 |
-| 表 9 偏差档 | 🟡 | `bias_response_20261116`（旧 4 档）；当前协议三档（0.20/0.46/0.70 × 2 banks × fixed/rule/oracle = 18 格）已排队，等图 7 跑完自动接（`scripts/run_table9_bias_after_sweep.sh`） | 结果 |
-| 表 10 agent 消融 | 🟡 | 代码就绪：`llm` / `llm_memory` / `llm_minimal`（工具被剥夺）/ `llm_cheap`（便宜模型），`llm_overrides` 按臂覆盖；`configs/experiment5_agent_ablation.yaml` 已启动（4 臂 × 4 原因 × 2 banks = 32 格） | 结果（~2 h）、成本对比 |
+| 表 9 偏差档 | ⏭️ | **改成不需要训练的探针版**（`policy_free_bias_sweep_20261123`）：residual 10.7 mm → 专家 0.00；5.0 mm → 1.00；≤3.1 mm → 1.00。偏差档与 twin_cost **非单调**，按偏差档比 SR 没有可解释量，18 个训练 run 已砍；结论写进审计 §28.3 | — |
+| 表 10 agent 消融 | ✅ | 32/32：LLM 0.900 / LLM+经验 0.850 / LLM 去工具 0.781 / 便宜模型 0.806；`results/experiment5_report.md` | 成本列需用新代码复跑才有服务端计费 |
 | 表 11 H 外推 | ✅ | 当前编码：训 H2/4 → H=2/4 = 0.950/0.900，H≥6 = **0.000**；全 H 训练对照 0.45–0.90；专家 H=6/8/10 各 3/3 | 多 seed |
-| 图 7 部署预算 8/24/48 | 🟡 | `fig7_budget_sweep.png` 是旧 2-cause/3-selector | 当前 4-cause/8-selector 的预算扫描（需新跑） |
+| 图 7 部署预算 8/24/48 | 🟡 | fb8 24/24、fb24 取自 paper8、fb48 8/24；`make_fig7_budget.py --fb8/--fb24/--fb48` | fb48 剩 16 格 |
 
 ## R1 / R2 / 理论
 

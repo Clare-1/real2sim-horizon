@@ -1,0 +1,148 @@
+{
+  "bank_index": 0,
+  "calibrations": 1,
+  "cause": "recovery_deficit",
+  "cost": {
+    "accepted_labels": 80000,
+    "available_labels": 81760,
+    "episodes": 320,
+    "eval_episodes": 120,
+    "sim_steps": 3630900,
+    "worker_seconds": 450.2533097725827
+  },
+  "decisions": [
+    {
+      "action": "calibrate_geometry",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "drop": 1,
+          "grasp": 5,
+          "placement": 4,
+          "transition": 4
+        },
+        "per_subgoal": {
+          "subgoal0": 7,
+          "subgoal1": 3,
+          "subgoal2": 3,
+          "subgoal3": 1
+        },
+        "perturbation_events": 65,
+        "perturbation_failure_rate": 0.5652173913043478,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0007207866634765456,
+        "sr": 0.41666666666666663
+      },
+      "reason": "The 0.72 mm calibration residual suggests geometry misalignment may be driving failures; correct calibration before collecting more data.",
+      "round": 1,
+      "sr_after": 0.35,
+      "sr_before": 0.35,
+      "target": null
+    },
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.4444444444444444,
+        "failure_types": {
+          "drop": 4,
+          "grasp": 6,
+          "placement": 1,
+          "stall": 1,
+          "transition": 6
+        },
+        "per_subgoal": {
+          "subgoal0": 5,
+          "subgoal1": 8,
+          "subgoal2": 1,
+          "subgoal3": 4
+        },
+        "perturbation_events": 49,
+        "perturbation_failure_rate": 0.7272727272727273,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0012748852814021758,
+        "sr": 0.25
+      },
+      "reason": "Subgoal1 has the most failures; geometry calibration did not improve success, and perturbation failures do not indicate a physics issue.",
+      "round": 2,
+      "sr_after": 0.4,
+      "sr_before": 0.35,
+      "target": "subgoal1"
+    },
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.375,
+        "failure_types": {
+          "drop": 6,
+          "grasp": 4,
+          "placement": 1,
+          "transition": 5
+        },
+        "per_subgoal": {
+          "subgoal0": 5,
+          "subgoal1": 2,
+          "subgoal2": 6,
+          "subgoal3": 3
+        },
+        "perturbation_events": 66,
+        "perturbation_failure_rate": 0.6666666666666666,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0017250929888194405,
+        "sr": 0.33333333333333337
+      },
+      "reason": "Failure remains concentrated in subgoals 2 and 0 despite targeted regeneration; collect corrective deployment examples before the final training round.",
+      "round": 3,
+      "sr_after": 0.65,
+      "sr_before": 0.4,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 0.65,
+  "first_action": "calibrate_geometry",
+  "first_step_correct": false,
+  "llm_calls": 3,
+  "llm_usage": [
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 285,
+      "model": "gpt-6-luna",
+      "output_tokens": 82,
+      "prompt_chars": 355,
+      "provider": "openai",
+      "reply_chars": 194,
+      "usd": 0.002085
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 310,
+      "model": "gpt-6-luna",
+      "output_tokens": 110,
+      "prompt_chars": 424,
+      "provider": "openai",
+      "reply_chars": 200,
+      "usd": 0.00258
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 338,
+      "model": "gpt-6-luna",
+      "output_tokens": 154,
+      "prompt_chars": 500,
+      "provider": "openai",
+      "reply_chars": 202,
+      "usd": 0.003324
+    }
+  ],
+  "llm_usd": 0.007989,
+  "new_labels": 80000,
+  "scenario": "recovery",
+  "seed": 0,
+  "selector": "llm_cheap"
+}

@@ -1,0 +1,138 @@
+{
+  "bank_index": 1,
+  "calibrations": 0,
+  "cause": "coverage_deficit",
+  "cost": {
+    "accepted_labels": 80000,
+    "available_labels": 80851,
+    "episodes": 320,
+    "eval_episodes": 120,
+    "sim_steps": 3361225,
+    "worker_seconds": 416.14948948821984
+  },
+  "decisions": [
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.9166666666666666,
+        "failure_types": {
+          "drop": 1,
+          "grasp": 4,
+          "placement": 2,
+          "stall": 2,
+          "transition": 15
+        },
+        "per_subgoal": {
+          "subgoal0": 22,
+          "subgoal1": 2
+        },
+        "perturbation_events": 4,
+        "perturbation_failure_rate": 1.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": null,
+        "sr": 0.0
+      },
+      "reason": "Failures concentrate at subgoal0; targeted data collection addresses the observed bottleneck.",
+      "round": 1,
+      "sr_after": 0.9,
+      "sr_before": 0.05,
+      "target": "subgoal0"
+    },
+    {
+      "action": "deploy_dagger",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "grasp": 1,
+          "stall": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 1,
+          "subgoal1": 1
+        },
+        "perturbation_events": 14,
+        "perturbation_failure_rate": 0.07692307692307693,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0014347279955538549,
+        "sr": 0.9166666666666666
+      },
+      "reason": "Success is high with few failures and no perturbation or recovery signal; collect deployment data before choosing a targeted intervention.",
+      "round": 2,
+      "sr_after": 0.85,
+      "sr_before": 0.9,
+      "target": null
+    },
+    {
+      "action": "stop",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "drop": 1,
+          "placement": 1
+        },
+        "per_subgoal": {
+          "subgoal0": 1,
+          "subgoal1": 1
+        },
+        "perturbation_events": 14,
+        "perturbation_failure_rate": 0.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0019975852052622443,
+        "sr": 0.9166666666666666
+      },
+      "reason": "Success is high, failures and recovery triggers are rare, perturbations show no failures, and the last deployment slightly reduced success.",
+      "round": 3,
+      "sr_after": 0.85,
+      "sr_before": 0.85,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 0.85,
+  "first_action": "regenerate_targeted",
+  "first_step_correct": true,
+  "llm_calls": 3,
+  "llm_usage": [
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 266,
+      "model": "gpt-6-luna",
+      "output_tokens": 81,
+      "prompt_chars": 324,
+      "provider": "openai",
+      "reply_chars": 157,
+      "usd": 0.002013
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 296,
+      "model": "gpt-6-luna",
+      "output_tokens": 341,
+      "prompt_chars": 399,
+      "provider": "openai",
+      "reply_chars": 190,
+      "usd": 0.006003
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 322,
+      "model": "gpt-6-luna",
+      "output_tokens": 106,
+      "prompt_chars": 463,
+      "provider": "openai",
+      "reply_chars": 182,
+      "usd": 0.002556
+    }
+  ],
+  "llm_usd": 0.010572,
+  "new_labels": 80000,
+  "scenario": "coverage",
+  "seed": 0,
+  "selector": "llm_cheap"
+}

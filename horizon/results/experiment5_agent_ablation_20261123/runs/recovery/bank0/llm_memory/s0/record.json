@@ -1,0 +1,142 @@
+{
+  "bank_index": 0,
+  "calibrations": 0,
+  "cause": "recovery_deficit",
+  "cost": {
+    "accepted_labels": 80000,
+    "available_labels": 82408,
+    "episodes": 320,
+    "eval_episodes": 120,
+    "sim_steps": 3398525,
+    "worker_seconds": 423.16811398928985
+  },
+  "decisions": [
+    {
+      "action": "regenerate_targeted",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "drop": 1,
+          "grasp": 5,
+          "placement": 4,
+          "transition": 4
+        },
+        "per_subgoal": {
+          "subgoal0": 7,
+          "subgoal1": 3,
+          "subgoal2": 3,
+          "subgoal3": 1
+        },
+        "perturbation_events": 65,
+        "perturbation_failure_rate": 0.5652173913043478,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0007207866634765456,
+        "sr": 0.41666666666666663
+      },
+      "reason": "Subgoal0 accounts for half of all failures, making it the best target for new demonstrations. Calibration residual is small, and no recoveries triggered.",
+      "round": 1,
+      "sr_after": 0.5,
+      "sr_before": 0.35,
+      "target": "subgoal0"
+    },
+    {
+      "action": "deploy_dagger",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.2777777777777778,
+        "failure_types": {
+          "drop": 2,
+          "grasp": 4,
+          "placement": 6,
+          "transition": 6
+        },
+        "per_subgoal": {
+          "subgoal0": 4,
+          "subgoal1": 4,
+          "subgoal2": 5,
+          "subgoal3": 5
+        },
+        "perturbation_events": 59,
+        "perturbation_failure_rate": 0.75,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0015182853717694948,
+        "sr": 0.25
+      },
+      "reason": "Failures span all subgoals without recovery triggers. Deployment-state labels can guide corrections without assuming a single failure cause, and both budgets allow collection.",
+      "round": 2,
+      "sr_after": 0.7,
+      "sr_before": 0.5,
+      "target": null
+    },
+    {
+      "action": "stop",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.5,
+        "failure_types": {
+          "placement": 2
+        },
+        "per_subgoal": {
+          "subgoal0": 1,
+          "subgoal2": 1
+        },
+        "perturbation_events": 91,
+        "perturbation_failure_rate": 0.08333333333333333,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.001502061160025995,
+        "sr": 0.9166666666666666
+      },
+      "reason": "Success reached 91.7%. Neither subgoal failed more than once, and no perturbation failures or recovery triggers justify another training round.",
+      "round": 3,
+      "sr_after": 0.7,
+      "sr_before": 0.7,
+      "target": null
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 0.7,
+  "first_action": "regenerate_targeted",
+  "first_step_correct": false,
+  "llm_calls": 3,
+  "llm_usage": [
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 352,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 62,
+      "prompt_chars": 721,
+      "provider": "openai",
+      "reply_chars": 217,
+      "usd": 0.001986
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 379,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 109,
+      "prompt_chars": 794,
+      "provider": "openai",
+      "reply_chars": 227,
+      "usd": 0.002772
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 389,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 52,
+      "prompt_chars": 828,
+      "provider": "openai",
+      "reply_chars": 186,
+      "usd": 0.001947
+    }
+  ],
+  "llm_usd": 0.006705,
+  "new_labels": 80000,
+  "scenario": "recovery",
+  "seed": 0,
+  "selector": "llm_memory"
+}

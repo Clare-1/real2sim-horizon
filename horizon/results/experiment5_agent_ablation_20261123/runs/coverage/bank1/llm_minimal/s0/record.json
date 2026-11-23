@@ -1,0 +1,144 @@
+{
+  "bank_index": 1,
+  "calibrations": 1,
+  "cause": "coverage_deficit",
+  "cost": {
+    "accepted_labels": 80000,
+    "available_labels": 81379,
+    "episodes": 344,
+    "eval_episodes": 120,
+    "sim_steps": 5563000,
+    "worker_seconds": 738.9384854731616
+  },
+  "decisions": [
+    {
+      "action": "calibrate_geometry",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.9166666666666666,
+        "failure_types": {
+          "drop": 1,
+          "grasp": 4,
+          "placement": 2,
+          "stall": 2,
+          "transition": 15
+        },
+        "per_subgoal": {
+          "subgoal0": 22,
+          "subgoal1": 2
+        },
+        "perturbation_events": 4,
+        "perturbation_failure_rate": 1.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": null,
+        "sr": 0.0
+      },
+      "reason": "Check geometry before collecting labels: the calibration residual is unknown, and 22 of 24 failures occur at subgoal0.",
+      "round": 1,
+      "sr_after": 0.05,
+      "sr_before": 0.05,
+      "target": null
+    },
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.8260869565217391,
+        "failure_types": {
+          "drop": 1,
+          "grasp": 5,
+          "placement": 1,
+          "transition": 16
+        },
+        "per_subgoal": {
+          "subgoal0": 19,
+          "subgoal1": 2,
+          "subgoal2": 2
+        },
+        "perturbation_events": 3,
+        "perturbation_failure_rate": 1.0,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0002755379293587802,
+        "sr": 0.04166666666666663
+      },
+      "reason": "Subgoal0 accounts for 19 of 23 failures. Calibration did not improve success, so prioritize corrective demonstrations at that subgoal.",
+      "round": 2,
+      "sr_after": 0.2,
+      "sr_before": 0.05,
+      "target": "subgoal0"
+    },
+    {
+      "action": "dagger_round",
+      "est_cost": 4,
+      "profile": {
+        "concentration": 0.75,
+        "failure_types": {
+          "grasp": 2,
+          "placement": 5,
+          "stall": 2,
+          "transition": 7
+        },
+        "per_subgoal": {
+          "subgoal0": 12,
+          "subgoal1": 2,
+          "subgoal3": 2
+        },
+        "perturbation_events": 9,
+        "perturbation_failure_rate": 0.375,
+        "perturbed_failure_rate": 0.0,
+        "recovery_triggers": 0,
+        "residual": 0.0018983173946791297,
+        "sr": 0.33333333333333337
+      },
+      "reason": "Use the final round on subgoal0: it accounts for 12 of 16 recorded failures, and prior DAgger improved success while calibration did not.",
+      "round": 3,
+      "sr_after": 0.65,
+      "sr_before": 0.2,
+      "target": "subgoal0"
+    }
+  ],
+  "deploy_episodes": 72,
+  "final_sr": 0.65,
+  "first_action": "calibrate_geometry",
+  "first_step_correct": false,
+  "llm_calls": 3,
+  "llm_usage": [
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 237,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 43,
+      "prompt_chars": 324,
+      "provider": "openai",
+      "reply_chars": 175,
+      "usd": 0.001356
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 273,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 47,
+      "prompt_chars": 411,
+      "provider": "openai",
+      "reply_chars": 191,
+      "usd": 0.001524
+    },
+    {
+      "base_url": "https://minara.cloud/v1",
+      "input_tokens": 300,
+      "model": "openai/gpt-6.2-astra",
+      "output_tokens": 52,
+      "prompt_chars": 478,
+      "provider": "openai",
+      "reply_chars": 194,
+      "usd": 0.00168
+    }
+  ],
+  "llm_usd": 0.00456,
+  "new_labels": 80000,
+  "scenario": "coverage",
+  "seed": 0,
+  "selector": "llm_minimal"
+}

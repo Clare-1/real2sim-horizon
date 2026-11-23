@@ -1,0 +1,81 @@
+# Control arm for experiment_llm_mixed: the rule with ONE documented fix, nothing else.
+#
+# `regenerate_targeted` is gated on cumulative `labels_spent < tau_labels_low` (20k). With an 80k
+# initial dump the gate is closed from round 1 on, which is the structural blind spot the LLM is
+# being compared against. Here tau_labels_low is raised to 200k so the gate stays open; every other
+# threshold is unchanged. This makes the LLM comparison two-sided instead of "LLM vs a bug".
+name: experiment_llm_mixed_rulefix
+seeds:
+- 0
+selectors:
+- rule
+families:
+- pack
+H_values:
+- 4
+scenario_banks: 2
+init_budget: 80000
+round_budget: 40000
+rounds: 3
+feedback_episodes: 24
+curve_n_per: 20
+final_n_per: 20
+feedback_pert: 0.1
+collection_pert: 0.1
+torch_threads: 4
+deploy_budget: 100000
+label_budget: 1000000
+banks:
+  training: 81000000
+  feedback: 82000000
+  curve: 83000000
+  final: 84000000
+world:
+  plate_half: 0.01
+  tray_height: 0.02
+train:
+  steps: 8000
+  hidden: 512
+  layers: 3
+  batch: 2048
+  lr: 0.001
+  device: cuda
+open_loop:
+  recovery_frac: 0.3
+  latency_choices:
+  - 0
+  - 0
+  - 1
+rule_thresholds:
+  tau_labels_low: 200000
+scenarios:
+- name: mixed_gc
+  cause: mixed_gc
+  conditions: &mixed_gc
+    recon:
+      bias:
+        plate: 0.46
+        tray: 0.46
+  train_randomization:
+    layout_prior: left_half
+- name: mixed_cr
+  cause: mixed_cr
+  conditions:
+    recon: {}
+  train_randomization:
+    layout_prior: left_half
+  open_loop:
+    recovery_frac: 0.0
+  feedback_pert: 0.5
+  eval_mode: perturbed
+  eval_pert: 0.7
+- name: mixed_gcr
+  cause: mixed_gcr
+  conditions: *mixed_gc
+  train_randomization:
+    layout_prior: left_half
+  open_loop:
+    recovery_frac: 0.0
+  feedback_pert: 0.5
+  eval_mode: perturbed
+  eval_pert: 0.7
